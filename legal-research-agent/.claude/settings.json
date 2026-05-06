@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 scripts/check-citation-auditor-smoke.py:*)",
+      "Bash(python3 scripts/check-citation-auditor-vendor.py:*)",
+      "Bash(python3 scripts/check-claude-conventions.py:*)",
+      "Bash(python3 scripts/check-docx-generation.py:*)",
+      "Bash(python3 scripts/check-fixture-consistency.py:*)",
+      "Bash(python3 scripts/check-formatter-output.py:*)",
+      "Bash(python3 scripts/check-knowledge-coverage.py:*)",
+      "Bash(python3 scripts/check-result-structure.py:*)",
+      "Bash(python3 scripts/check-source-playbooks.py:*)",
+      "Bash(python3 scripts/check-standalone-workflow.py:*)",
+      "Bash(python3 scripts/compare-token-runs.py:*)",
+      "Bash(python3 scripts/create-source-playbook.py:*)",
+      "Bash(python3 scripts/evaluate-golden-set.py:*)",
+      "Bash(python3 scripts/evaluate-quality.py:*)",
+      "Bash(python3 scripts/measure-prompt-footprint.py:*)",
+      "Bash(python3 scripts/measure-tokens.py:*)",
+      "Bash(python3 scripts/render-docx.py:*)",
+      "Bash(python3 scripts/run-local-checks.py:*)",
+      "Bash(python3 scripts/smoke-check.py:*)",
+      "Bash(python3 scripts/validate-intake-payload.py:*)",
+      "Bash(python3 scripts/validate-output.py:*)",
+      "Bash(python3 tests/test_*.py:*)",
+      "Bash(bash tests/lint_no_legacy_invocation.sh:*)",
+      "WebFetch",
+      "WebSearch",
+      "mcp__claude_ai_Korean-law__*"
+    ]
+  }
+}
