@@ -48,6 +48,11 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-knowledge-coverage.py"],
     },
     {
+        "id": "claude_conventions",
+        "description": "Verify Claude Code skill frontmatter, agent definition, settings, command, prerequisites, and AGENTS.md shim.",
+        "cmd": ["python3", "scripts/check-claude-conventions.py"],
+    },
+    {
         "id": "formatter_output",
         "description": "Validate standalone formatter output fixtures.",
         "cmd": ["python3", "scripts/check-formatter-output.py", "tests/fixtures/formatter"],
