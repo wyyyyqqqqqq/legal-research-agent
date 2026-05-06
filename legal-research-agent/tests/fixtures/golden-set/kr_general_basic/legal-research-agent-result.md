@@ -50,9 +50,9 @@ Verify the current official source and any regulator notice guidance.
 
 ## Sources
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
-| src_001 | A | Official Korean legal source placeholder | Official source placeholder | Notice obligation placeholder |
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
+| src_001 | A | Official Korean legal source placeholder | Official source placeholder | Notice obligation placeholder | official source placeholder |
 
 ## Coverage Gaps
 

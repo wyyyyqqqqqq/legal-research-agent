@@ -72,11 +72,14 @@ Individual checks:
 ```bash
 python3 scripts/smoke-check.py
 python3 scripts/check-fixture-consistency.py
+python3 scripts/validate-intake-payload.py tests/fixtures/intake-payloads
 python3 tests/test_output_contract.py
 python3 tests/test_quality_evaluation.py
 python3 tests/test_golden_set_evaluation.py
 python3 tests/test_knowledge_coverage.py
 python3 tests/test_result_structure.py
+python3 tests/test_prompt_footprint.py
+python3 tests/test_intake_payload.py
 python3 tests/test_run_local_checks.py
 python3 tests/test_fixture_consistency.py
 python3 tests/test_citation_auditor_vendor.py
@@ -86,6 +89,7 @@ python3 scripts/check-citation-auditor-vendor.py
 python3 scripts/check-citation-auditor-smoke.py
 python3 scripts/check-result-structure.py tests/fixtures/output/valid
 python3 scripts/evaluate-golden-set.py
+python3 scripts/measure-prompt-footprint.py
 python3 scripts/measure-tokens.py path/to/events.jsonl
 bash tests/lint_no_legacy_invocation.sh
 ```
@@ -108,6 +112,27 @@ python3 scripts/evaluate-quality.py /path/to/output \
 ```
 
 Quality evaluation is mandatory before comparing token savings.
+
+`scripts/measure-prompt-footprint.py` measures the core instruction footprint
+for Phase 0 diagnostics:
+
+```bash
+python3 scripts/measure-prompt-footprint.py
+python3 scripts/measure-prompt-footprint.py --include-vendor
+```
+
+This is a stable rough-token proxy for repo instructions, not a substitute for
+end-to-end usage from real Claude Code `events.jsonl` runs.
+The current Phase 0 snapshot is recorded in `docs/prompt-footprint.md`.
+
+`scripts/validate-intake-payload.py` checks the future orchestrator-to-agent
+payload shape without modifying the orchestrator repository:
+
+```bash
+python3 scripts/validate-intake-payload.py tests/fixtures/intake-payloads
+```
+
+The local contract is documented in `docs/orchestrator-intake.md`.
 
 `scripts/evaluate-golden-set.py` runs all local golden-set quality specs against
 their matching output directories:

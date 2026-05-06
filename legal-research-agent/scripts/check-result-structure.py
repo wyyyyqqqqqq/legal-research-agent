@@ -29,7 +29,7 @@ REQUIRED_ANALYSIS_HEADINGS = [
     "### Counter-Analysis Or Caveat",
     "### Practical Next Step",
 ]
-SOURCE_TABLE_HEADER = "| ID | Grade | Title | Citation | Pinpoint |"
+SOURCE_TABLE_HEADER = "| ID | Grade | Title | Citation | Pinpoint | Access |"
 PLACEHOLDER_PATTERN = re.compile(r"\{\{[^}]+\}\}")
 ROUTE_CONTEXT_LABELS = {
     "Active profile": "active_profile",
@@ -53,6 +53,31 @@ LIMITING_SHORT_ANSWER_TERMS = (
     "verify",
 )
 HANDOFF_TERMS = ("handoff", "delegat")
+PRACTICAL_ACTION_TERMS = (
+    "ask",
+    "build",
+    "check",
+    "confirm",
+    "coordinate",
+    "current",
+    "handoff",
+    "jurisdiction",
+    "review",
+    "run",
+    "source",
+    "specialist",
+    "verify",
+    "검증",
+    "확인",
+    "요청",
+    "검토",
+    "조율",
+    "위임",
+    "인계",
+    "출처",
+    "최신",
+    "관할",
+)
 
 
 class StructureError(Exception):
@@ -139,10 +164,10 @@ def source_table_rows(text: str) -> tuple[dict[str, dict[str, str]], list[str]]:
         if not line.strip().startswith("|"):
             continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        if len(cells) < 5 or not re.fullmatch(r"src_[0-9A-Za-z_-]+", cells[0]):
+        if len(cells) < 6 or not re.fullmatch(r"src_[0-9A-Za-z_-]+", cells[0]):
             continue
 
-        source_id, grade, title, citation, pinpoint = cells[:5]
+        source_id, grade, title, citation, pinpoint, access = cells[:6]
         if source_id in rows:
             errors.append(f"sources_table: duplicate row for source id {source_id!r}")
         row = {
@@ -150,6 +175,7 @@ def source_table_rows(text: str) -> tuple[dict[str, dict[str, str]], list[str]]:
             "title": title,
             "citation": citation,
             "pinpoint": pinpoint,
+            "url_or_access": access,
         }
         for field, value in row.items():
             if not value:
@@ -328,6 +354,19 @@ def validate_analysis_structure(text: str, meta: dict[str, Any]) -> list[str]:
     if missing_rule_ids:
         errors.append(
             f"analysis_structure: Rule And Authority missing authority source ids {missing_rule_ids}"
+        )
+
+    practical_body = analysis_subsection_body(analysis, "### Practical Next Step")
+    normalized_practical = normalize_display_text(practical_body)
+    if practical_body and (
+        normalized_practical in EMPTY_SECTION_VALUES
+        or re.fullmatch(r"(?is)\s*(none|none\.|n/a|tbd|to be determined)\.?\s*", practical_body)
+    ):
+        errors.append("analysis_structure: Practical Next Step must be substantive")
+    if practical_body and not any(term in normalized_practical for term in PRACTICAL_ACTION_TERMS):
+        errors.append(
+            "analysis_structure: Practical Next Step must include a concrete verification, "
+            "handoff, jurisdiction, source-check, or follow-up action"
         )
 
     return errors
@@ -549,7 +588,7 @@ def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[s
         source_id = source["id"]
         if source_id not in table_rows:
             continue
-        for field in ("title", "citation", "pinpoint"):
+        for field in ("title", "citation", "pinpoint", "url_or_access"):
             metadata_value = str(source.get(field, ""))
             table_value = table_rows[source_id][field]
             if metadata_value != table_value:

@@ -52,9 +52,9 @@ Coordinate with pipa-specialist before finalizing any data-use recommendation.
 
 ## Sources
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
-| src_001 | A | Official Korean game-regulation source placeholder | Official source placeholder | Game-law framing placeholder |
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
+| src_001 | A | Official Korean game-regulation source placeholder | Official source placeholder | Game-law framing placeholder | official source placeholder |
 
 ## Coverage Gaps
 

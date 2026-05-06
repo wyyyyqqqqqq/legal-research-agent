@@ -1,0 +1,14 @@
+{
+  "user_question": "한국 게임사가 확률형 아이템 확률 표시를 하지 않았을 때 게임 규제상 제재가 있는지 조사해줘.",
+  "output_dir": "/tmp/legal-research-agent/classification_mismatch_general_to_game",
+  "active_profile": "merged",
+  "orchestrator_classification": {
+    "domains": ["general"],
+    "jurisdictions": ["KR"],
+    "route_mode": "general",
+    "agent_research_mode": "general",
+    "confidence": "medium"
+  },
+  "co_running_agents": [],
+  "style_guide_path": null
+}

@@ -10,12 +10,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Any
 
 
 AGENT_ID = "legal-research-agent"
+SUMMARY_MAX_ROUGH_TOKENS = 500
+PLACEHOLDER_TEXT_VALUES = {"-", "none", "none.", "n/a", "na", "tbd", "to be determined"}
 
 REQUIRED_KEYS = {
     "meta_version",
@@ -90,6 +93,21 @@ def require_non_empty_string(value: Any, field: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ValidationError(f"{field}: expected non-empty string")
     return value
+
+
+def rough_token_count(value: str) -> int:
+    return math.ceil(len(value) / 4)
+
+
+def validate_summary(value: Any) -> None:
+    summary = require_non_empty_string(value, "summary")
+    if summary.strip().lower() in PLACEHOLDER_TEXT_VALUES:
+        raise ValidationError("summary: expected substantive text, not a placeholder")
+    rough_tokens = rough_token_count(summary)
+    if rough_tokens > SUMMARY_MAX_ROUGH_TOKENS:
+        raise ValidationError(
+            f"summary: exceeds {SUMMARY_MAX_ROUGH_TOKENS} rough-token limit ({rough_tokens})"
+        )
 
 
 def validate_string_list(value: Any, field: str, require_non_empty: bool = False) -> None:
@@ -175,7 +193,7 @@ def validate_meta(meta: dict[str, Any]) -> None:
     if missing_keys:
         raise ValidationError(f"metadata missing required keys: {missing_keys}")
 
-    require_type(meta["summary"], str, "summary")
+    validate_summary(meta["summary"])
     if meta["research_mode"] not in RESEARCH_MODES:
         raise ValidationError(f"research_mode: invalid value {meta['research_mode']!r}")
     if meta["mode_source"] not in MODE_SOURCES:
@@ -183,7 +201,7 @@ def validate_meta(meta: dict[str, Any]) -> None:
     if meta["error"] not in ERROR_VALUES:
         raise ValidationError(f"error: invalid value {meta['error']!r}")
 
-    for key in ("meta_version", "summary", "active_profile", "orchestrator_route_mode"):
+    for key in ("meta_version", "active_profile", "orchestrator_route_mode"):
         require_non_empty_string(meta[key], key)
 
     if meta["fallback_reason"] is not None:

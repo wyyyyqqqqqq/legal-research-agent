@@ -107,6 +107,20 @@ class OutputContractTest(unittest.TestCase):
         with self.assertRaises(VALIDATOR.ValidationError):
             VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
 
+    def test_summary_must_not_be_placeholder(self) -> None:
+        meta = valid_meta()
+        meta["summary"] = "TBD"
+        output_dir = self.write_output(meta)
+        with self.assertRaisesRegex(VALIDATOR.ValidationError, "placeholder"):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_summary_must_fit_rough_token_limit(self) -> None:
+        meta = valid_meta()
+        meta["summary"] = "a" * ((VALIDATOR.SUMMARY_MAX_ROUGH_TOKENS * 4) + 1)
+        output_dir = self.write_output(meta)
+        with self.assertRaisesRegex(VALIDATOR.ValidationError, "rough-token limit"):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
     def test_route_metadata_strings_must_be_non_empty(self) -> None:
         meta = valid_meta()
         meta["active_profile"] = ""

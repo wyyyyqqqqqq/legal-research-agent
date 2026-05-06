@@ -58,10 +58,10 @@ Build a live comparison matrix from official KR and JP sources.
 
 ## Sources
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
-| src_001 | A | Official Korean game-regulation source placeholder | Korea official source placeholder | Classification placeholder |
-| src_002 | A | Official Japan game-regulation source placeholder | Japan official source placeholder | Consumer notice placeholder |
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
+| src_001 | A | Official Korean game-regulation source placeholder | Korea official source placeholder | Classification placeholder | official source placeholder |
+| src_002 | A | Official Japan game-regulation source placeholder | Japan official source placeholder | Consumer notice placeholder | official source placeholder |
 
 ## Coverage Gaps
 

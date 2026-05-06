@@ -1,0 +1,14 @@
+{
+  "user_question": "정확한 국가를 특정하지 않고 게임 아이템 규제의 전세계 공통 기준을 확정적으로 알려줘.",
+  "output_dir": "/tmp/legal-research-agent/fallback_source_coverage",
+  "active_profile": "merged",
+  "orchestrator_classification": {
+    "domains": ["game_regulation"],
+    "jurisdictions": ["UNSPECIFIED"],
+    "route_mode": "fallback",
+    "agent_research_mode": "fallback",
+    "confidence": "low"
+  },
+  "co_running_agents": [],
+  "style_guide_path": null
+}

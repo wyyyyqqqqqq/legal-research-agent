@@ -28,6 +28,11 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-fixture-consistency.py"],
     },
     {
+        "id": "intake_payloads",
+        "description": "Validate orchestrator-to-agent intake payload fixtures.",
+        "cmd": ["python3", "scripts/validate-intake-payload.py", "tests/fixtures/intake-payloads"],
+    },
+    {
         "id": "unit_tests",
         "description": "Run all local Python unit tests.",
         "cmd": ["python3", "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"],
@@ -36,6 +41,11 @@ CHECKS: list[dict[str, Any]] = [
         "id": "knowledge_coverage",
         "description": "Check that core source-planning markers remain present.",
         "cmd": ["python3", "scripts/check-knowledge-coverage.py"],
+    },
+    {
+        "id": "prompt_footprint",
+        "description": "Measure core prompt and instruction footprint.",
+        "cmd": ["python3", "scripts/measure-prompt-footprint.py", "--json"],
     },
     {
         "id": "citation_auditor_vendor",

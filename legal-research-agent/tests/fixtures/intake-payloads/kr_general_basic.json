@@ -1,0 +1,14 @@
+{
+  "user_question": "한국 법상 온라인 서비스 약관 변경 시 이용자에게 사전 고지를 해야 하는지 조사해줘.",
+  "output_dir": "/tmp/legal-research-agent/kr_general_basic",
+  "active_profile": "merged",
+  "orchestrator_classification": {
+    "domains": ["general"],
+    "jurisdictions": ["KR"],
+    "route_mode": "general",
+    "agent_research_mode": "general",
+    "confidence": "high"
+  },
+  "co_running_agents": [],
+  "style_guide_path": null
+}

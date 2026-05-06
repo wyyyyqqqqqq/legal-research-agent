@@ -52,9 +52,9 @@ conclusion.
 
 ## Sources
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
-| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint |
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
+| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint | official source placeholder |
 
 ## Coverage Gaps
 

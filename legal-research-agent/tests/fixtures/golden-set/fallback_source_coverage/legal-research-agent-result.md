@@ -51,9 +51,9 @@ Ask for the target jurisdiction or run separate jurisdiction-specific research.
 
 ## Sources
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
-| src_001 | C | Secondary orientation source placeholder | Secondary overview placeholder | Jurisdiction-specific confirmation needed |
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
+| src_001 | C | Secondary orientation source placeholder | Secondary overview placeholder | Jurisdiction-specific confirmation needed | secondary source placeholder |
 
 ## Coverage Gaps
 

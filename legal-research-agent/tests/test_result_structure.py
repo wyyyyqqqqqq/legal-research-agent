@@ -153,7 +153,7 @@ class ResultStructureTest(unittest.TestCase):
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
         output_dir = self.write_output(
             text.replace(
-                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint |\n",
+                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint | official source placeholder |\n",
                 "",
             )
         )
@@ -164,8 +164,8 @@ class ResultStructureTest(unittest.TestCase):
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
         output_dir = self.write_output(
             text.replace(
-                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint |",
-                "| src_001 | B | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint |",
+                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint | official source placeholder |",
+                "| src_001 | B | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint | official source placeholder |",
             )
         )
         errors = CHECKER.check_result_structure(output_dir)
@@ -175,19 +175,30 @@ class ResultStructureTest(unittest.TestCase):
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
         output_dir = self.write_output(
             text.replace(
-                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint |",
-                "| src_001 | A | Different source title | Placeholder article | Placeholder pinpoint |",
+                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint | official source placeholder |",
+                "| src_001 | A | Different source title | Placeholder article | Placeholder pinpoint | official source placeholder |",
             )
         )
         errors = CHECKER.check_result_structure(output_dir)
         self.assertTrue(any("detail mismatch" in error for error in errors), errors)
 
+    def test_source_table_access_mismatch_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint | official source placeholder |",
+                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint | different access note |",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("src_001.url_or_access" in error for error in errors), errors)
+
     def test_source_table_blank_cell_fails(self) -> None:
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
         output_dir = self.write_output(
             text.replace(
-                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint |",
-                "| src_001 | A | Official game-regulation source placeholder |  | Placeholder pinpoint |",
+                "| src_001 | A | Official game-regulation source placeholder | Placeholder article | Placeholder pinpoint | official source placeholder |",
+                "| src_001 | A | Official game-regulation source placeholder |  | Placeholder pinpoint | official source placeholder |",
             )
         )
         errors = CHECKER.check_result_structure(output_dir)
@@ -254,6 +265,28 @@ class ResultStructureTest(unittest.TestCase):
         )
         errors = CHECKER.check_result_structure(output_dir)
         self.assertTrue(any("empty analysis subsection" in error for error in errors), errors)
+
+    def test_practical_next_step_placeholder_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "### Practical Next Step\n\nVerify src_001 against the current official source before using the sanction\nconclusion.\n",
+                "### Practical Next Step\n\nTBD.\n",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("Practical Next Step must be substantive" in error for error in errors), errors)
+
+    def test_practical_next_step_generic_text_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "### Practical Next Step\n\nVerify src_001 against the current official source before using the sanction\nconclusion.\n",
+                "### Practical Next Step\n\nThis should be handled appropriately.\n",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("Practical Next Step must include" in error for error in errors), errors)
 
     def test_rule_and_authority_requires_source_anchor(self) -> None:
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")

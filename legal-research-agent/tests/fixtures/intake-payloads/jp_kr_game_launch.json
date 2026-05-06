@@ -1,0 +1,14 @@
+{
+  "user_question": "일본 게임사가 한국에 모바일 게임을 출시할 때 게임 규제, 등급분류, 소비자 고지 측면에서 확인해야 할 사항을 비교해줘.",
+  "output_dir": "/tmp/legal-research-agent/jp_kr_game_launch",
+  "active_profile": "merged",
+  "orchestrator_classification": {
+    "domains": ["game_regulation"],
+    "jurisdictions": ["JP", "KR"],
+    "route_mode": "game_regulation",
+    "agent_research_mode": "game_regulation",
+    "confidence": "high"
+  },
+  "co_running_agents": [],
+  "style_guide_path": null
+}

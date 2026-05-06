@@ -33,9 +33,9 @@ The current deterministic fixture set covers:
   quality criterion.
 - Result and metadata files exist.
 - Metadata validates.
-- Metadata text fields are substantive: no empty `summary`, route fields,
-  jurisdictions, domains, issue labels, issue answers, authority IDs, or
-  key-finding items.
+- Metadata text fields are substantive: no empty or placeholder `summary`,
+  route fields, jurisdictions, domains, issue labels, issue answers, authority
+  IDs, or key-finding items. `summary` must stay within 500 rough tokens.
 - No fabricated sources.
 - Each key legal conclusion maps to at least one source.
 - No critical legal issue found by legacy or reviewer is omitted.
@@ -86,8 +86,9 @@ Source detail integrity is mandatory:
 - every metadata source must include non-empty `title`, `citation`, `pinpoint`,
   and `url_or_access`;
 - every metadata source must appear in the result `## Sources` table;
-- the table's `Grade`, `Title`, `Citation`, and `Pinpoint` cells must match
-  metadata for the same source ID.
+- the table's `Grade`, `Title`, `Citation`, `Pinpoint`, and `Access` cells must
+  match metadata for the same source ID, with `Access` mirroring
+  `sources[*].url_or_access`.
 
 Question fidelity is mandatory. The result memo's `## Question` section must be
 substantive. In local golden-set fixtures, it must match the case fixture
@@ -105,6 +106,11 @@ include non-empty subsections in this order:
 `### Rule And Authority` must display every authority source ID used by
 `issue_map[*].authority_ids`. Source IDs appearing only in metadata, issue
 blocks, or the source table are not enough for the rule paragraph.
+
+`### Practical Next Step` must be substantive and action-oriented. It must tell
+the next operator what to verify, ask, confirm, coordinate, hand off, separately
+research, or compare. Generic closure such as "handle appropriately" and
+placeholder values such as `TBD` fail the golden-set gate.
 
 Coverage gap display is mandatory. The result memo's `## Coverage Gaps` section
 must not be empty. When metadata `coverage_gaps` is non-empty, the visible
@@ -185,6 +191,11 @@ Suggested pass line:
 - no critical issue omission.
 
 ## Token Reporting Table
+
+Use `scripts/measure-prompt-footprint.py` for Phase 0 prompt/instruction
+footprint diagnostics; the current Phase 0 snapshot is recorded in
+`docs/prompt-footprint.md`. Use `scripts/measure-tokens.py` for actual Claude
+Code `events.jsonl` usage whenever legacy and merged runs are available.
 
 | Route pattern | Legacy measured tokens | Merged measured tokens | Delta | Decision |
 |---|---:|---:|---:|---|

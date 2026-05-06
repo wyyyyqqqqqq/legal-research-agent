@@ -95,6 +95,12 @@ by the issue blocks. If `issue_map[*].authority_ids` includes `src_001` and
 `src_002`, both IDs must appear in `### Rule And Authority`, not only in the
 source table or metadata.
 
+`### Practical Next Step` must be action-oriented, not generic closing prose.
+Name the concrete follow-up: verify a current source, confirm a missing fact or
+jurisdiction, coordinate a specialist handoff, run separate research, or build a
+comparison matrix. Do not use vague text such as "handle appropriately" or
+placeholder values such as `TBD`.
+
 For multi-jurisdiction work, analyze each jurisdiction first and synthesize only
 after jurisdiction-specific rows or paragraphs are complete.
 When the metadata uses `comparison_matrix`, every matrix row must have a clear
@@ -108,16 +114,16 @@ markdown table before `## Sources`. The table must display every metadata row's
 
 The `## Sources` section must include a table:
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
 
 Use the same source IDs as metadata. Do not invent display-only IDs that are
 absent from metadata.
 Every metadata source must appear exactly once in the table, with the same grade
 as `sources[*].grade`.
-The table's `Title`, `Citation`, and `Pinpoint` cells must exactly mirror
-`sources[*].title`, `sources[*].citation`, and `sources[*].pinpoint`; do not
-leave any source-detail cell blank.
+The table's `Title`, `Citation`, `Pinpoint`, and `Access` cells must exactly
+mirror `sources[*].title`, `sources[*].citation`, `sources[*].pinpoint`, and
+`sources[*].url_or_access`; do not leave any source-detail cell blank.
 
 ## Coverage Gaps
 

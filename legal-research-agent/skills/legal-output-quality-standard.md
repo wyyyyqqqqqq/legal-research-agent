@@ -70,6 +70,11 @@ A strong result should tell the downstream writer or lawyer:
 - what facts would change the answer;
 - which specialist should handle any out-of-scope issue.
 
+The practical next step must name a concrete action: verify a current source,
+confirm a missing fact or jurisdiction, coordinate a specialist handoff, run
+separate research, or build a comparison matrix. Do not end a legal memo with a
+generic instruction to "handle appropriately."
+
 ## Failure Labels
 
 Use explicit labels rather than smoothing over uncertainty:

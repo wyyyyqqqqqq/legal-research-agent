@@ -59,9 +59,9 @@ Verify current official advertising and consumer-notice sources before launch.
 
 ## Sources
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
-| src_001 | A | Official Korean advertising and consumer source placeholder | Official source placeholder | Advertising and consumer notice placeholder |
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
+| src_001 | A | Official Korean advertising and consumer source placeholder | Official source placeholder | Advertising and consumer notice placeholder | official source placeholder |
 
 ## Coverage Gaps
 

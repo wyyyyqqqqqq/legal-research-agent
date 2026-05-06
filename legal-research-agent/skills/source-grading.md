@@ -58,11 +58,13 @@ Each source should include:
   "grade": "A",
   "citation": "Article, paragraph, decision number, or section",
   "pinpoint": "Specific pinpoint",
-  "url_or_access": "optional"
+  "url_or_access": "URL, database path, MCP source, or access note"
 }
 ```
 
 Use stable source IDs and reference them from `issue_map[*].authority_ids`.
+`url_or_access` is required and must also be displayed in the result memo's
+`## Sources` table as the `Access` cell.
 
 ## Korean and Translation Refinements
 

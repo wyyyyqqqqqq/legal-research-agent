@@ -13,7 +13,17 @@ SCAN_PATHS=(
   "$ROOT_DIR/knowledge"
 )
 
-if grep -R -n -E 'general-legal-research|game-legal-research' "${SCAN_PATHS[@]}"; then
+MATCHES="$(
+  find "${SCAN_PATHS[@]}" \
+    -type f \
+    ! -path '*/__pycache__/*' \
+    ! -path "$ROOT_DIR/scripts/validate-intake-payload.py" \
+    -print0 \
+    | xargs -0 grep -n -E 'general-legal-research|game-legal-research' || true
+)"
+
+if [[ -n "$MATCHES" ]]; then
+  printf '%s\n' "$MATCHES"
   echo "FAIL: forbidden legacy agent ID found in runtime files" >&2
   exit 1
 fi

@@ -1,0 +1,14 @@
+{
+  "user_question": "한국에서 모바일 게임의 확률형 아이템 확률 표시 의무와 위반 시 제재를 조사해줘.",
+  "output_dir": "/tmp/legal-research-agent/kr_loot_box_probability",
+  "active_profile": "merged",
+  "orchestrator_classification": {
+    "domains": ["game_regulation"],
+    "jurisdictions": ["KR"],
+    "route_mode": "game_regulation",
+    "agent_research_mode": "game_regulation",
+    "confidence": "high"
+  },
+  "co_running_agents": [],
+  "style_guide_path": null
+}

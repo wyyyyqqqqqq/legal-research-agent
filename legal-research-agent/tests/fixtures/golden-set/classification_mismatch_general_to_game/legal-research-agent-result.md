@@ -52,9 +52,9 @@ game-regulation advice.
 
 ## Sources
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
-| src_001 | A | Official Korean legal source placeholder | Official source placeholder | Routing mismatch placeholder |
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
+| src_001 | A | Official Korean legal source placeholder | Official source placeholder | Routing mismatch placeholder | official source placeholder |
 
 ## Coverage Gaps
 

@@ -42,6 +42,8 @@ The agent must write exactly two files:
 
 - `meta_version`, `summary`, `active_profile`, and
   `orchestrator_route_mode` must be non-empty strings.
+- `summary` must be substantive downstream metadata, not `None`, `TBD`, or a
+  process placeholder. Keep it within 500 rough tokens.
 - `jurisdictions` and `domains` must be non-empty lists of non-empty strings.
 - `classification_warnings`, `co_running_agents`, and `key_findings` must be
   lists; when present, every item must be a non-empty string.
@@ -104,4 +106,4 @@ ID used by the issue map.
 When metadata `comparison_matrix` is non-empty, the result memo must include a
 visible `## Comparison Matrix` table before `## Sources`.
 The `## Sources` table must mirror metadata source `grade`, `title`,
-`citation`, and `pinpoint` exactly for each source ID.
+`citation`, `pinpoint`, and `url_or_access` exactly for each source ID.

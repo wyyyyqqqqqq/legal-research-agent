@@ -48,9 +48,9 @@
 
 ## Sources
 
-| ID | Grade | Title | Citation | Pinpoint |
-|---|---|---|---|---|
-| src_001 | A | {{source_title}} | {{source_citation}} | {{source_pinpoint}} |
+| ID | Grade | Title | Citation | Pinpoint | Access |
+|---|---|---|---|---|---|
+| src_001 | A | {{source_title}} | {{source_citation}} | {{source_pinpoint}} | {{source_url_or_access}} |
 
 ## Coverage Gaps
 
