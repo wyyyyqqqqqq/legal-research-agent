@@ -1,0 +1,14 @@
+{
+  "id": "classification_mismatch_general_to_game_quality",
+  "case_id": "classification_mismatch_general_to_game",
+  "expected_research_mode": "general",
+  "expected_mode_source": "orchestrator",
+  "expected_error": "classification_mismatch",
+  "required_classification_warnings": ["classification_mismatch"],
+  "required_coverage_gap_types": ["classification_mismatch"],
+  "required_jurisdictions": ["KR"],
+  "required_domains": ["general"],
+  "required_issue_terms": ["classification", "mismatch", "game"],
+  "required_result_terms": ["routed", "coverage gap"],
+  "required_source_grades": ["A"]
+}

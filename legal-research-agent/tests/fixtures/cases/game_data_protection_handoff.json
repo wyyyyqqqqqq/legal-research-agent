@@ -1,0 +1,10 @@
+{
+  "id": "game_data_protection_handoff",
+  "title": "Game privacy handoff with co-running specialist",
+  "user_question": "한국 게임사가 게임 내 행동 로그와 결제 데이터를 활용해 맞춤형 이벤트를 운영할 때 게임 규제 관점과 개인정보보호 쟁점 분담을 정리해줘.",
+  "expected_research_mode": "game_regulation",
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "co_running_agents": ["pipa-specialist"],
+  "required_taxonomy": ["Privacy/Data Handoff", "Advertising and Monetization"]
+}

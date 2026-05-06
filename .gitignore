@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local environments and caches
+.venv/
+venv/
+.uv-cache/
+.cache/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Generated local reports/artifacts
+reports/
+*.audit.md
+*.audit.json
+*.audit-source.md
+*.source-map.json
+
+# Local planning/build notes
+implementation-build-log.md
+merged-legal-research-agent*.md

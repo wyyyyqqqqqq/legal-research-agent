@@ -1,0 +1,11 @@
+{
+  "id": "kr_loot_box_probability_quality",
+  "case_id": "kr_loot_box_probability",
+  "expected_research_mode": "game_regulation",
+  "required_jurisdictions": ["KR"],
+  "required_domains": ["game_regulation"],
+  "required_taxonomy": ["Randomized Rewards", "Enforcement and Remedies"],
+  "required_issue_terms": ["probability", "disclosure", "enforcement"],
+  "required_result_terms": ["official", "verify", "sanction"],
+  "required_source_grades": ["A"]
+}

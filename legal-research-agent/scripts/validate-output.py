@@ -1,0 +1,251 @@
+#!/usr/bin/env python3
+"""Validate legal-research-agent output files.
+
+This validator intentionally works without third-party dependencies. If a JSON
+schema path is provided and the optional jsonschema package is installed, it also
+runs schema validation.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Any
+
+
+AGENT_ID = "legal-research-agent"
+
+REQUIRED_KEYS = {
+    "meta_version",
+    "summary",
+    "research_mode",
+    "mode_source",
+    "active_profile",
+    "orchestrator_route_mode",
+    "fallback_reason",
+    "classification_warnings",
+    "co_running_agents",
+    "jurisdictions",
+    "domains",
+    "issue_map",
+    "key_findings",
+    "sources",
+    "comparison_matrix",
+    "coverage_gaps",
+    "error",
+}
+
+RESEARCH_MODES = {"general", "game_regulation", "game_plus_general", "fallback"}
+MODE_SOURCES = {"orchestrator", "self_classified"}
+SOURCE_GRADES = {"A", "B", "C", "D"}
+CONFIDENCE_VALUES = {"high", "medium", "low"}
+ERROR_VALUES = {
+    None,
+    "mcp_unavailable",
+    "partial_sources",
+    "timeout",
+    "classification_ambiguous",
+    "classification_mismatch",
+    "source_coverage_insufficient",
+    "internal_error",
+}
+GAP_TYPES = {
+    "classification_mismatch",
+    "source_coverage",
+    "source_access",
+    "jurisdiction",
+    "specialist_handoff",
+    "temporal_status",
+    "other",
+}
+ERROR_TO_GAP_TYPE = {
+    "classification_mismatch": "classification_mismatch",
+    "source_coverage_insufficient": "source_coverage",
+    "mcp_unavailable": "source_access",
+    "partial_sources": "source_access",
+    "timeout": "source_access",
+    "classification_ambiguous": "classification_mismatch",
+}
+
+
+class ValidationError(Exception):
+    """Raised when output validation fails."""
+
+
+def load_json(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValidationError(f"{path}: invalid JSON: {exc}") from exc
+
+
+def require_type(value: Any, expected_type: type, field: str) -> None:
+    if not isinstance(value, expected_type):
+        raise ValidationError(f"{field}: expected {expected_type.__name__}")
+
+
+def validate_sources(meta: dict[str, Any]) -> set[str]:
+    sources = meta["sources"]
+    require_type(sources, list, "sources")
+
+    ids: set[str] = set()
+    for index, source in enumerate(sources):
+        field = f"sources[{index}]"
+        require_type(source, dict, field)
+        for key in ("id", "title", "grade", "citation", "pinpoint", "url_or_access"):
+            if key not in source:
+                raise ValidationError(f"{field}: missing {key}")
+            if key != "grade" and (not isinstance(source[key], str) or not source[key].strip()):
+                raise ValidationError(f"{field}.{key}: expected non-empty string")
+        source_id = source["id"]
+        if not isinstance(source_id, str) or not source_id:
+            raise ValidationError(f"{field}.id: expected non-empty string")
+        if source_id in ids:
+            raise ValidationError(f"{field}.id: duplicate source id {source_id}")
+        ids.add(source_id)
+        if source["grade"] not in SOURCE_GRADES:
+            raise ValidationError(f"{field}.grade: invalid grade {source['grade']!r}")
+    return ids
+
+
+def validate_issue_map(meta: dict[str, Any], source_ids: set[str]) -> None:
+    issue_map = meta["issue_map"]
+    require_type(issue_map, list, "issue_map")
+
+    for index, issue in enumerate(issue_map):
+        field = f"issue_map[{index}]"
+        require_type(issue, dict, field)
+        for key in ("issue", "answer", "authority_ids", "confidence"):
+            if key not in issue:
+                raise ValidationError(f"{field}: missing {key}")
+        require_type(issue["authority_ids"], list, f"{field}.authority_ids")
+        missing = [source_id for source_id in issue["authority_ids"] if source_id not in source_ids]
+        if missing:
+            raise ValidationError(f"{field}.authority_ids: unknown source ids {missing}")
+        if issue["confidence"] not in CONFIDENCE_VALUES:
+            raise ValidationError(f"{field}.confidence: invalid value {issue['confidence']!r}")
+
+
+def validate_coverage_gaps(meta: dict[str, Any]) -> None:
+    coverage_gaps = meta["coverage_gaps"]
+    require_type(coverage_gaps, list, "coverage_gaps")
+    for index, gap in enumerate(coverage_gaps):
+        field = f"coverage_gaps[{index}]"
+        require_type(gap, dict, field)
+        for key in ("type", "description"):
+            if key not in gap:
+                raise ValidationError(f"{field}: missing {key}")
+        if gap["type"] not in GAP_TYPES:
+            raise ValidationError(f"{field}.type: invalid value {gap['type']!r}")
+        if not isinstance(gap["description"], str) or not gap["description"].strip():
+            raise ValidationError(f"{field}.description: expected non-empty string")
+
+    required_gap_type = ERROR_TO_GAP_TYPE.get(meta["error"])
+    if required_gap_type and not any(gap.get("type") == required_gap_type for gap in coverage_gaps):
+        raise ValidationError(
+            f"coverage_gaps: error {meta['error']!r} requires gap type {required_gap_type!r}"
+        )
+
+    if meta["research_mode"] == "fallback" and not coverage_gaps:
+        raise ValidationError("coverage_gaps: required when research_mode is fallback")
+
+
+def validate_meta(meta: dict[str, Any]) -> None:
+    missing_keys = sorted(REQUIRED_KEYS - set(meta))
+    if missing_keys:
+        raise ValidationError(f"metadata missing required keys: {missing_keys}")
+
+    require_type(meta["summary"], str, "summary")
+    if meta["research_mode"] not in RESEARCH_MODES:
+        raise ValidationError(f"research_mode: invalid value {meta['research_mode']!r}")
+    if meta["mode_source"] not in MODE_SOURCES:
+        raise ValidationError(f"mode_source: invalid value {meta['mode_source']!r}")
+    if meta["error"] not in ERROR_VALUES:
+        raise ValidationError(f"error: invalid value {meta['error']!r}")
+
+    for key in (
+        "classification_warnings",
+        "co_running_agents",
+        "jurisdictions",
+        "domains",
+        "key_findings",
+        "comparison_matrix",
+    ):
+        require_type(meta[key], list, key)
+
+    if meta["research_mode"] == "fallback" and not meta["fallback_reason"]:
+        raise ValidationError("fallback_reason: required when research_mode is fallback")
+
+    if (
+        meta["error"] == "classification_mismatch"
+        and "classification_mismatch" not in meta["classification_warnings"]
+    ):
+        raise ValidationError(
+            "classification_warnings: must include classification_mismatch when error uses it"
+        )
+
+    source_ids = validate_sources(meta)
+    validate_issue_map(meta, source_ids)
+    validate_coverage_gaps(meta)
+
+
+def validate_schema(meta: dict[str, Any], schema_path: Path) -> list[str]:
+    if not schema_path.exists():
+        raise ValidationError(f"schema path does not exist: {schema_path}")
+    try:
+        import jsonschema  # type: ignore[import-not-found]
+    except ImportError:
+        return ["jsonschema package not installed; skipped schema validation"]
+
+    schema = load_json(schema_path)
+    jsonschema.validate(meta, schema)
+    return []
+
+
+def validate_output_dir(output_dir: Path, agent_id: str, schema_path: Path | None = None) -> list[str]:
+    result_path = output_dir / f"{agent_id}-result.md"
+    meta_path = output_dir / f"{agent_id}-meta.json"
+
+    if not result_path.exists():
+        raise ValidationError(f"missing result file: {result_path}")
+    if not meta_path.exists():
+        raise ValidationError(f"missing metadata file: {meta_path}")
+    if not result_path.read_text(encoding="utf-8").strip():
+        raise ValidationError(f"empty result file: {result_path}")
+
+    meta = load_json(meta_path)
+    require_type(meta, dict, "metadata")
+    validate_meta(meta)
+
+    warnings: list[str] = []
+    if schema_path:
+        warnings.extend(validate_schema(meta, schema_path))
+    return warnings
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("output_dir", type=Path)
+    parser.add_argument("--agent-id", default=AGENT_ID)
+    parser.add_argument("--schema", type=Path)
+    args = parser.parse_args(argv)
+
+    try:
+        warnings = validate_output_dir(args.output_dir, args.agent_id, args.schema)
+    except ValidationError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    except Exception as exc:  # pragma: no cover - defensive CLI boundary
+        print(f"FAIL: unexpected validation error: {exc}", file=sys.stderr)
+        return 1
+
+    print("OK: output contract valid")
+    for warning in warnings:
+        print(f"WARN: {warning}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

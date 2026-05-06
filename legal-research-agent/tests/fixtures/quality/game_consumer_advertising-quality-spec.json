@@ -1,0 +1,11 @@
+{
+  "id": "game_consumer_advertising_quality",
+  "case_id": "game_consumer_advertising",
+  "expected_research_mode": "game_regulation",
+  "required_jurisdictions": ["KR"],
+  "required_domains": ["game_regulation"],
+  "required_taxonomy": ["Advertising and Monetization", "Consumer Protection"],
+  "required_issue_terms": ["advertising", "influencer", "consumer", "limited package"],
+  "required_result_terms": ["official", "verify"],
+  "required_source_grades": ["A"]
+}

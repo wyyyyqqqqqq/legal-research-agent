@@ -1,0 +1,9 @@
+{
+  "id": "game_consumer_advertising",
+  "title": "Game consumer protection and advertising",
+  "user_question": "한국 게임사가 인플루언서 광고와 한정 패키지 판매를 할 때 소비자보호와 광고 규제상 주의할 점을 조사해줘.",
+  "expected_research_mode": "game_regulation",
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "required_taxonomy": ["Advertising and Monetization", "Consumer Protection"]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "kr_general_basic_quality",
+  "case_id": "kr_general_basic",
+  "expected_research_mode": "general",
+  "required_jurisdictions": ["KR"],
+  "required_domains": ["general"],
+  "required_issue_terms": ["terms", "notice"],
+  "required_result_terms": ["official", "verify"],
+  "required_source_grades": ["A"]
+}

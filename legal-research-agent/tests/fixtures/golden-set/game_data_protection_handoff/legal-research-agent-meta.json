@@ -1,0 +1,37 @@
+{
+  "meta_version": "1.1",
+  "summary": "Korean game-law privacy handoff sample for co-running specialist validation.",
+  "research_mode": "game_regulation",
+  "mode_source": "orchestrator",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "game_regulation",
+  "fallback_reason": null,
+  "classification_warnings": [],
+  "co_running_agents": ["pipa-specialist"],
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "issue_map": [
+    {
+      "issue": "Privacy handoff for game-law analysis",
+      "answer": "Detailed privacy analysis is delegated to the co-running specialist; this output preserves only the game-law framing and handoff.",
+      "authority_ids": ["src_001"],
+      "confidence": "medium"
+    }
+  ],
+  "key_findings": [
+    "Privacy analysis is delegated to pipa-specialist while game-law monetization and event-framing issues remain in this result."
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Official Korean game-regulation source placeholder",
+      "grade": "A",
+      "citation": "Official source placeholder",
+      "pinpoint": "Game-law framing placeholder",
+      "url_or_access": "official source placeholder"
+    }
+  ],
+  "comparison_matrix": [],
+  "coverage_gaps": [],
+  "error": null
+}

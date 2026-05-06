@@ -1,0 +1,13 @@
+{
+  "id": "game_data_protection_handoff_quality",
+  "case_id": "game_data_protection_handoff",
+  "expected_research_mode": "game_regulation",
+  "required_jurisdictions": ["KR"],
+  "required_domains": ["game_regulation"],
+  "required_taxonomy": ["Privacy/Data Handoff", "Advertising and Monetization"],
+  "required_issue_terms": ["privacy", "handoff"],
+  "required_result_terms": ["delegated", "game-law"],
+  "required_source_grades": ["A"],
+  "required_co_running_agents": ["pipa-specialist"],
+  "requires_privacy_handoff": true
+}

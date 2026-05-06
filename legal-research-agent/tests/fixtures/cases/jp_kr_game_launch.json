@@ -1,0 +1,10 @@
+{
+  "id": "jp_kr_game_launch",
+  "title": "Japan game company launching in Korea",
+  "user_question": "일본 게임사가 한국에 모바일 게임을 출시할 때 게임 규제, 등급분류, 소비자 고지 측면에서 확인해야 할 사항을 비교해줘.",
+  "expected_research_mode": "game_regulation",
+  "jurisdictions": ["JP", "KR"],
+  "domains": ["game_regulation"],
+  "requires_comparison_matrix": true,
+  "required_taxonomy": ["Product Classification", "Minors and Youth Protection", "Consumer Protection"]
+}

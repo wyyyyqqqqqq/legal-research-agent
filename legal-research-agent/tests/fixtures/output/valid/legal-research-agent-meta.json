@@ -1,0 +1,37 @@
+{
+  "meta_version": "1.1",
+  "summary": "A valid sample metadata file for probability disclosure and enforcement quality validation.",
+  "research_mode": "game_regulation",
+  "mode_source": "orchestrator",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "game_regulation",
+  "fallback_reason": null,
+  "classification_warnings": [],
+  "co_running_agents": [],
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "issue_map": [
+    {
+      "issue": "Probability disclosure and enforcement",
+      "answer": "Probability disclosure and sanction exposure should be verified against official game-regulation sources.",
+      "authority_ids": ["src_001"],
+      "confidence": "medium"
+    }
+  ],
+  "key_findings": [
+    "Official source verification is required before final probability disclosure or sanction conclusions."
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Official game-regulation source placeholder",
+      "grade": "A",
+      "citation": "Placeholder article",
+      "pinpoint": "Placeholder pinpoint",
+      "url_or_access": "official source placeholder"
+    }
+  ],
+  "comparison_matrix": [],
+  "coverage_gaps": [],
+  "error": null
+}

@@ -1,0 +1,9 @@
+{
+  "id": "fallback_source_coverage",
+  "title": "Fallback when source coverage is insufficient",
+  "user_question": "정확한 국가를 특정하지 않고 게임 아이템 규제의 전세계 공통 기준을 확정적으로 알려줘.",
+  "expected_research_mode": "fallback",
+  "jurisdictions": ["UNSPECIFIED"],
+  "domains": ["game_regulation"],
+  "expected_error": "source_coverage_insufficient"
+}

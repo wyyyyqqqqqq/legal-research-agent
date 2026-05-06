@@ -1,0 +1,13 @@
+{
+  "id": "classification_mismatch_general_to_game",
+  "title": "General route with visibly game-regulation facts",
+  "user_question": "한국 게임사가 확률형 아이템 확률 표시를 하지 않았을 때 게임 규제상 제재가 있는지 조사해줘.",
+  "expected_research_mode": "general",
+  "jurisdictions": ["KR"],
+  "domains": ["general"],
+  "route_context": {
+    "orchestrator_route_mode": "general",
+    "visible_fact_pattern": "game_regulation"
+  },
+  "expected_classification_warning": "classification_mismatch"
+}

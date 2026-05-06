@@ -1,0 +1,58 @@
+{
+  "meta_version": "1.1",
+  "summary": "Japan-to-Korea game launch sample with classification and consumer comparison.",
+  "research_mode": "game_regulation",
+  "mode_source": "orchestrator",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "game_regulation",
+  "fallback_reason": null,
+  "classification_warnings": [],
+  "co_running_agents": [],
+  "jurisdictions": ["JP", "KR"],
+  "domains": ["game_regulation"],
+  "issue_map": [
+    {
+      "issue": "Korea and Japan launch comparison",
+      "answer": "Classification and consumer-facing launch duties should be compared with official Korea and Japan sources.",
+      "authority_ids": ["src_001", "src_002"],
+      "confidence": "medium"
+    }
+  ],
+  "key_findings": [
+    "Official Korea and Japan source verification is required before final classification or consumer launch recommendations."
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Official Korean game-regulation source placeholder",
+      "grade": "A",
+      "citation": "Korea official source placeholder",
+      "pinpoint": "Classification placeholder",
+      "url_or_access": "official source placeholder"
+    },
+    {
+      "id": "src_002",
+      "title": "Official Japan game-regulation source placeholder",
+      "grade": "A",
+      "citation": "Japan official source placeholder",
+      "pinpoint": "Consumer notice placeholder",
+      "url_or_access": "official source placeholder"
+    }
+  ],
+  "comparison_matrix": [
+    {
+      "issue": "Classification",
+      "KR": "Verify with official Korean game-regulation source.",
+      "JP": "Verify with official Japan source.",
+      "status": "requires_current_source_check"
+    },
+    {
+      "issue": "Consumer notices",
+      "KR": "Verify with official Korean consumer/game source.",
+      "JP": "Verify with official Japan consumer/game source.",
+      "status": "requires_current_source_check"
+    }
+  ],
+  "coverage_gaps": [],
+  "error": null
+}

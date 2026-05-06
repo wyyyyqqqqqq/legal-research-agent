@@ -1,0 +1,37 @@
+{
+  "meta_version": "1.1",
+  "summary": "Korean general legal research sample for terms-change notice quality validation.",
+  "research_mode": "general",
+  "mode_source": "orchestrator",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "general",
+  "fallback_reason": null,
+  "classification_warnings": [],
+  "co_running_agents": [],
+  "jurisdictions": ["KR"],
+  "domains": ["general"],
+  "issue_map": [
+    {
+      "issue": "Terms change notice",
+      "answer": "Terms-change notice obligations should be verified against official Korean statute and regulator sources before final use.",
+      "authority_ids": ["src_001"],
+      "confidence": "medium"
+    }
+  ],
+  "key_findings": [
+    "Official source verification is required before relying on any terms-change notice conclusion."
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Official Korean legal source placeholder",
+      "grade": "A",
+      "citation": "Official source placeholder",
+      "pinpoint": "Notice obligation placeholder",
+      "url_or_access": "official source placeholder"
+    }
+  ],
+  "comparison_matrix": [],
+  "coverage_gaps": [],
+  "error": null
+}

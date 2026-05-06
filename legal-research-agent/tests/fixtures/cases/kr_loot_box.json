@@ -1,0 +1,10 @@
+{
+  "id": "kr_loot_box_probability",
+  "title": "KR loot box probability disclosure",
+  "user_question": "한국에서 모바일 게임의 확률형 아이템 확률 표시 의무와 위반 시 제재를 조사해줘.",
+  "expected_research_mode": "game_regulation",
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "required_taxonomy": ["Randomized Rewards", "Enforcement and Remedies"],
+  "required_source_grades": ["A", "B"]
+}

@@ -1,0 +1,12 @@
+[project]
+name = "legal-research-agent"
+version = "0.1.0"
+description = "Merged legal research agent with deterministic local quality gates."
+requires-python = ">=3.11"
+dependencies = [
+  "marko>=2.1.0",
+  "pydantic>=2.7.0",
+]
+
+[dependency-groups]
+dev = []

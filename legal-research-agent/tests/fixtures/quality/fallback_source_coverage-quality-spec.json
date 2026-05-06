@@ -1,0 +1,14 @@
+{
+  "id": "fallback_source_coverage_quality",
+  "case_id": "fallback_source_coverage",
+  "expected_research_mode": "fallback",
+  "expected_mode_source": "self_classified",
+  "expected_error": "source_coverage_insufficient",
+  "expected_fallback_reason": "source_coverage_insufficient",
+  "required_coverage_gap_types": ["source_coverage"],
+  "required_jurisdictions": ["UNSPECIFIED"],
+  "required_domains": ["game_regulation"],
+  "required_issue_terms": ["fallback", "source coverage"],
+  "required_result_terms": ["coverage gap", "jurisdiction"],
+  "required_source_grades": ["C"]
+}

@@ -1,0 +1,38 @@
+{
+  "meta_version": "1.1",
+  "summary": "Core summary within 500 tokens.",
+  "research_mode": "game_regulation",
+  "mode_source": "orchestrator",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "game_regulation",
+  "fallback_reason": null,
+  "classification_warnings": [],
+  "co_running_agents": [],
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "issue_map": [
+    {
+      "issue": "Probability disclosure for randomized paid items",
+      "answer": "Short answer with source-backed conclusion.",
+      "authority_ids": ["src_001"],
+      "confidence": "high"
+    }
+  ],
+  "key_findings": [
+    "Finding 1",
+    "Finding 2"
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Official source title",
+      "grade": "A",
+      "citation": "Article or section",
+      "pinpoint": "Specific pinpoint",
+      "url_or_access": "URL, database path, or access note"
+    }
+  ],
+  "comparison_matrix": [],
+  "coverage_gaps": [],
+  "error": null
+}

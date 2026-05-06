@@ -1,0 +1,42 @@
+{
+  "meta_version": "1.1",
+  "summary": "Fallback sample for insufficient source coverage and unspecified jurisdiction.",
+  "research_mode": "fallback",
+  "mode_source": "self_classified",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "fallback",
+  "fallback_reason": "source_coverage_insufficient",
+  "classification_warnings": [],
+  "co_running_agents": [],
+  "jurisdictions": ["UNSPECIFIED"],
+  "domains": ["game_regulation"],
+  "issue_map": [
+    {
+      "issue": "Fallback source coverage for unspecified global game item regulation",
+      "answer": "A global definitive answer cannot be provided without jurisdiction-specific official sources.",
+      "authority_ids": ["src_001"],
+      "confidence": "low"
+    }
+  ],
+  "key_findings": [
+    "Source coverage is insufficient because the question asks for a global rule without specifying jurisdiction."
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Secondary orientation source placeholder",
+      "grade": "C",
+      "citation": "Secondary overview placeholder",
+      "pinpoint": "Jurisdiction-specific confirmation needed",
+      "url_or_access": "secondary source placeholder"
+    }
+  ],
+  "comparison_matrix": [],
+  "coverage_gaps": [
+    {
+      "type": "source_coverage",
+      "description": "No controlling jurisdiction was specified; official source coverage cannot support a global conclusion."
+    }
+  ],
+  "error": "source_coverage_insufficient"
+}

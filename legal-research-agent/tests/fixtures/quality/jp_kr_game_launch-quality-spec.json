@@ -1,0 +1,12 @@
+{
+  "id": "jp_kr_game_launch_quality",
+  "case_id": "jp_kr_game_launch",
+  "expected_research_mode": "game_regulation",
+  "required_jurisdictions": ["JP", "KR"],
+  "required_domains": ["game_regulation"],
+  "required_taxonomy": ["Product Classification", "Minors and Youth Protection", "Consumer Protection"],
+  "required_issue_terms": ["classification", "consumer", "korea", "japan"],
+  "required_result_terms": ["official", "compare"],
+  "required_source_grades": ["A"],
+  "requires_comparison_matrix": true
+}

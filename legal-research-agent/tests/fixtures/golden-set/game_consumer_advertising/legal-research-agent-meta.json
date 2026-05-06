@@ -1,0 +1,43 @@
+{
+  "meta_version": "1.1",
+  "summary": "Korean game advertising and consumer protection sample for quality validation.",
+  "research_mode": "game_regulation",
+  "mode_source": "orchestrator",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "game_regulation",
+  "fallback_reason": null,
+  "classification_warnings": [],
+  "co_running_agents": [],
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "issue_map": [
+    {
+      "issue": "Influencer advertising disclosure",
+      "answer": "Influencer advertising disclosures should be verified against official advertising and game-regulation sources.",
+      "authority_ids": ["src_001"],
+      "confidence": "medium"
+    },
+    {
+      "issue": "Limited package consumer notice",
+      "answer": "Limited package sale terms should be verified against official consumer-facing sources before launch.",
+      "authority_ids": ["src_001"],
+      "confidence": "medium"
+    }
+  ],
+  "key_findings": [
+    "Official source verification is required for influencer advertising and limited package consumer notice conclusions."
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Official Korean advertising and consumer source placeholder",
+      "grade": "A",
+      "citation": "Official source placeholder",
+      "pinpoint": "Advertising and consumer notice placeholder",
+      "url_or_access": "official source placeholder"
+    }
+  ],
+  "comparison_matrix": [],
+  "coverage_gaps": [],
+  "error": null
+}
