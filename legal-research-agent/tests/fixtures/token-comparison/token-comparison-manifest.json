@@ -1,6 +1,7 @@
 {
   "version": "1.0",
   "description": "Deterministic local token-comparison fixture.",
+  "required_route_patterns": ["general-only", "game-plus-general"],
   "patterns": [
     {
       "case_id": "kr_general_basic",

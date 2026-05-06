@@ -216,7 +216,14 @@ It prefers actual Claude Code `events.jsonl` usage. Proxy metrics are allowed
 only as clearly marked review data. A merged run that uses more tokens fails the
 local comparison gate unless the manifest records a `quality_reason`. Optional
 `quality_report` files can be attached so the manifest's `quality_status` is
-checked against the actual quality-gate result.
+checked against the actual quality-gate result. The manifest also declares a
+`version` and may declare `required_route_patterns` so planned route baselines
+cannot be silently omitted. When both runs report `agent_calls`, the comparison
+also blocks merged call-count increases unless `agent_call_reason` explains the
+increase. Proxy metrics can also report `result_bytes` and `wall_clock_ms`;
+positive deltas are surfaced as warnings for review. The report includes an
+aggregate `summary` for decision counts, actual token totals, proxy-only
+patterns, and agent-call delta.
 
 `scripts/validate-intake-payload.py` checks the future orchestrator-to-agent
 payload shape without modifying the orchestrator repository:

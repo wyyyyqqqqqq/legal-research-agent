@@ -122,4 +122,11 @@ actual Claude Code `events.jsonl` files when available. Proxy metrics may be
 recorded only as review data. A merged run that increases token usage must
 record a concrete `quality_reason`; otherwise the token comparison fails. When
 available, attach a `quality_report` to the token manifest so the comparison can
-verify that `quality_status` and `case_id` match the quality gate output.
+verify that `quality_status` and `case_id` match the quality gate output. Use
+`required_route_patterns` when a Phase 2 comparison batch must cover specific
+route-pattern baselines. If merged uses more agent calls than legacy, record a
+specific `agent_call_reason`; otherwise the comparison fails. Treat positive
+`result_bytes` or `wall_clock_ms` proxy deltas as review warnings, not as legal
+quality substitutes. Use the comparison report's aggregate `summary` for
+rollout evidence, but inspect per-pattern failures before making a default
+switching decision.

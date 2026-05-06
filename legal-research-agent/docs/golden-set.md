@@ -219,6 +219,8 @@ Minimal token-comparison manifest shape:
 
 ```json
 {
+  "version": "1.0",
+  "required_route_patterns": ["general-only"],
   "patterns": [
     {
       "case_id": "kr_general_basic",
@@ -237,3 +239,15 @@ the comparison gate fails. If either side lacks actual `events`, proxy metrics
 may be recorded, but the decision remains proxy-only review data.
 When `quality_report` is present, its `status` and `case_id` must match the
 manifest entry so token evidence cannot drift away from the quality gate result.
+Use `required_route_patterns` to make a comparison manifest fail when a planned
+route-pattern baseline is accidentally omitted.
+When both sides report `agent_calls`, the comparison report includes an
+`agent_calls` delta. If merged uses more agent calls than legacy, add
+`agent_call_reason` or the gate fails.
+Proxy metrics can include `agent_calls`, `result_bytes`, and `wall_clock_ms`.
+`agent_calls` may be supplied either top-level or inside `proxy_metrics`; if both
+are present they must match. Positive `result_bytes` or `wall_clock_ms` deltas
+are warnings, not hard rollout blockers.
+The JSON report includes a top-level `summary` with decision counts, aggregate
+actual-token totals, aggregate token delta, proxy-only pattern count, and
+aggregate agent-call delta.
