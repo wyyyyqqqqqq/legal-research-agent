@@ -46,6 +46,8 @@ KP Legal Orchestrator는 여러 전문 에이전트를 디스패치합니다. �
 
 `legal-research-agent`는 이 둘을 4가지 명시적 리서치 모드를 가진 단일 정식 에이전트로 통합합니다. 오케스트레이터는 라우트 분기당 최대 한 번만 디스패치하며, 모드별 동작은 두 개의 별도 프롬프트 표면이 아니라 컴팩트한 스킬로 보존됩니다. 결과적으로 토큰 비용은 내려가고 법률 품질은 유지됩니다.
 
+통합의 두 번째 이유는 **유지보수**입니다. 두 전문가가 패턴 — 현행성 어휘, 청구 스팟체크, 소스 세탁 가드, 인용 계층 — 을 공유하면, 한 줄짜리 수정도 두 번 작성하고 두 번 테스트하고 두 번 감사해야 합니다. 통합하면 업그레이드 지점이 하나로 줄어듭니다. PR 하나, 회귀 점검 한 번, 롤아웃 한 번이면 끝납니다. 같은 논리로 [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert)와 [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert)를 단일 프라이버시 전문가로 통합하는 작업도 병행 진행 중입니다.
+
 > [!IMPORTANT]
 > **토큰 절감은 부수적 최적화입니다.** 출처 커버리지, 쟁점 도출, 현행성 점검, 인용 무결성이 보존될 때만 의미가 있습니다. 품질이 떨어지는 것이 대안이라면, 이 에이전트는 토큰을 더 씁니다 — 덜 쓰지 않습니다.
 
@@ -633,6 +635,7 @@ legal-research-agent/
 - [x] `citation-auditor` 및 verifier 플러그인 패밀리 vendor 처리
 - [ ] `general-legal-research` 정식 패리티 비교 실행 ([`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md) 참조)
 - [ ] `game-legal-research` 정식 패리티 비교 실행
+- [ ] 동일 통합 패턴을 [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) + [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert)에 적용 — 통합 프라이버시 전문가 (진행 중)
 - [ ] Codex 전용 형제 에이전트 출시 (동일 스킬, `AGENTS.md` 우선, Codex CLI 컨벤션)
 - [ ] 중복 제거된 단일 에이전트 라우트로 `legal-agent-orchestrator` 디스패치 그래프 경량화
 - [ ] citation-audit 스탠드얼론 워크플로우용 라이브 verifier 통합 테스트 fixture 추가

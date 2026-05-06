@@ -46,6 +46,8 @@ The KP Legal Orchestrator dispatches a portfolio of specialist agents. Two of th
 
 `legal-research-agent` collapses that pair into one canonical agent with four explicit research modes. The orchestrator dispatches at most once per route branch. Mode-specific behavior survives as compact skills rather than two separate prompt surfaces. Token cost goes down. Legal quality does not.
 
+Maintenance is the second reason to merge. When two specialists share patterns — the currentness vocabulary, the claim spot-check, the source-laundering guard, the citation hierarchy — a one-line fix has to be written twice, tested twice, and audited twice. Collapsing them gives back one place to upgrade: one PR, one regression sweep, one rollout. The same logic motivates an in-progress parallel merger of [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) and [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) into a single privacy specialist.
+
 > [!IMPORTANT]
 > Token savings are a secondary optimization. They count only when source coverage, issue spotting, currentness discipline, and citation integrity are preserved. The agent will spend more tokens — not fewer — when the alternative is a quality regression.
 
@@ -633,6 +635,7 @@ legal-research-agent/
 - [x] Vendor `citation-auditor` and verifier plugin family
 - [ ] Run formal `general-legal-research` parity comparison (see [`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md))
 - [ ] Run formal `game-legal-research` parity comparison
+- [ ] Apply the same merger pattern to [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) + [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) — unified privacy specialist (in progress)
 - [ ] Ship Codex-tuned sibling agent (same skills, `AGENTS.md`-first, Codex CLI conventions)
 - [ ] Lighten `legal-agent-orchestrator` dispatch graph using the deduplicated single-agent route
 - [ ] Add live-verifier integration test fixtures for the citation-audit standalone workflow
