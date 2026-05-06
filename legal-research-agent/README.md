@@ -1,35 +1,279 @@
+<div align="center">
+
 # Legal Research Agent
 
-`legal-research-agent` is the merged legal research specialist for the KP Legal
-Orchestrator and standalone legal research use.
+**Source-first legal research for general legal questions and game-industry regulation, on Claude Code.**
 
-It consolidates the previous general and game-regulation research roles into one
-canonical Claude Code agent while preserving mode-specific behavior and the
-existing orchestrator output contract.
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Powered-blueviolet?logo=anthropic)](https://claude.ai/code)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
+[![Modes](https://img.shields.io/badge/Research_modes-4-2196F3)](#research-modes)
+[![Local checks](https://img.shields.io/badge/Local_preflight-20_checks-4caf50)](#local-preflight)
 
-## Goals
+**[Standalone Workflow](docs/standalone-workflow.md)** · **[Orchestrator Intake](docs/orchestrator-intake.md)** · **[Source Playbook Authoring](docs/source-playbook-authoring.md)** · **[Migration Notes](docs/migration-notes.md)**
 
-- Preserve source-first legal research quality.
-- Keep game-regulation expertise explicit through a dedicated mode and taxonomy.
-- Avoid wrapper calls to legacy research agents.
-- Produce orchestrator-compatible result and metadata files.
-- Produce standalone polished research deliverables when explicitly requested.
-- Support legacy-vs-merged golden-set evaluation before default rollout.
+**Language:** [**English**](README.md) · [한국어](README.ko.md)
 
-Token reduction is a secondary optimization. It matters only when the merged
-agent preserves or improves legal research quality.
+</div>
 
-## Runtime Contract
+> **Heritage:** v2 — merges [`general-legal-research`](https://github.com/lowtidebuild/general-legal-research) and [`game-legal-research`](https://github.com/lowtidebuild/game-legal-research) into one Claude Code agent. Same legal-quality floor, smaller token footprint, single dispatch path.
 
-Required output files:
+---
+
+## Table of Contents
+
+- [Why This Repo Exists](#why-this-repo-exists)
+- [Heritage and v2 Story](#heritage-and-v2-story)
+- [Quick Start](#quick-start)
+- [Research Modes](#research-modes)
+- [Architecture](#architecture)
+- [Workflow](#workflow)
+- [Output Contract](#output-contract)
+- [Source Reliability Model](#source-reliability-model)
+- [Standalone Deliverables](#standalone-deliverables)
+- [Citation Audit](#citation-audit)
+- [Local Preflight](#local-preflight)
+- [Token Discipline](#token-discipline)
+- [Repository Structure](#repository-structure)
+- [Roadmap](#roadmap)
+- [Part of KP Legal Orchestrator](#part-of-kp-legal-orchestrator)
+- [Disclaimer](#disclaimer)
+
+---
+
+## Why This Repo Exists
+
+The KP Legal Orchestrator dispatches a portfolio of specialist agents. Two of them — `general-legal-research` and `game-legal-research` — overlapped substantially: the same source-first discipline, the same MCP and web-fetch surface, the same orchestrator-compatible output contract. Their dispatch paths could collide, billing the orchestrator twice for one matter while producing duplicate research with no quality benefit.
+
+`legal-research-agent` collapses that pair into one canonical agent with four explicit research modes. The orchestrator dispatches at most once per route branch. Mode-specific behavior survives as compact skills rather than two separate prompt surfaces. Token cost goes down. Legal quality does not.
+
+> [!IMPORTANT]
+> Token savings are a secondary optimization. They count only when source coverage, issue spotting, currentness discipline, and citation integrity are preserved. The agent will spend more tokens — not fewer — when the alternative is a quality regression.
+
+A Codex-tuned sibling agent is planned. The merge here is the prerequisite: once general-law and game-law live in one rule set, porting to `AGENTS.md`-first Codex conventions is a metadata change, not a re-implementation.
+
+---
+
+## Heritage and v2 Story
+
+| Predecessor | v1 role | Status in v2 |
+|:---|:---|:---|
+| [`general-legal-research`](https://github.com/lowtidebuild/general-legal-research) | General-law specialist across 17+ jurisdictions | Replaced by `general` mode |
+| [`game-legal-research`](https://github.com/lowtidebuild/game-legal-research) | Game-industry specialist (loot boxes, ratings, virtual goods, platform compliance) | Replaced by `game_regulation` mode |
+
+The merge contract:
+
+| Property | Constraint |
+|:---|:---|
+| Quality floor | At least matches each predecessor on its native domain |
+| Output contract | Identical to legacy: `*-result.md` and `*-meta.json` |
+| Dispatch | One canonical `agent_research_mode` per matter; orchestrator deduplicates |
+| Game expertise | Preserved as a dedicated mode plus compact taxonomy in `knowledge/game-regulation/` |
+| Privacy / specialist handoff | Recorded in metadata; this agent does not duplicate co-running specialist analysis |
+| Token comparison | Gated by `scripts/compare-token-runs.py` against legacy baselines; merged-run token regressions block rollout unless explained by a quality reason |
+
+Pre-rollout parity is documented in [`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md). Pre-parity quality hardening — source playbook authoring, claim-level verification, currentness checks — is documented in [`docs/general-quality-hardening-plan.md`](docs/general-quality-hardening-plan.md).
+
+---
+
+## Quick Start
+
+### Requirements
+
+| Requirement | Details |
+|:---|:---|
+| **Claude Code** | [CLI](https://claude.ai/code) installed and authenticated |
+| **Python 3.11+** | Standard library only for the validators; `marko`, `pydantic`, and `python-docx` for renderer/test paths (see `pyproject.toml`) |
+| **MCP server** | `korean-law` (registered as `mcp__claude_ai_Korean-law__*`); optional but strongly preferred for KR primary-source coverage |
+| **Network** | Required for `WebFetch` / `WebSearch` fallbacks; not required for the local preflight |
+
+### Standalone use
+
+Open the project in Claude Code and either:
 
 ```text
-{OUTPUT_DIR}/legal-research-agent-result.md
-{OUTPUT_DIR}/legal-research-agent-meta.json
+/research <jurisdiction or topic> <question text>
 ```
 
-The metadata contract is additive. Existing orchestrator readers should continue
-to rely only on:
+or just describe your question in plain language. The agent reads `CLAUDE.md`, picks a mode, and produces the two contract files plus an optional polished deliverable.
+
+### Subagent dispatch
+
+From an orchestrator session:
+
+```text
+Task(subagent_type='legal-research-agent', prompt=<intake payload JSON>)
+```
+
+The agent definition lives at [`.claude/agents/legal-research-agent.md`](.claude/agents/legal-research-agent.md) and re-uses `CLAUDE.md` via `@`-import so the standalone and subagent surfaces never drift.
+
+### First-run sanity check
+
+```bash
+python3 scripts/run-local-checks.py
+```
+
+A clean repo passes 20/20. See [Local Preflight](#local-preflight) below.
+
+---
+
+## Research Modes
+
+```mermaid
+flowchart TD
+    Q[User question] --> O{Orchestrator classification?}
+    O -- "agent_research_mode set" --> A[Use it]
+    O -- "route_mode canonical" --> R[Use route_mode]
+    O -- "absent / malformed / uncertain" --> S[Self-classify]
+    A --> M{Selected mode}
+    R --> M
+    S --> M
+    M -->|general| G[general workflow]
+    M -->|game_regulation| GR[game_regulation workflow]
+    M -->|game_plus_general| GP[game_plus_general workflow]
+    M -->|fallback| F[fallback: conservative + coverage gaps]
+    style A fill:#e3f2fd,stroke:#2196f3,color:#0d47a1
+    style R fill:#e3f2fd,stroke:#2196f3,color:#0d47a1
+    style S fill:#fff3e0,stroke:#ff9800,color:#e65100
+    style F fill:#fce4ec,stroke:#e91e63,color:#880e4f
+```
+
+| Mode | When to use | Treatment |
+|:---|:---|:---|
+| `general` | Ordinary legal questions where no narrower specialist is required | Identify jurisdictions and domains; prefer statutes, regulations, official guidance, official agency or court decisions |
+| `game_regulation` | Game publishing, online/mobile games, randomized items, ratings, game advertising, platform compliance, virtual goods, youth protection, game consumer protection | Adjacent law treated as relevant only where it affects game compliance |
+| `game_plus_general` | Game-industry question with a distinct non-game legal issue that cannot be handled as adjacency | Build separate issue trees, then synthesize with explicit handoff if a specialist is co-running |
+| `fallback` | Question is ambiguous, source coverage is materially insufficient, or the topic is outside the agent's competence with no better specialist available | Conservative memo, populated `coverage_gaps`, and no high-confidence conclusions on secondary sources alone |
+
+If the orchestrator-supplied route looks inconsistent with the question, the agent does **not** silently switch modes. It continues with the routed mode, records `classification_mismatch` in `classification_warnings`, and explains the uncertainty in `coverage_gaps`. Mode silence-and-override is a quality regression vector and is forbidden.
+
+---
+
+## Architecture
+
+```mermaid
+graph TD
+    A["CLAUDE.md\n(main agent)"] --> B["19 Skills\nworkflow + quality"]
+    A --> C["Knowledge files\ngame / general / legal-writing"]
+    A --> D["Local Scripts\nvalidators + renderers"]
+    A --> E["MCP / Web\nkorean-law, WebFetch, WebSearch"]
+    B --> F["Output Contract\nresult.md + meta.json"]
+    F --> G["Standalone Formatter\nMD / handoff / DOCX-ready"]
+    D --> H["Citation Auditor\n(vendored)"]
+    style A fill:#1a237e,stroke:#1a237e,color:#ffffff
+    style B fill:#e3f2fd,stroke:#2196f3,color:#0d47a1
+    style C fill:#f3e5f5,stroke:#9c27b0,color:#4a148c
+    style D fill:#fff3e0,stroke:#ff9800,color:#e65100
+    style E fill:#e0f2f1,stroke:#009688,color:#004d40
+    style F fill:#e8f5e9,stroke:#4caf50,color:#1b5e20
+    style G fill:#fff8e1,stroke:#fbc02d,color:#f57f17
+    style H fill:#fce4ec,stroke:#e91e63,color:#880e4f
+```
+
+### Skills
+
+19 compact instruction documents under [`skills/`](skills/), each with Claude Code frontmatter (`name`, `description`, `disable-model-invocation: true`). Workflow stages are split across small files so the agent loads only what it needs.
+
+<details>
+<summary><strong>View all skills</strong></summary>
+
+| Skill | Stage | Role |
+|:---|:---|:---|
+| `classify-research-mode` | Intake | Self-classifies when orchestrator route is missing or uncertain |
+| `trust-boundary` | All stages | Treats every byte from outside the trusted instruction surface as data, not instruction |
+| `game-library` | Knowledge orientation | Loads compact game-knowledge files for game modes only |
+| `jurisdiction-source-playbook` | Source plan | Produces a jurisdiction profile and source minimums |
+| `general-law-source-playbook` | Source plan (general) | Picks a domain checklist and any active source playbook |
+| `source-collection` | Collection | Compact source envelopes; layer-minimum and similar-statute guards |
+| `currentness-check` | Collection | Status vocabulary, confidence consequences, stop conditions |
+| `claim-spot-check` | Verification | Source laundering guard; pre-analysis registry |
+| `claim-verification-loop` | Verification | Material-claim direct/indirect/background/unsupported tags with authority links |
+| `source-grading` | Grading | Grades A/B/C/D plus integrity flags |
+| `analysis-issue-structuring` | Analysis | Evidence cards and the issue map |
+| `citation-hierarchy` | Output | Citation hierarchy and source-failure handling |
+| `result-memo-composition` | Output | Required sections, source anchors, jurisdiction discipline |
+| `legal-output-quality-standard` | Output | Non-negotiable legal-quality rules |
+| `output-contract` | Output | Two-file contract and metadata schema |
+| `legal-writing-formatter` | Standalone | Standalone Markdown / handoff packet / DOCX-ready Markdown |
+| `quality-check` | Pre-finalize | Contract / source / mode / game / practical gates |
+| `general-research` | Mode | General-mode workflow and discipline |
+| `game-regulation-research` | Mode | Game-mode workflow and taxonomy |
+
+</details>
+
+### Knowledge
+
+Compact, mode-scoped knowledge under [`knowledge/`](knowledge/):
+
+```text
+knowledge/
+├── game-regulation/        # taxonomy, regulator map, source map, library index
+├── general/                # domain checklist, source map, source-playbook index
+│   └── playbooks/          # active per-domain source playbooks (e.g., kr-platform-service)
+└── legal-writing/          # ko / en formatter profiles + DOCX-ready profile
+```
+
+The agent loads only the matching profile for the active mode and language. Bilingual loading happens only when explicitly requested.
+
+### Citation auditor (vendored)
+
+[`citation-auditor`](citation_auditor/) ships vendored — the package, the Claude Code skill at [`.claude/skills/citation-auditor/`](.claude/skills/citation-auditor/), the verifier plugins under [`.claude/skills/verifiers/`](.claude/skills/verifiers/), and the [`/audit`](/.claude/commands/audit.md) slash command. Refresh the vendor stamp from the sibling source repo only when intentionally upgrading:
+
+```bash
+../citation-auditor/scripts/vendor-into.sh "$PWD"
+```
+
+The vendor smoke runs in `python3 scripts/check-citation-auditor-vendor.py` and the deterministic chunk/aggregate/render smoke runs in `python3 scripts/check-citation-auditor-smoke.py`. Live verifier dispatch is a Claude Code session capability, not a preflight gate.
+
+---
+
+## Workflow
+
+The agent follows a compact but disciplined eight-stage workflow:
+
+```mermaid
+flowchart LR
+    S1["1\nIntake &\nRoute"] --> S2["2\nKnowledge\nOrientation"]
+    S2 --> S3["3\nSource Plan\n& Collection"]
+    S3 --> S4["4\nClaim\nSpot-Check"]
+    S4 --> S5["5\nSource\nGrading"]
+    S5 --> S6["6\nAnalysis"]
+    S6 --> S7["7\nOutput"]
+    S7 --> S8["8\nQuality\nCheck"]
+    S7 -.standalone.-> SW["+ Formatter\n(MD / handoff / DOCX-ready)"]
+    style S1 fill:#e3f2fd,stroke:#2196f3,color:#0d47a1
+    style S3 fill:#fff3e0,stroke:#ff9800,color:#e65100
+    style S4 fill:#fce4ec,stroke:#e91e63,color:#880e4f
+    style S6 fill:#f3e5f5,stroke:#9c27b0,color:#4a148c
+    style S7 fill:#e0f2f1,stroke:#009688,color:#004d40
+    style S8 fill:#e8eaf6,stroke:#3f51b5,color:#1a237e
+    style SW fill:#fff8e1,stroke:#fbc02d,color:#f57f17
+```
+
+| Stage | Output |
+|:---:|:---|
+| **1** | Parsed intake (`user_question`, `active_profile`, `orchestrator_classification`, `co_running_agents`, `output_dir`) and selected research mode |
+| **2** | Loaded knowledge files for the active mode only |
+| **3** | Jurisdiction profile, source minimums, compact source envelopes, currentness tags |
+| **4** | Claim registry; for material claims, `claim_checks` entries with support strength |
+| **5** | Graded sources (A/B/C/D) plus integrity flags |
+| **6** | Issue map with authority links; counter-analysis for material conclusions |
+| **7** | `legal-research-agent-result.md` + `legal-research-agent-meta.json`; optional standalone deliverable |
+| **8** | Contract / source / mode / game / practical gates; `python3 scripts/validate-output.py` when local execution is available |
+
+The full workflow is encoded in [`CLAUDE.md`](CLAUDE.md). Stage skill paths are listed there with explicit "apply" instructions so the agent never silently skips a stage.
+
+---
+
+## Output Contract
+
+The agent must write exactly two files into `{OUTPUT_DIR}`:
+
+```text
+legal-research-agent-result.md
+legal-research-agent-meta.json
+```
+
+Existing orchestrator readers should rely only on the additive surface:
 
 - `summary`
 - `issue_map`
@@ -37,83 +281,126 @@ to rely only on:
 - `sources`
 - `error`
 
-Standalone formatted deliverables are optional and are generated only when the
-user asks for a polished memo, opinion-style research note, client-ready summary,
-handoff packet, or DOCX-ready source. The required research contract remains the
-two files above.
+The richer fields below are additive — older readers ignore them, while local validators use them to catch stale authority, unsupported claims, missing source layers, and route-vs-question mismatches before parity testing.
 
-## Modes
-
-- `general`: ordinary legal research where no narrower specialist is required.
-- `game_regulation`: game-industry regulation and adjacent game-law issues.
-- `game_plus_general`: game-industry question plus a distinct non-game legal
-  issue.
-- `fallback`: ambiguous, undersourced, or out-of-scope research where a
-  conservative memo is still useful.
-
-## Key Design Rules
-
-- Orchestrator classification is primary.
-- Use `agent_research_mode` when provided; otherwise use canonical `route_mode`.
-- Do not silently override a conflicting route. Record
-  `classification_mismatch`.
-- Deduplicated merged-agent routes should dispatch this agent at most once per
-  route branch.
-- When data-protection specialists are co-running, this agent performs privacy
-  handoff and game-law framing, not duplicate deep privacy analysis.
-- Do not save tokens by skipping material issue spotting, current-law checks,
-  primary-source verification, or citation integrity checks.
-- For standalone formatting, load only one compact formatter profile from
-  `knowledge/legal-writing/` unless the user explicitly requests bilingual
-  output.
-
-## Standalone Legal Writing Formatter
-
-The formatter turns completed research output into a polished legal research
-deliverable without changing the underlying legal analysis.
-
-The standalone artifact workflow is documented in:
+<details>
+<summary><strong>Required metadata fields</strong></summary>
 
 ```text
-docs/standalone-workflow.md
+meta_version
+summary
+research_mode                    # general | game_regulation | game_plus_general | fallback
+mode_source                      # orchestrator | self_classified
+active_profile                   # "merged"
+orchestrator_route_mode
+fallback_reason
+classification_warnings
+co_running_agents
+jurisdictions
+domains
+issue_map
+key_findings
+sources
+comparison_matrix
+coverage_gaps
+error                            # null | mcp_unavailable | partial_sources | timeout |
+                                 # classification_ambiguous | classification_mismatch |
+                                 # source_coverage_insufficient | internal_error
 ```
 
-Formatter skill:
+</details>
 
-```text
-skills/legal-writing-formatter.md
+<details>
+<summary><strong>Optional currentness and claim-check fields</strong></summary>
+
+```json
+{
+  "sources": [{
+    "id": "src_001",
+    "currentness": {
+      "status": "checked_current",
+      "checked_as_of": "2026-05-06",
+      "effective_date": null,
+      "notes": "Official current version checked."
+    }
+  }],
+  "claim_checks": [{
+    "claim_id": "claim_001",
+    "issue_id": "issue_001",
+    "claim": "Material legal proposition.",
+    "authority_ids": ["src_001"],
+    "support_strength": "direct",
+    "currentness": "checked",
+    "confidence_impact": "supports_medium_or_high",
+    "limitation": "None identified."
+  }]
+}
 ```
 
-Compact profiles:
+The vocabulary lives in [`skills/currentness-check.md`](skills/currentness-check.md) and [`skills/claim-verification-loop.md`](skills/claim-verification-loop.md). High-confidence issues require a direct claim check; `not_checked` / `pending_change` / `stale_or_superseded` controlling sources block high confidence.
 
-```text
-knowledge/legal-writing/formatter-index.md
-knowledge/legal-writing/ko-formatter-profile.md
-knowledge/legal-writing/en-formatter-profile.md
-```
+</details>
 
-Supported formatter modes:
-
-- `standalone_markdown`: default polished memo or opinion-style note.
-- `handoff_packet`: compact packet for a downstream legal-writing agent.
-- `docx_ready_markdown`: Word-ready Markdown source that can be rendered to
-  binary DOCX with the MVP renderer.
-
-Validate standalone formatter output with:
+The local contract is documented in [`docs/orchestrator-intake.md`](docs/orchestrator-intake.md). Validate sample payloads with:
 
 ```bash
-python3 scripts/check-formatter-output.py /path/to/formatted.md \
-  --meta /path/to/legal-research-agent-meta.json \
-  --language ko
+python3 scripts/validate-intake-payload.py tests/fixtures/intake-payloads
 ```
 
-Validate a complete standalone deliverable manifest with:
+Validate any output directory with:
 
 ```bash
-python3 scripts/check-standalone-workflow.py /path/to/output
+python3 scripts/validate-output.py /path/to/output
+python3 scripts/check-result-structure.py /path/to/output
+python3 scripts/evaluate-quality.py /path/to/output \
+  --case-spec tests/fixtures/quality/kr_loot_box-quality-spec.json
 ```
 
-Render a validated Markdown deliverable to DOCX with:
+---
+
+## Source Reliability Model
+
+| Grade | Description |
+|:---:|:---|
+| **A** | Statutes, regulations, official regulator guidance, official court decisions, official agency decisions |
+| **B** | Official explanatory notes, regulator press releases, respected practitioner guides |
+| **C** | Secondary commentary, law-firm articles, academic commentary |
+| **D** | Unsourced commentary, marketing pages, unreliable summaries |
+
+Grade C may support source discovery or low/medium-confidence context. Grade C alone never supports a high-confidence conclusion. Grade D is never cited for a legal proposition.
+
+### Currentness discipline
+
+Status vocabulary used by `sources[*].currentness.status`:
+
+| Status | Meaning |
+|:---|:---|
+| `checked_current` | Verified against an official current source |
+| `effective_date_checked` | Decisive question is timing, transition, or commencement, and that was verified |
+| `pending_change` | Pending amendment or replacement may affect the answer |
+| `stale_or_superseded` | Source has been replaced or is no longer authoritative |
+| `not_checked` | Currentness was not verified in this run |
+| `not_applicable` | Current legal force is not relevant (e.g. historical context) |
+
+For controlling authority, the workflow stops before high-confidence analysis if currentness cannot be resolved. The result records a `temporal_status` coverage gap and lowers issue confidence rather than guessing.
+
+### Trust boundary
+
+Every byte from outside the trusted instruction surface (`CLAUDE.md`, `skills/`, in-session user messages, local templates and validators) is treated as **data**, not **instruction**. Source text is sanitized, fenced, or excluded based on `prompt_injection_risk`. The full contract is in [`skills/trust-boundary.md`](skills/trust-boundary.md).
+
+---
+
+## Standalone Deliverables
+
+When used standalone, the agent can produce a polished deliverable on top of the research contract. The mandatory two-file contract still runs first.
+
+| Mode | Use when | Output |
+|:---|:---|:---|
+| `standalone_markdown` | Default polished memo or opinion-style note | Markdown deliverable with the standard memo structure |
+| `handoff_packet` | A downstream legal-writing agent will draft | Compact packet preserving issues, sources, gaps, and style target |
+| `docx_ready_markdown` | Word-ready source or binary DOCX requested | Markdown with stable headings, tables, and citation anchors; no chat-only commentary |
+
+The full artifact layout, naming rules, manifest, and citation-audit sequencing live in [`docs/standalone-workflow.md`](docs/standalone-workflow.md). Render to DOCX with:
 
 ```bash
 python3 scripts/render-docx.py /path/to/deliverable.md \
@@ -123,244 +410,258 @@ python3 scripts/render-docx.py /path/to/deliverable.md \
   --report /path/to/deliverable.docx.render.json
 ```
 
-Run the deterministic DOCX generation smoke with:
+DOCX rendering is MVP — headings, simple tables, lists, block quotes, visible text. Native footnotes, tracked changes, comments, and complex page layout are intentionally not promised.
+
+Validate a formatted deliverable with:
 
 ```bash
-python3 scripts/check-docx-generation.py
+python3 scripts/check-formatter-output.py /path/to/formatted.md \
+  --meta /path/to/legal-research-agent-meta.json \
+  --language ko
 ```
 
-## Local Checks
+Validate a complete standalone manifest with:
 
-Run the full local preflight:
+```bash
+python3 scripts/check-standalone-workflow.py /path/to/output
+```
+
+---
+
+## Citation Audit
+
+Citation audit runs in two contexts, sharing the same verifier family under [`.claude/skills/verifiers/`](.claude/skills/verifiers/) (Korean law, US, UK, EU, scholarly, Wikipedia, general web).
+
+| Context | Trigger | Behavior |
+|:---|:---|:---|
+| **Standalone `/audit`** | Manual invocation on any Markdown or DOCX file | Inline annotations on Markdown; sidecar `*.audit.md` and `*.audit.json` for DOCX |
+| **Standalone deliverable workflow** | External / client-facing standalone output | Audit folded into the deliverable manifest; `live_passed` vs `deterministic_smoke` vs `not_run_session_unavailable` recorded explicitly |
+
+Forecasts, opinions, rumors, and soft prediction language are intentionally skipped — only verifiable factual and citation claims enter the audit surface.
+
+Refresh vendor only when intentionally upgrading:
+
+```bash
+../citation-auditor/scripts/vendor-into.sh "$PWD"
+```
+
+---
+
+## Local Preflight
+
+A single command runs the full local preflight:
 
 ```bash
 python3 scripts/run-local-checks.py
 python3 scripts/run-local-checks.py --report
 ```
 
-Individual checks:
+A clean repo passes 20/20 in well under a second. Failures break out by check id so a regression points at exactly the surface that broke.
+
+<details>
+<summary><strong>Individual checks</strong></summary>
 
 ```bash
+# Output contract and result structure
+python3 scripts/validate-output.py tests/fixtures/output/valid
+python3 scripts/check-result-structure.py tests/fixtures/output/valid
+python3 scripts/evaluate-quality.py tests/fixtures/output/valid \
+  --case-spec tests/fixtures/quality/kr_loot_box-quality-spec.json
+
+# Fixtures, smoke, intake
 python3 scripts/smoke-check.py
 python3 scripts/check-fixture-consistency.py
 python3 scripts/validate-intake-payload.py tests/fixtures/intake-payloads
-python3 tests/test_output_contract.py
-python3 tests/test_quality_evaluation.py
-python3 tests/test_golden_set_evaluation.py
-python3 tests/test_knowledge_coverage.py
-python3 tests/test_formatter_output.py
-python3 tests/test_standalone_workflow.py
-python3 tests/test_docx_generation.py
-python3 tests/test_result_structure.py
-python3 tests/test_prompt_footprint.py
-python3 tests/test_intake_payload.py
-python3 tests/test_run_local_checks.py
-python3 tests/test_fixture_consistency.py
-python3 tests/test_citation_auditor_vendor.py
-python3 tests/test_citation_auditor_smoke.py
-python3 tests/test_token_comparison.py
-python3 tests/test_source_playbooks.py
-python3 scripts/check-source-playbooks.py
+
+# Knowledge, source playbooks, formatter, standalone, DOCX
 python3 scripts/check-knowledge-coverage.py
+python3 scripts/check-source-playbooks.py
 python3 scripts/check-formatter-output.py tests/fixtures/formatter
 python3 scripts/check-standalone-workflow.py tests/fixtures/standalone-workflow
 python3 scripts/check-docx-generation.py
+
+# Claude Code conventions (skill frontmatter, agent, settings, command, prereq, AGENTS.md)
+python3 scripts/check-claude-conventions.py
+
+# Citation auditor vendor + smoke
 python3 scripts/check-citation-auditor-vendor.py
 python3 scripts/check-citation-auditor-smoke.py
-python3 scripts/check-result-structure.py tests/fixtures/output/valid
-python3 scripts/evaluate-golden-set.py
+
+# Token comparison and footprint diagnostics
 python3 scripts/measure-prompt-footprint.py
 python3 scripts/measure-tokens.py path/to/events.jsonl
-python3 scripts/compare-token-runs.py path/to/token-comparison-manifest.json
+python3 scripts/compare-token-runs.py tests/fixtures/token-comparison/token-comparison-manifest.json
+
+# Golden set and lint
+python3 scripts/evaluate-golden-set.py
 bash tests/lint_no_legacy_invocation.sh
 ```
 
-`scripts/validate-output.py` validates a generated output directory:
-
-```bash
-python3 scripts/validate-output.py /path/to/output
-```
-
-Use `--schema /path/to/orchestrator/schemas/agent-meta.schema.json` when the
-orchestrator repository is available.
-
-`scripts/evaluate-quality.py` checks legal-quality gates beyond JSON shape:
-
-```bash
-python3 scripts/check-result-structure.py /path/to/output
-python3 scripts/evaluate-quality.py /path/to/output \
-  --case-spec tests/fixtures/quality/kr_loot_box-quality-spec.json
-```
-
-Quality evaluation is mandatory before comparing token savings.
-
-`scripts/measure-prompt-footprint.py` measures the core instruction footprint
-for Phase 0 diagnostics:
-
-```bash
-python3 scripts/measure-prompt-footprint.py
-python3 scripts/measure-prompt-footprint.py --include-vendor
-```
-
-This is a stable rough-token proxy for repo instructions, not a substitute for
-end-to-end usage from real Claude Code `events.jsonl` runs.
-The current Phase 0 snapshot is recorded in `docs/prompt-footprint.md`.
-
-`scripts/compare-token-runs.py` compares legacy and merged runs by route
-pattern for Phase 2 diagnostics:
-
-```bash
-python3 scripts/compare-token-runs.py \
-  tests/fixtures/token-comparison/token-comparison-manifest.json
-```
-
-It prefers actual Claude Code `events.jsonl` usage. Proxy metrics are allowed
-only as clearly marked review data. A merged run that uses more tokens fails the
-local comparison gate unless the manifest records a `quality_reason`. Optional
-`quality_report` files can be attached so the manifest's `quality_status` is
-checked against the actual quality-gate result. The manifest also declares a
-`version` and may declare `required_route_patterns` so planned route baselines
-cannot be silently omitted. When both runs report `agent_calls`, the comparison
-also blocks merged call-count increases unless `agent_call_reason` explains the
-increase. Proxy metrics can also report `result_bytes` and `wall_clock_ms`;
-positive deltas are surfaced as warnings for review. The report includes an
-aggregate `summary` for decision counts, actual token totals, proxy-only
-patterns, and agent-call delta.
-
-`scripts/validate-intake-payload.py` checks the future orchestrator-to-agent
-payload shape without modifying the orchestrator repository:
-
-```bash
-python3 scripts/validate-intake-payload.py tests/fixtures/intake-payloads
-```
-
-The local contract is documented in `docs/orchestrator-intake.md`.
-
-`scripts/create-source-playbook.py` creates and registers draft general-law
-source playbooks:
+Source-playbook authoring scaffold:
 
 ```bash
 python3 scripts/create-source-playbook.py \
   --jurisdiction KR \
   --domain platform_service \
   --title "KR Platform Service"
-```
-
-Generated playbooks intentionally contain TODO placeholders until the required
-source-layer, currentness, and fallback sections are filled. Validate playbooks
-with:
-
-```bash
 python3 scripts/check-source-playbooks.py
 ```
 
-The authoring workflow is documented in:
+The authoring workflow is documented in [`docs/source-playbook-authoring.md`](docs/source-playbook-authoring.md).
 
-```text
-docs/source-playbook-authoring.md
-```
+</details>
 
-General-law source planning now uses a compact domain checklist plus optional
-active playbooks:
+---
 
-```text
-skills/general-law-source-playbook.md
-knowledge/general/domain-source-checklist.md
-knowledge/general/source-playbook-index.json
-knowledge/general/playbooks/kr-platform-service.md
-```
+## Token Discipline
 
-Source metadata may also include optional currentness data for controlling
-authority:
+Token cost is a target, not a constraint that overrides legal quality.
 
-```json
-{
-  "currentness": {
-    "status": "checked_current",
-    "checked_as_of": "2026-05-06",
-    "effective_date": null,
-    "notes": "Official current version checked."
-  }
-}
-```
-
-The status vocabulary and confidence consequences are defined in:
-
-```text
-skills/currentness-check.md
-```
-
-Output metadata may also include optional claim-level checks:
-
-```json
-{
-  "claim_checks": [
-    {
-      "claim_id": "claim_001",
-      "issue_id": "issue_001",
-      "claim": "Material legal proposition.",
-      "authority_ids": ["src_001"],
-      "support_strength": "direct",
-      "currentness": "checked",
-      "confidence_impact": "supports_medium_or_high",
-      "limitation": "None identified."
-    }
-  ]
-}
-```
-
-The claim verification loop is defined in:
-
-```text
-skills/claim-verification-loop.md
-```
-
-Together these hardening gates are intentionally additive. Existing consumers
-can continue reading the original metadata fields, while local validators use
-the richer fields when present to catch stale authority, unsupported claims, and
-missing source layers before legacy parity testing.
-
-`scripts/evaluate-golden-set.py` runs all local golden-set quality specs against
-their matching output directories:
+### Footprint diagnostic
 
 ```bash
-python3 scripts/evaluate-golden-set.py
-python3 scripts/evaluate-golden-set.py --case-id kr_general_basic
+python3 scripts/measure-prompt-footprint.py
+python3 scripts/measure-prompt-footprint.py --include-vendor
 ```
 
-General-only parity against the legacy `general-legal-research` agent is planned
-separately in:
+This is a stable rough-token proxy for repo instructions, not a substitute for end-to-end usage measured from real Claude Code `events.jsonl` runs. The Phase 0 baseline is recorded in [`docs/prompt-footprint.md`](docs/prompt-footprint.md) and is intentionally frozen for legacy parity comparison.
 
-```text
-docs/general-legacy-parity-plan.md
-```
-
-Pre-parity quality hardening for source playbook authoring, general-law source
-planning, claim-level verification, and currentness checks is planned in:
-
-```text
-docs/general-quality-hardening-plan.md
-```
-
-## Citation Auditor Vendor
-
-`citation-auditor` is vendored into this agent rather than symlinked:
-
-```text
-.claude/commands/audit.md
-.claude/skills/citation-auditor/
-.claude/skills/verifiers/
-citation_auditor/
-```
-
-The vendor stamp is `.claude/skills/citation-auditor/VENDOR.md`. Refresh it
-from the sibling source repo only when intentionally upgrading:
+### Run comparison
 
 ```bash
-../citation-auditor/scripts/vendor-into.sh "$PWD"
+python3 scripts/compare-token-runs.py \
+  tests/fixtures/token-comparison/token-comparison-manifest.json
 ```
 
-The local preflight checks the vendored file set, runs a CLI help smoke test,
-and runs a deterministic chunk/aggregate/render smoke against a legal research
-result fixture. Live verifier dispatch and web/MCP-backed audits are not part
-of preflight because they depend on the surrounding Claude Code session.
+The harness prefers actual `events.jsonl` token totals; proxy metrics are allowed only as clearly marked review data. A merged-agent run that uses more tokens than the legacy baseline fails the local comparison gate unless the manifest records a `quality_reason`. Optional `quality_report` files can be attached so manifest `quality_status` is checked against the actual quality-gate result. The harness also blocks merged call-count increases unless `agent_call_reason` explains the increase.
+
+### Quality supremacy
+
+Block or mark a result as incomplete when:
+
+- a material issue is not researched;
+- a controlling jurisdiction is omitted;
+- a key conclusion lacks primary or official support where such support should exist;
+- secondary commentary is being laundered as primary law;
+- currentness or effective date is unresolved for a controlling rule;
+- privacy, IP, tax, finance, or another specialist issue is central but only superficially handled.
+
+If a quality-preserving answer needs more tokens than expected, spend them and record the reason in `coverage_gaps` or the result memo where relevant.
+
+---
+
+## Repository Structure
+
+<details>
+<summary><strong>View directory tree</strong></summary>
+
+```text
+legal-research-agent/
+├── CLAUDE.md                          # main agent instructions (start here)
+├── AGENTS.md                          # cross-tool shim (@CLAUDE.md import)
+├── README.md                          # this file (English)
+├── README.ko.md                       # Korean version
+├── pyproject.toml                     # Python 3.11+, marko / pydantic / python-docx
+│
+├── .claude/
+│   ├── agents/
+│   │   └── legal-research-agent.md    # subagent definition (orchestrator dispatch)
+│   ├── commands/
+│   │   ├── research.md                # /research slash command
+│   │   └── audit.md                   # /audit slash command (citation-auditor)
+│   ├── settings.json                  # permissions allowlist (Bash + WebFetch + MCP)
+│   └── skills/                        # vendored citation-auditor + verifiers
+│       ├── citation-auditor/
+│       └── verifiers/                 # kr / us / uk / eu / scholarly / wikipedia / general-web
+│
+├── skills/                            # 19 main-agent workflow / quality skills
+├── knowledge/
+│   ├── game-regulation/               # taxonomy, regulator map, source map, library index
+│   ├── general/                       # domain checklist, source map, playbook index + active playbooks
+│   └── legal-writing/                 # ko / en formatter profiles + DOCX-ready profile
+│
+├── citation_auditor/                  # vendored Python package backing /audit
+├── templates/                         # result.md / meta.example.json / source-playbook.example.md
+│
+├── scripts/
+│   ├── run-local-checks.py            # full preflight (20 checks)
+│   ├── validate-output.py             # orchestrator-compatibility schema
+│   ├── check-result-structure.py      # result memo structural gates
+│   ├── evaluate-quality.py            # legal-quality gates beyond schema
+│   ├── check-formatter-output.py      # standalone formatter validator
+│   ├── check-standalone-workflow.py   # standalone manifest validator
+│   ├── check-claude-conventions.py    # Claude Code surface validator
+│   ├── check-knowledge-coverage.py    # required marker presence
+│   ├── check-source-playbooks.py      # general-law playbook registry validator
+│   ├── check-fixture-consistency.py   # case / spec / golden-set fixture consistency
+│   ├── check-citation-auditor-*.py    # vendor + deterministic audit smoke
+│   ├── check-docx-generation.py       # DOCX render + extraction smoke
+│   ├── render-docx.py                 # MVP DOCX renderer
+│   ├── create-source-playbook.py      # authoring scaffold
+│   ├── evaluate-golden-set.py         # batch quality eval against golden set
+│   ├── validate-intake-payload.py     # orchestrator → agent intake schema
+│   ├── measure-prompt-footprint.py    # rough-token proxy diagnostic
+│   ├── measure-tokens.py              # events.jsonl aggregator
+│   ├── compare-token-runs.py          # legacy vs merged token / quality / call-count comparison
+│   └── smoke-check.py                 # smoke fixture validator
+│
+├── tests/                             # pytest-style unittests (165 tests)
+│   ├── fixtures/
+│   └── test_*.py
+│
+└── docs/
+    ├── standalone-workflow.md         # standalone deliverable spec
+    ├── orchestrator-intake.md         # intake payload contract
+    ├── source-playbook-authoring.md   # contributor scaffold
+    ├── general-quality-hardening-plan.md
+    ├── general-legacy-parity-plan.md
+    ├── claude-code-scaffolding-plan.md
+    ├── golden-set.md
+    ├── prompt-footprint.md            # frozen Phase 0 baseline
+    └── migration-notes.md
+```
+
+</details>
+
+---
+
+## Roadmap
+
+- [x] Merge `general-legal-research` and `game-legal-research` into a single dispatch path
+- [x] Add Claude Code skill frontmatter, subagent definition, settings, and slash command
+- [x] Land general-law source playbook authoring scaffold and currentness vocabulary
+- [x] Vendor `citation-auditor` and verifier plugin family
+- [ ] Run formal `general-legal-research` parity comparison (see [`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md))
+- [ ] Run formal `game-legal-research` parity comparison
+- [ ] Ship Codex-tuned sibling agent (same skills, `AGENTS.md`-first, Codex CLI conventions)
+- [ ] Lighten `legal-agent-orchestrator` dispatch graph using the deduplicated single-agent route
+- [ ] Add live-verifier integration test fixtures for the citation-audit standalone workflow
+
+---
+
+## Part of KP Legal Orchestrator
+
+This agent is part of the **KP Legal Orchestrator** series of specialist legal workflow agents:
+
+| Agent | Role | Specialty |
+|:---|:---|:---|
+| **`legal-research-agent`** *(this repo)* | **Legal Research Specialist (v2)** | **General law + game-industry regulation** |
+| ~~[`general-legal-research`](https://github.com/lowtidebuild/general-legal-research)~~ | ~~General-law specialist~~ | Superseded by this repo's `general` mode |
+| ~~[`game-legal-research`](https://github.com/lowtidebuild/game-legal-research)~~ | ~~Game-industry specialist~~ | Superseded by this repo's `game_regulation` mode |
+| [`legal-translation-agent`](https://github.com/lowtidebuild/legal-translation-agent) | Legal Translation Specialist | Legal translation |
+| [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) | Privacy Specialist (Korea) | Korean data privacy law |
+| [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) | Privacy Specialist (EU) | Data protection law (GDPR) |
+| [`contract-review-agent`](https://github.com/lowtidebuild/contract-review-agent) | Contract Specialist | Contract review |
+| [`legal-writing-agent`](https://github.com/lowtidebuild/legal-writing-agent) | Legal Drafting Specialist | Legal writing |
+| [`second-review-agent`](https://github.com/lowtidebuild/second-review-agent) | Senior Review Specialist | Quality review |
+
+---
+
+<div align="center">
+
+## Disclaimer
+
+This project supports legal research workflows. It does not provide legal advice.
+For legal decisions, consult qualified counsel in the relevant jurisdiction.
+
+</div>
