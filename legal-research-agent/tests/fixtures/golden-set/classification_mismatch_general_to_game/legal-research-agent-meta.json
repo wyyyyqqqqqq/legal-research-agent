@@ -19,7 +19,7 @@
     }
   ],
   "key_findings": [
-    "The routed mode is preserved, but classification mismatch is recorded as a coverage gap."
+    "The routed mode is preserved, but classification mismatch is recorded as a coverage gap while src_001 anchors the sample source."
   ],
   "sources": [
     {

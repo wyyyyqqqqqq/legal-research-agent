@@ -28,6 +28,15 @@ class KnowledgeCoverageTest(unittest.TestCase):
     def test_required_coverage_markers_are_present(self) -> None:
         self.assertEqual(CHECKER.check_markers(ROOT), [])
 
+    def test_formatter_profiles_are_required(self) -> None:
+        required_paths = set(CHECKER.REQUIRED_MARKERS)
+        self.assertIn("skills/legal-writing-formatter.md", required_paths)
+        self.assertIn("docs/standalone-workflow.md", required_paths)
+        self.assertIn("knowledge/legal-writing/formatter-index.md", required_paths)
+        self.assertIn("knowledge/legal-writing/docx-ready-markdown-profile.md", required_paths)
+        self.assertIn("knowledge/legal-writing/ko-formatter-profile.md", required_paths)
+        self.assertIn("knowledge/legal-writing/en-formatter-profile.md", required_paths)
+
 
 if __name__ == "__main__":
     unittest.main()

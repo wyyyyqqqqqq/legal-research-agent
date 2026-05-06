@@ -19,7 +19,7 @@
     }
   ],
   "key_findings": [
-    "Official source verification is required before final probability disclosure or sanction conclusions."
+    "Official source verification is required before final probability disclosure or sanction conclusions, anchored to src_001."
   ],
   "sources": [
     {

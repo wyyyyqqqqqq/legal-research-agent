@@ -19,7 +19,7 @@
     }
   ],
   "key_findings": [
-    "Source coverage is insufficient because the question asks for a global rule without specifying jurisdiction."
+    "Source coverage is insufficient because the question asks for a global rule without specifying jurisdiction; src_001 is only an orientation source."
   ],
   "sources": [
     {

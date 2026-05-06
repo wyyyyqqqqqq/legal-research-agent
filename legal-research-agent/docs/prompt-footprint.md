@@ -25,22 +25,22 @@ Core profile:
 
 | Category | Rough tokens | Files |
 |---|---:|---:|
-| agent_prompt | 1,422 | 1 |
-| knowledge | 4,981 | 5 |
-| skills | 11,167 | 15 |
+| agent_prompt | 1,537 | 1 |
+| knowledge | 8,609 | 9 |
+| skills | 13,790 | 16 |
 | templates | 512 | 2 |
-| total | 18,082 | 23 |
+| total | 24,448 | 28 |
 
 Core plus vendored Claude skills:
 
 | Category | Rough tokens | Files |
 |---|---:|---:|
-| agent_prompt | 1,422 | 1 |
-| knowledge | 4,981 | 5 |
-| skills | 11,167 | 15 |
+| agent_prompt | 1,537 | 1 |
+| knowledge | 8,609 | 9 |
+| skills | 13,790 | 16 |
 | templates | 512 | 2 |
 | vendor_claude | 16,031 | 11 |
-| total | 34,113 | 34 |
+| total | 40,479 | 39 |
 
 ## Interpretation
 

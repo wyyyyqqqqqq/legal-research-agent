@@ -43,6 +43,21 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-knowledge-coverage.py"],
     },
     {
+        "id": "formatter_output",
+        "description": "Validate standalone formatter output fixtures.",
+        "cmd": ["python3", "scripts/check-formatter-output.py", "tests/fixtures/formatter"],
+    },
+    {
+        "id": "standalone_workflow",
+        "description": "Validate standalone deliverable workflow manifests.",
+        "cmd": ["python3", "scripts/check-standalone-workflow.py", "tests/fixtures/standalone-workflow"],
+    },
+    {
+        "id": "docx_generation",
+        "description": "Render standalone Markdown to DOCX and verify extracted text.",
+        "cmd": ["python3", "scripts/check-docx-generation.py"],
+    },
+    {
         "id": "prompt_footprint",
         "description": "Measure core prompt and instruction footprint.",
         "cmd": ["python3", "scripts/measure-prompt-footprint.py", "--json"],

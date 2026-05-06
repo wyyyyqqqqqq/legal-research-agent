@@ -108,7 +108,8 @@ be well-formed JSON and still fail if it lacks source support, cites weak
 authority for high-confidence conclusions, omits a required jurisdiction, or
 misses a material issue term from the case spec.
 It can also fail when metadata reports an error or material coverage gap while
-issue confidence remains high.
+issue confidence remains high, or when a metadata key finding lacks a source
+anchor.
 
 For multi-case evaluation, each quality spec must point to a stable `case_id`.
 When `requires_comparison_matrix`, `required_co_running_agents`, or

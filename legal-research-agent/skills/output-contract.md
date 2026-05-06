@@ -47,6 +47,8 @@ The agent must write exactly two files:
 - `jurisdictions` and `domains` must be non-empty lists of non-empty strings.
 - `classification_warnings`, `co_running_agents`, and `key_findings` must be
   lists; when present, every item must be a non-empty string.
+- For quality evaluation, every `key_findings[*]` item should cite at least one
+  known `sources[*].id`.
 - `research_mode` must be one of:
   - `general`
   - `game_regulation`

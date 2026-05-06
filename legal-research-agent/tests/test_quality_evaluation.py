@@ -110,6 +110,23 @@ class QualityEvaluationTest(unittest.TestCase):
         self.assertEqual(result["status"], "fail")
         self.assertTrue(any("D-grade" in error for error in result["errors"]))
 
+    def test_key_findings_require_source_anchor(self) -> None:
+        meta = valid_meta()
+        meta["key_findings"] = ["Official source verification is required."]
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("key_findings[0]" in error for error in result["errors"]))
+        self.assertEqual(result["checks"].get("key_findings_source_support"), "fail")
+
+    def test_key_findings_unknown_source_anchor_fails(self) -> None:
+        meta = valid_meta()
+        meta["key_findings"] = ["Official source verification is required under src_missing."]
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("unknown source ids" in error for error in result["errors"]))
+
     def test_missing_required_jurisdiction_fails_against_case_spec(self) -> None:
         meta = valid_meta()
         meta["jurisdictions"] = ["JP"]

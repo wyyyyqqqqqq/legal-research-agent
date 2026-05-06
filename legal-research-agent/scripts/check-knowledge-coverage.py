@@ -38,6 +38,23 @@ REQUIRED_MARKERS: dict[str, list[str]] = {
         "Every metadata source",
         "Coverage Gaps",
     ],
+    "skills/legal-writing-formatter.md": [
+        "standalone_markdown",
+        "handoff_packet",
+        "docx_ready_markdown",
+        "Transformation Workflow",
+        "docs/standalone-workflow.md",
+        "Do not load both profiles",
+    ],
+    "docs/standalone-workflow.md": [
+        "Artifact Layout",
+        "Naming Rules",
+        "standalone-deliverable-manifest.json",
+        "scripts/render-docx.py",
+        "generated_and_extracted",
+        "Citation Audit Integration",
+        "Completion Criteria",
+    ],
     "skills/source-collection.md": [
         "Source Minimum Enforcement",
         "temporal_status",
@@ -54,6 +71,33 @@ REQUIRED_MARKERS: dict[str, list[str]] = {
         "Japan",
         "EU",
         "United States",
+    ],
+    "knowledge/legal-writing/formatter-index.md": [
+        "Korean legal research memo",
+        "English legal research memo",
+        "DOCX-ready Markdown",
+        "Do not load both profiles",
+    ],
+    "knowledge/legal-writing/docx-ready-markdown-profile.md": [
+        "DOCX-Ready Markdown",
+        "scripts/render-docx.py",
+        "MVP DOCX rendering",
+        "Source Appendix",
+        "DOCX Honesty Rule",
+    ],
+    "knowledge/legal-writing/ko-formatter-profile.md": [
+        "합니다",
+        "쟁점",
+        "Section Drafting Rules",
+        "출처",
+        "Source Coverage Gap",
+    ],
+    "knowledge/legal-writing/en-formatter-profile.md": [
+        "Executive Summary",
+        "Issues Presented",
+        "Section Drafting Rules",
+        "Sources",
+        "Source Coverage Gap",
     ],
 }
 

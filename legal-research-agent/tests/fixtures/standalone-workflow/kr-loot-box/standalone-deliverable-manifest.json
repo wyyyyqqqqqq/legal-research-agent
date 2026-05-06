@@ -1,0 +1,24 @@
+{
+  "workflow_version": "1.0",
+  "case_id": "kr_loot_box_probability",
+  "research_output_dir": ".",
+  "deliverables": [
+    {
+      "mode": "standalone_markdown",
+      "language": "ko",
+      "path": "deliverables/20260506_kr-loot-box-probability_standalone_ko_v1.md",
+      "meta_path": "legal-research-agent-meta.json",
+      "result_path": "legal-research-agent-result.md",
+      "audit": {
+        "required": true,
+        "status": "deterministic_smoke",
+        "claim": "src_001은 본 fixture에서 공식 게임규제 출처 확인을 요구하는 anchor입니다."
+      },
+      "docx": {
+        "status": "not_requested",
+        "path": null,
+        "render_report_path": null
+      }
+    }
+  ]
+}

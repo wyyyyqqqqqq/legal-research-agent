@@ -19,7 +19,7 @@
     }
   ],
   "key_findings": [
-    "Official source verification is required before relying on any terms-change notice conclusion."
+    "Official source verification is required before relying on any terms-change notice conclusion, anchored to src_001."
   ],
   "sources": [
     {

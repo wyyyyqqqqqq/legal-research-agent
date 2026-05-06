@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -30,6 +31,7 @@ LIMITING_CONFIDENCE_GAP_TYPES = {
     "source_coverage",
     "temporal_status",
 }
+SOURCE_ID_PATTERN = re.compile(r"\bsrc_[0-9A-Za-z_-]+\b")
 
 
 def load_validator():
@@ -101,6 +103,10 @@ def has_any_grade(grades: list[str], allowed: set[str]) -> bool:
     return any(grade in allowed for grade in grades)
 
 
+def referenced_source_ids(value: str) -> set[str]:
+    return set(SOURCE_ID_PATTERN.findall(value))
+
+
 def coverage_gap_types(meta: dict[str, Any]) -> set[str]:
     return {
         str(gap.get("type", "")).lower()
@@ -119,6 +125,24 @@ def confidence_limiting_reasons(meta: dict[str, Any]) -> list[str]:
     if limiting_gaps:
         reasons.append(f"coverage_gaps={','.join(limiting_gaps)}")
     return reasons
+
+
+def key_finding_source_errors(meta: dict[str, Any], sources: dict[str, dict[str, Any]]) -> list[str]:
+    errors: list[str] = []
+    known_source_ids = set(sources)
+    for index, finding in enumerate(meta.get("key_findings", [])):
+        if not isinstance(finding, str):
+            continue
+        source_ids = referenced_source_ids(finding)
+        if not source_ids:
+            errors.append(f"key_findings[{index}]: must cite at least one metadata source id")
+            continue
+        unknown_source_ids = sorted(source_ids - known_source_ids)
+        if unknown_source_ids:
+            errors.append(
+                f"key_findings[{index}]: references unknown source ids {unknown_source_ids}"
+            )
+    return errors
 
 
 def comparison_jurisdictions(meta: dict[str, Any], case_spec: dict[str, Any]) -> list[str]:
@@ -257,6 +281,13 @@ def evaluate_output(output_dir: Path, case_spec: dict[str, Any] | None = None) -
             errors.append("key_findings: non-fallback successful output must include key findings")
             core_material_error = True
     checks["non_fallback_success_has_core_material"] = FAIL if core_material_error else PASS
+
+    key_finding_errors = key_finding_source_errors(meta, sources)
+    if key_finding_errors:
+        errors.extend(key_finding_errors)
+        checks["key_findings_source_support"] = FAIL
+    else:
+        checks["key_findings_source_support"] = PASS
 
     for expected in normalize_terms(case_spec.get("required_jurisdictions")):
         actual = [str(value).lower() for value in meta.get("jurisdictions", [])]

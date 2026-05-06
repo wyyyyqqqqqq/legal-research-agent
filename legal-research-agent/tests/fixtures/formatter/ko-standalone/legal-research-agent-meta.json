@@ -1,6 +1,6 @@
 {
   "meta_version": "1.1",
-  "summary": "A valid sample metadata file for probability disclosure and enforcement quality validation.",
+  "summary": "A valid sample metadata file for probability disclosure and enforcement formatter validation.",
   "research_mode": "game_regulation",
   "mode_source": "orchestrator",
   "active_profile": "merged",

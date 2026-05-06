@@ -21,6 +21,7 @@ omission, do the extra work and record why.
 
 - No invented source IDs.
 - Every key finding maps to at least one source.
+- Every `key_findings[*]` item cites at least one known `sources[*].id`.
 - Every `issue_map[*].authority_ids` entry exists in `sources[*].id`.
 - Source grades are valid.
 - Controlling legal propositions use primary or official sources where

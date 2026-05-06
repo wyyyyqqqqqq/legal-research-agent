@@ -38,6 +38,7 @@ The current deterministic fixture set covers:
   IDs, or key-finding items. `summary` must stay within 500 rough tokens.
 - No fabricated sources.
 - Each key legal conclusion maps to at least one source.
+- Each `key_findings[*]` item cites at least one known source ID.
 - Confidence is conservative: fallback, error, source/access/jurisdiction,
   temporal-status, and classification-mismatch gaps cannot pair with high
   issue confidence.
@@ -80,7 +81,8 @@ analysis, sources, coverage gaps, and handoff notes. `evaluate-quality.py`
 checks minimum legal-quality signals such as source support, Grade A/B support
 for high-confidence conclusions, no D-grade legal basis, jurisdiction coverage,
 confidence alignment for fallback/error/coverage-gap outputs, and case-specific
-material issue terms. `evaluate-golden-set.py` applies those checks across every
+material issue terms. It also checks that metadata key findings cite known
+source IDs. `evaluate-golden-set.py` applies those checks across every
 `tests/fixtures/quality/*-quality-spec.json` file and fails if any expected
 output directory is missing.
 
