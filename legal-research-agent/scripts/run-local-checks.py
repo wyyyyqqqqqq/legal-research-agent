@@ -43,6 +43,11 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-citation-auditor-vendor.py"],
     },
     {
+        "id": "citation_auditor_smoke",
+        "description": "Run deterministic citation-auditor chunk/aggregate/render smoke.",
+        "cmd": ["python3", "scripts/check-citation-auditor-smoke.py"],
+    },
+    {
         "id": "output_contract",
         "description": "Validate sample output metadata contract.",
         "cmd": ["python3", "scripts/validate-output.py", "tests/fixtures/output/valid"],

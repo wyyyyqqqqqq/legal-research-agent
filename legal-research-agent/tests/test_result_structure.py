@@ -112,6 +112,35 @@ class ResultStructureTest(unittest.TestCase):
         errors = CHECKER.check_result_structure(output_dir)
         self.assertTrue(any("missing authority source ids" in error for error in errors), errors)
 
+    def test_missing_analysis_subsection_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(text.replace("### Application\n\n", ""))
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("missing required analysis subsection" in error for error in errors), errors)
+
+    def test_empty_analysis_subsection_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "### Practical Next Step\n\nVerify src_001 against the current official source before using the sanction\nconclusion.\n",
+                "### Practical Next Step\n\n",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("empty analysis subsection" in error for error in errors), errors)
+
+    def test_analysis_subsection_order_mismatch_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        rule_heading = "### Rule And Authority"
+        application_heading = "### Application"
+        output_dir = self.write_output(
+            text.replace(rule_heading, "### TEMP_RULE", 1)
+            .replace(application_heading, rule_heading, 1)
+            .replace("### TEMP_RULE", application_heading, 1)
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("analysis subsections are out of order" in error for error in errors), errors)
+
     def test_route_context_research_mode_mismatch_fails(self) -> None:
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
         output_dir = self.write_output(text.replace("- Research mode: `game_regulation`", "- Research mode: `general`"))

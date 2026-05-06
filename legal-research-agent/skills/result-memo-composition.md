@@ -51,7 +51,15 @@ block's `Sources` line.
 
 ## Analysis Requirements
 
-The `## Analysis` section should include:
+The `## Analysis` section must include these subsections in this order, and
+none may be empty:
+
+1. `### Rule And Authority`
+2. `### Application`
+3. `### Counter-Analysis Or Caveat`
+4. `### Practical Next Step`
+
+Together these subsections should cover:
 
 - controlling rule or best available authority;
 - application to the user's facts;

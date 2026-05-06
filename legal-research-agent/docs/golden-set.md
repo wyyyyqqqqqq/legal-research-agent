@@ -51,6 +51,7 @@ python3 scripts/run-local-checks.py
 python3 scripts/check-fixture-consistency.py
 python3 scripts/check-knowledge-coverage.py
 python3 scripts/check-citation-auditor-vendor.py
+python3 scripts/check-citation-auditor-smoke.py
 python3 scripts/validate-output.py /path/to/output
 python3 scripts/check-result-structure.py /path/to/output
 python3 scripts/evaluate-quality.py /path/to/output --case-spec /path/to/case-quality-spec.json
@@ -64,6 +65,9 @@ case fixtures, quality specs, and golden-set output directories.
 instructions and jurisdiction source maps. `check-citation-auditor-vendor.py`
 prevents the vendored citation-auditor skill, verifier set, and Python utility
 package from silently disappearing or drifting from the pinned vendor stamp.
+`check-citation-auditor-smoke.py` verifies the deterministic local
+chunk/aggregate/render path against a legal research result fixture without
+calling live verifier subagents.
 `validate-output.py` checks the contract shape. `check-result-structure.py`
 checks that the result memo exposes question, route context, issue blocks,
 analysis, sources, coverage gaps, and handoff notes. `evaluate-quality.py`
@@ -81,6 +85,14 @@ Source detail integrity is mandatory:
 - every metadata source must appear in the result `## Sources` table;
 - the table's `Grade`, `Title`, `Citation`, and `Pinpoint` cells must match
   metadata for the same source ID.
+
+Analysis structure is mandatory. The result memo's `## Analysis` section must
+include non-empty subsections in this order:
+
+- `### Rule And Authority`
+- `### Application`
+- `### Counter-Analysis Or Caveat`
+- `### Practical Next Step`
 
 Case specs may require route-specific gates:
 

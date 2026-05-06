@@ -23,6 +23,12 @@ REQUIRED_HEADINGS = [
     "## Coverage Gaps",
     "## Handoff Notes",
 ]
+REQUIRED_ANALYSIS_HEADINGS = [
+    "### Rule And Authority",
+    "### Application",
+    "### Counter-Analysis Or Caveat",
+    "### Practical Next Step",
+]
 SOURCE_TABLE_HEADER = "| ID | Grade | Title | Citation | Pinpoint |"
 PLACEHOLDER_PATTERN = re.compile(r"\{\{[^}]+\}\}")
 ROUTE_CONTEXT_LABELS = {
@@ -175,6 +181,39 @@ def validate_route_context(text: str, meta: dict[str, Any]) -> list[str]:
     return errors
 
 
+def analysis_subsection_positions(analysis: str) -> dict[str, int]:
+    positions: dict[str, int] = {}
+    for heading in REQUIRED_ANALYSIS_HEADINGS:
+        match = re.search(rf"(?m)^{re.escape(heading)}\s*$", analysis)
+        if match:
+            positions[heading] = match.start()
+    return positions
+
+
+def analysis_subsection_body(analysis: str, heading: str) -> str:
+    match = re.search(rf"(?ms)^{re.escape(heading)}\s*(.*?)(?=^### |\Z)", analysis)
+    return match.group(1).strip() if match else ""
+
+
+def validate_analysis_structure(text: str) -> list[str]:
+    errors: list[str] = []
+    analysis = section_text(text, "## Analysis")
+    positions = analysis_subsection_positions(analysis)
+
+    for heading in REQUIRED_ANALYSIS_HEADINGS:
+        if heading not in positions:
+            errors.append(f"analysis_structure: missing required analysis subsection {heading!r}")
+            continue
+        if not analysis_subsection_body(analysis, heading):
+            errors.append(f"analysis_structure: empty analysis subsection {heading!r}")
+
+    ordered_positions = [positions[heading] for heading in REQUIRED_ANALYSIS_HEADINGS if heading in positions]
+    if ordered_positions != sorted(ordered_positions):
+        errors.append("analysis_structure: required analysis subsections are out of order")
+
+    return errors
+
+
 def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[str]:
     result_path = output_dir / f"{agent_id}-result.md"
     meta_path = output_dir / f"{agent_id}-meta.json"
@@ -203,6 +242,7 @@ def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[s
         errors.append("heading_order: required headings are out of order")
 
     errors.extend(validate_route_context(text, meta))
+    errors.extend(validate_analysis_structure(text))
 
     issue_count = len(re.findall(r"(?m)^### Issue\b", text))
     material_issue_count = len([issue for issue in meta.get("issue_map", []) if isinstance(issue, dict)])

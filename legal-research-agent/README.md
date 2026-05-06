@@ -80,8 +80,10 @@ python3 tests/test_result_structure.py
 python3 tests/test_run_local_checks.py
 python3 tests/test_fixture_consistency.py
 python3 tests/test_citation_auditor_vendor.py
+python3 tests/test_citation_auditor_smoke.py
 python3 scripts/check-knowledge-coverage.py
 python3 scripts/check-citation-auditor-vendor.py
+python3 scripts/check-citation-auditor-smoke.py
 python3 scripts/check-result-structure.py tests/fixtures/output/valid
 python3 scripts/evaluate-golden-set.py
 python3 scripts/measure-tokens.py path/to/events.jsonl
@@ -133,6 +135,7 @@ from the sibling source repo only when intentionally upgrading:
 ../citation-auditor/scripts/vendor-into.sh "$PWD"
 ```
 
-The local preflight checks the vendored file set and runs a CLI help smoke test.
-The full audit workflow is not part of preflight because live verifier dispatch
-and web/MCP access depend on the surrounding Claude Code session.
+The local preflight checks the vendored file set, runs a CLI help smoke test,
+and runs a deterministic chunk/aggregate/render smoke against a legal research
+result fixture. Live verifier dispatch and web/MCP-backed audits are not part
+of preflight because they depend on the surrounding Claude Code session.
