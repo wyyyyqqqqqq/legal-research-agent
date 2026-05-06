@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -44,6 +45,17 @@ RESEARCH_MODES = {"general", "game_regulation", "game_plus_general", "fallback"}
 MODE_SOURCES = {"orchestrator", "self_classified"}
 SOURCE_GRADES = {"A", "B", "C", "D"}
 CONFIDENCE_VALUES = {"high", "medium", "low"}
+CLAIM_SUPPORT_STRENGTHS = {"direct", "indirect", "background", "unsupported"}
+CURRENTNESS_STATUSES = {
+    "checked_current",
+    "effective_date_checked",
+    "pending_change",
+    "stale_or_superseded",
+    "not_checked",
+    "not_applicable",
+}
+CURRENTNESS_CHECKED_STATUSES = {"checked_current", "effective_date_checked"}
+DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 ERROR_VALUES = {
     None,
     "mcp_unavailable",
@@ -61,6 +73,7 @@ GAP_TYPES = {
     "jurisdiction",
     "specialist_handoff",
     "temporal_status",
+    "claim_verification",
     "other",
 }
 ERROR_TO_GAP_TYPE = {
@@ -118,6 +131,36 @@ def validate_string_list(value: Any, field: str, require_non_empty: bool = False
         require_non_empty_string(item, f"{field}[{index}]")
 
 
+def validate_date_string(value: Any, field: str) -> None:
+    if not isinstance(value, str) or not DATE_PATTERN.fullmatch(value):
+        raise ValidationError(f"{field}: expected YYYY-MM-DD string")
+
+
+def validate_optional_date_string(value: Any, field: str) -> None:
+    if value is None:
+        return
+    validate_date_string(value, field)
+
+
+def validate_currentness(value: Any, field: str) -> None:
+    require_type(value, dict, field)
+    status = value.get("status")
+    if status not in CURRENTNESS_STATUSES:
+        raise ValidationError(f"{field}.status: invalid value {status!r}")
+
+    checked_as_of = value.get("checked_as_of")
+    if status in CURRENTNESS_CHECKED_STATUSES:
+        validate_date_string(checked_as_of, f"{field}.checked_as_of")
+    elif checked_as_of is not None:
+        validate_optional_date_string(checked_as_of, f"{field}.checked_as_of")
+
+    if "effective_date" in value:
+        validate_optional_date_string(value.get("effective_date"), f"{field}.effective_date")
+
+    if "notes" in value and value["notes"] is not None and not isinstance(value["notes"], str):
+        raise ValidationError(f"{field}.notes: expected string or null")
+
+
 def validate_sources(meta: dict[str, Any]) -> set[str]:
     sources = meta["sources"]
     require_type(sources, list, "sources")
@@ -139,6 +182,8 @@ def validate_sources(meta: dict[str, Any]) -> set[str]:
         ids.add(source_id)
         if source["grade"] not in SOURCE_GRADES:
             raise ValidationError(f"{field}.grade: invalid grade {source['grade']!r}")
+        if "currentness" in source:
+            validate_currentness(source["currentness"], f"{field}.currentness")
     return ids
 
 
@@ -162,6 +207,54 @@ def validate_issue_map(meta: dict[str, Any], source_ids: set[str]) -> None:
             raise ValidationError(f"{field}.authority_ids: unknown source ids {missing}")
         if issue["confidence"] not in CONFIDENCE_VALUES:
             raise ValidationError(f"{field}.confidence: invalid value {issue['confidence']!r}")
+
+
+def validate_claim_checks(meta: dict[str, Any], source_ids: set[str]) -> None:
+    if "claim_checks" not in meta:
+        return
+
+    claim_checks = meta["claim_checks"]
+    require_type(claim_checks, list, "claim_checks")
+    seen_claim_ids: set[str] = set()
+    for index, claim_check in enumerate(claim_checks):
+        field = f"claim_checks[{index}]"
+        require_type(claim_check, dict, field)
+        for key in (
+            "claim_id",
+            "issue_id",
+            "claim",
+            "authority_ids",
+            "support_strength",
+            "currentness",
+            "confidence_impact",
+            "limitation",
+        ):
+            if key not in claim_check:
+                raise ValidationError(f"{field}: missing {key}")
+
+        claim_id = require_non_empty_string(claim_check["claim_id"], f"{field}.claim_id")
+        if claim_id in seen_claim_ids:
+            raise ValidationError(f"{field}.claim_id: duplicate claim id {claim_id}")
+        seen_claim_ids.add(claim_id)
+
+        require_non_empty_string(claim_check["issue_id"], f"{field}.issue_id")
+        require_non_empty_string(claim_check["claim"], f"{field}.claim")
+        require_non_empty_string(claim_check["currentness"], f"{field}.currentness")
+        require_non_empty_string(claim_check["confidence_impact"], f"{field}.confidence_impact")
+        require_non_empty_string(claim_check["limitation"], f"{field}.limitation")
+
+        support_strength = claim_check["support_strength"]
+        if support_strength not in CLAIM_SUPPORT_STRENGTHS:
+            raise ValidationError(f"{field}.support_strength: invalid value {support_strength!r}")
+
+        require_type(claim_check["authority_ids"], list, f"{field}.authority_ids")
+        if not claim_check["authority_ids"]:
+            raise ValidationError(f"{field}.authority_ids: expected non-empty list")
+        for authority_index, source_id in enumerate(claim_check["authority_ids"]):
+            require_non_empty_string(source_id, f"{field}.authority_ids[{authority_index}]")
+        missing = [source_id for source_id in claim_check["authority_ids"] if source_id not in source_ids]
+        if missing:
+            raise ValidationError(f"{field}.authority_ids: unknown source ids {missing}")
 
 
 def validate_coverage_gaps(meta: dict[str, Any]) -> None:
@@ -227,6 +320,7 @@ def validate_meta(meta: dict[str, Any]) -> None:
 
     source_ids = validate_sources(meta)
     validate_issue_map(meta, source_ids)
+    validate_claim_checks(meta, source_ids)
     validate_coverage_gaps(meta)
 
 

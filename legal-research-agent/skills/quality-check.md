@@ -27,7 +27,19 @@ omission, do the extra work and record why.
 - Controlling legal propositions use primary or official sources where
   reasonably available.
 - Every material legal anchor was spot-checked or explicitly marked unverified.
+- `claim_checks` is internally consistent when present.
+- Every `claim_checks[*].authority_ids[*]` entry exists in `sources[*].id`.
+- Every high-confidence issue has at least one direct claim check when
+  `claim_checks` is present.
+- `background` and `unsupported` claim checks do not carry high-confidence
+  conclusions.
 - Temporal status is checked for statutes, regulations, and agency rules.
+- `sources[*].currentness` uses `currentness-check.md` status values when
+  present.
+- High confidence is blocked when controlling authority is only
+  `not_checked`, `pending_change`, or `stale_or_superseded`.
+- Pending, stale, superseded, or unchecked controlling sources require a visible
+  caveat or a `temporal_status` coverage gap.
 - Source laundering risks are resolved, re-attributed, or marked `[Unverified]`.
 - Grade C does not alone support a high-confidence conclusion.
 - Grade D is not cited for legal propositions.

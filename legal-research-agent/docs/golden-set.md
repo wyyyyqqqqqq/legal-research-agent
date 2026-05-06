@@ -3,6 +3,13 @@
 Run each case through legacy and merged profiles. Local deterministic fixtures
 exercise the merged-agent quality gates before any human or LLM-as-judge review.
 
+For pure general-law replacement testing, use
+`docs/general-legacy-parity-plan.md` before treating local fixture success as
+evidence that `legal-research-agent` matches `general-legal-research`.
+Pre-parity improvements for source playbook authoring, general source planning,
+claim verification, and currentness discipline are tracked in
+`docs/general-quality-hardening-plan.md`.
+
 ## Candidate Cases
 
 1. KR general legal research question.
@@ -42,6 +49,12 @@ The current deterministic fixture set covers:
 - Confidence is conservative: fallback, error, source/access/jurisdiction,
   temporal-status, and classification-mismatch gaps cannot pair with high
   issue confidence.
+- Optional `sources[*].currentness` metadata uses the approved status
+  vocabulary and cannot silently support high confidence when currentness is
+  pending, stale, superseded, or unchecked.
+- Optional `claim_checks` metadata uses known source IDs and valid support
+  strength values. When present, key-finding source anchors must be represented
+  by claim checks, and high-confidence issues require direct claim support.
 - No critical legal issue found by legacy or reviewer is omitted.
 - Required jurisdictions are not omitted.
 - Game cases cover relevant taxonomy categories.
@@ -76,14 +89,16 @@ package from silently disappearing or drifting from the pinned vendor stamp.
 `check-citation-auditor-smoke.py` verifies the deterministic local
 chunk/aggregate/render path against a legal research result fixture without
 calling live verifier subagents.
-`validate-output.py` checks the contract shape. `check-result-structure.py`
-checks that the result memo exposes question, route context, issue blocks,
-analysis, sources, coverage gaps, and handoff notes. `evaluate-quality.py`
-checks minimum legal-quality signals such as source support, Grade A/B support
-for high-confidence conclusions, no D-grade legal basis, jurisdiction coverage,
-confidence alignment for fallback/error/coverage-gap outputs, and case-specific
-material issue terms. It also checks that metadata key findings cite known
-source IDs. `evaluate-golden-set.py` applies those checks across every
+`validate-output.py` checks the contract shape, including optional
+`sources[*].currentness` and `claim_checks` metadata when present.
+`check-result-structure.py` checks that the result memo exposes question, route
+context, issue blocks, analysis, sources, coverage gaps, and handoff notes.
+`evaluate-quality.py` checks minimum legal-quality signals such as source
+support, Grade A/B support for high-confidence conclusions, no D-grade legal
+basis, jurisdiction coverage, confidence alignment for
+fallback/error/coverage-gap outputs, currentness alignment, claim verification,
+and case-specific material issue terms. It also checks that metadata key
+findings cite known source IDs. `evaluate-golden-set.py` applies those checks across every
 `tests/fixtures/quality/*-quality-spec.json` file and fails if any expected
 output directory is missing. `compare-token-runs.py` turns Phase 2 token
 evidence into a route-pattern report and blocks token increases that lack a
@@ -124,6 +139,24 @@ Coverage gap display is mandatory. The result memo's `## Coverage Gaps` section
 must not be empty. When metadata `coverage_gaps` is non-empty, the visible
 section must not say `None` and must display each gap `type` in readable form
 such as `source coverage` or `classification mismatch`.
+
+Currentness alignment is mandatory when currentness metadata is present:
+
+- `checked_current`, `effective_date_checked`, and `not_applicable` can support
+  confidence when otherwise appropriate;
+- `not_checked`, `pending_change`, or `stale_or_superseded` requires a
+  `temporal_status` coverage gap or visible caveat;
+- a high-confidence issue cannot rely only on authority sources with limiting
+  currentness statuses.
+
+Claim verification is mandatory when `claim_checks` metadata is present:
+
+- every `claim_id` must be unique;
+- every `authority_ids[*]` value must exist in metadata sources;
+- `support_strength` must be `direct`, `indirect`, `background`, or
+  `unsupported`;
+- key-finding source anchors must be represented by at least one claim check;
+- a high-confidence issue requires at least one direct claim check.
 
 Handoff display is mandatory. The result memo's `## Handoff Notes` section must
 not be empty. When metadata `co_running_agents` is non-empty, the visible

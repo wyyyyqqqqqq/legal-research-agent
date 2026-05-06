@@ -38,6 +38,11 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"],
     },
     {
+        "id": "source_playbooks",
+        "description": "Validate general-law source playbook registry and files.",
+        "cmd": ["python3", "scripts/check-source-playbooks.py"],
+    },
+    {
         "id": "knowledge_coverage",
         "description": "Check that core source-planning markers remain present.",
         "cmd": ["python3", "scripts/check-knowledge-coverage.py"],

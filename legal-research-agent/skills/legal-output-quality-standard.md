@@ -27,6 +27,9 @@ For each material issue, include:
 6. Confidence.
 7. Coverage gap, if any.
 
+When `claim_checks` metadata is present, every material proposition should map
+to at least one claim check with known authority IDs.
+
 ## Materiality
 
 An issue is material when it could change:
@@ -59,9 +62,20 @@ For multi-jurisdiction work:
 - Do not cite self-regulatory material as binding law unless an official source
   gives it legal effect.
 - Mark stale, pending, repealed, or not-yet-effective law inline.
+- Apply `currentness-check.md` to controlling authority and carry
+  `sources[*].currentness` when structured metadata is available.
+- Apply `claim-verification-loop.md` to material propositions and carry
+  `claim_checks` when structured metadata is available.
 - Do not mark an issue `high` confidence when the result is fallback,
   source-limited, access-limited, jurisdiction-limited, temporally uncertain, or
   affected by a classification mismatch.
+- Do not mark an issue `high` confidence when all controlling authority sources
+  are `not_checked`, `pending_change`, or `stale_or_superseded`.
+- Do not mark an issue `high` confidence when available claim checks for that
+  issue are only `background` or `unsupported`.
+- For general-law issues, do not mark an issue `high` confidence unless the
+  selected domain checklist or active source playbook minimums were checked, or
+  the result explains why a listed layer is immaterial.
 
 ## Practicality
 

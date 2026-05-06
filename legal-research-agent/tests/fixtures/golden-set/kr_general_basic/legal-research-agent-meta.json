@@ -28,10 +28,33 @@
       "grade": "A",
       "citation": "Official source placeholder",
       "pinpoint": "Notice obligation placeholder",
-      "url_or_access": "official source placeholder"
+      "url_or_access": "official source placeholder",
+      "currentness": {
+        "status": "not_checked",
+        "checked_as_of": null,
+        "effective_date": null,
+        "notes": "Live official currentness is intentionally not checked in this fixture."
+      }
     }
   ],
   "comparison_matrix": [],
-  "coverage_gaps": [],
+  "coverage_gaps": [
+    {
+      "type": "temporal_status",
+      "description": "Temporal status coverage gap: live amendments and current official text are not checked in this fixture."
+    }
+  ],
+  "claim_checks": [
+    {
+      "claim_id": "claim_001",
+      "issue_id": "issue_001",
+      "claim": "Terms-change notice obligations should be verified against official Korean statute and regulator sources before final use.",
+      "authority_ids": ["src_001"],
+      "support_strength": "direct",
+      "currentness": "not_checked",
+      "confidence_impact": "supports_medium_only",
+      "limitation": "Live currentness and delegated-rule coverage are not checked in this fixture."
+    }
+  ],
   "error": null
 }

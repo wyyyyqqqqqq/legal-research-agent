@@ -37,6 +37,9 @@ Track material claims:
 }
 ```
 
+For output-level claim verification, use `claim-verification-loop.md` and carry
+material checks into optional `claim_checks` metadata when feasible.
+
 ## Source Laundering Patterns
 
 Flag laundering when:

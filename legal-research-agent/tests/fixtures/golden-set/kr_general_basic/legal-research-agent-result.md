@@ -56,7 +56,8 @@ Verify the current official source and any regulator notice guidance.
 
 ## Coverage Gaps
 
-This fixture does not perform live source collection.
+Temporal status coverage gap: this fixture does not perform live source
+collection and does not check live amendments or current official text.
 
 ## Handoff Notes
 

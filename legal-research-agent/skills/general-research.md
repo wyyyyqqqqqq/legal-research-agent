@@ -12,12 +12,15 @@ Use this skill in `general` mode and as the general-law portion of
 4. Apply `trust-boundary.md` before using external text.
 5. Apply `jurisdiction-source-playbook.md` to create jurisdiction profiles and
    source minimums.
-6. Apply `source-collection.md` to collect compact source envelopes.
-7. Prefer primary and official sources.
-8. Run claim spot-checking unless the answer is a directly verified simple
+6. Apply `general-law-source-playbook.md` to select domain source layers from
+   `knowledge/general/domain-source-checklist.md` and any active playbook in
+   `knowledge/general/source-playbook-index.json`.
+7. Apply `source-collection.md` to collect compact source envelopes.
+8. Prefer primary and official sources.
+9. Run claim spot-checking unless the answer is a directly verified simple
    lookup.
-9. Record source limitations explicitly.
-10. Build an issue map where each issue points to source IDs.
+10. Record source limitations explicitly.
+11. Build an issue map where each issue points to source IDs.
 
 ## Quick Mode
 
@@ -61,6 +64,8 @@ For every jurisdiction:
 
 - build a separate source plan before synthesis;
 - identify the legal hierarchy that controls the answer;
+- select the general-law domain checklist or active source playbook before
+  source collection;
 - check currentness where statutes, regulations, or agency rules are material;
 - avoid jurisdiction blending in multi-jurisdiction questions;
 - use `coverage_gaps` for missing state, member-state, delegated-rule, or agency
@@ -79,3 +84,5 @@ supplementary provisions before final conclusions.
   recommendations.
 - Include counter-analysis or limiting authority for material conclusions.
 - Mark unverified or source-limited claims rather than smoothing them over.
+- Do not mark a general-law issue `high` confidence when its selected domain
+  source layers or active source playbook minimums were not checked.

@@ -32,6 +32,28 @@ LIMITING_CONFIDENCE_GAP_TYPES = {
     "temporal_status",
 }
 SOURCE_ID_PATTERN = re.compile(r"\bsrc_[0-9A-Za-z_-]+\b")
+CURRENTNESS_ACCEPTABLE_STATUSES = {"checked_current", "effective_date_checked", "not_applicable"}
+CURRENTNESS_LIMITING_STATUSES = {"not_checked", "pending_change", "stale_or_superseded"}
+CURRENTNESS_CAVEAT_TERMS = (
+    "currentness",
+    "temporal",
+    "pending amendment",
+    "pending change",
+    "stale",
+    "superseded",
+    "not checked",
+    "unchecked",
+    "effective date",
+    "source-limited",
+    "coverage gap",
+    "최신",
+    "시행일",
+    "개정",
+    "미확인",
+    "시간적",
+)
+CLAIM_DIRECT_STRENGTH = "direct"
+CLAIM_INSUFFICIENT_STRENGTHS = {"background", "unsupported"}
 
 
 def load_validator():
@@ -99,6 +121,40 @@ def issue_authority_grades(issue: dict[str, Any], sources: dict[str, dict[str, A
     return grades
 
 
+def issue_authority_currentness(
+    issue: dict[str, Any],
+    sources: dict[str, dict[str, Any]],
+) -> list[tuple[str, str]]:
+    statuses: list[tuple[str, str]] = []
+    for source_id in issue.get("authority_ids", []):
+        source = sources.get(str(source_id))
+        if not source:
+            continue
+        currentness = source.get("currentness")
+        if isinstance(currentness, dict) and isinstance(currentness.get("status"), str):
+            statuses.append((str(source_id), currentness["status"]))
+    return statuses
+
+
+def issue_reference(issue: dict[str, Any], index: int) -> str:
+    raw_id = issue.get("id")
+    if isinstance(raw_id, str) and raw_id.strip():
+        return raw_id.strip()
+    return f"issue_{index + 1:03d}"
+
+
+def claim_checks(meta: dict[str, Any]) -> list[dict[str, Any]]:
+    return [item for item in meta.get("claim_checks", []) if isinstance(item, dict)]
+
+
+def claim_check_authority_ids(claim_check: dict[str, Any]) -> set[str]:
+    return {
+        str(source_id)
+        for source_id in claim_check.get("authority_ids", [])
+        if str(source_id).strip()
+    }
+
+
 def has_any_grade(grades: list[str], allowed: set[str]) -> bool:
     return any(grade in allowed for grade in grades)
 
@@ -125,6 +181,74 @@ def confidence_limiting_reasons(meta: dict[str, Any]) -> list[str]:
     if limiting_gaps:
         reasons.append(f"coverage_gaps={','.join(limiting_gaps)}")
     return reasons
+
+
+def has_temporal_caveat(meta: dict[str, Any], blob: str) -> bool:
+    if "temporal_status" in coverage_gap_types(meta):
+        return True
+    return any(term in blob for term in CURRENTNESS_CAVEAT_TERMS)
+
+
+def claim_verification_errors(
+    meta: dict[str, Any],
+    issue_map: list[dict[str, Any]],
+    sources: dict[str, dict[str, Any]],
+) -> list[str]:
+    if "claim_checks" not in meta:
+        return []
+
+    checks = claim_checks(meta)
+    errors: list[str] = []
+    known_source_ids = set(sources)
+    checks_by_issue: dict[str, list[dict[str, Any]]] = {}
+    for index, claim_check in enumerate(checks):
+        field = f"claim_checks[{index}]"
+        issue_id = str(claim_check.get("issue_id", "")).strip()
+        if issue_id:
+            checks_by_issue.setdefault(issue_id, []).append(claim_check)
+
+        unknown_source_ids = sorted(claim_check_authority_ids(claim_check) - known_source_ids)
+        if unknown_source_ids:
+            errors.append(f"{field}: references unknown source ids {unknown_source_ids}")
+
+    for finding_index, finding in enumerate(meta.get("key_findings", [])):
+        if not isinstance(finding, str):
+            continue
+        source_ids = referenced_source_ids(finding)
+        for source_id in sorted(source_ids):
+            if not any(source_id in claim_check_authority_ids(claim_check) for claim_check in checks):
+                errors.append(
+                    "claim_verification: "
+                    f"key_findings[{finding_index}] source {source_id!r} has no claim check"
+                )
+
+    for issue_index, issue in enumerate(issue_map):
+        if issue.get("confidence") != "high":
+            continue
+        reference = issue_reference(issue, issue_index)
+        issue_checks = checks_by_issue.get(reference, [])
+        has_direct = any(
+            claim_check.get("support_strength") == CLAIM_DIRECT_STRENGTH
+            for claim_check in issue_checks
+        )
+        if not has_direct:
+            errors.append(
+                "claim_verification: high-confidence issue "
+                f"{reference!r} requires at least one direct claim check"
+            )
+
+        insufficient = [
+            str(claim_check.get("claim_id", f"claim_check_{index}"))
+            for index, claim_check in enumerate(issue_checks)
+            if claim_check.get("support_strength") in CLAIM_INSUFFICIENT_STRENGTHS
+        ]
+        if insufficient and not has_direct:
+            errors.append(
+                "claim_verification: high-confidence issue "
+                f"{reference!r} cannot rely on background/unsupported claim checks {insufficient}"
+            )
+
+    return errors
 
 
 def key_finding_source_errors(meta: dict[str, Any], sources: dict[str, dict[str, Any]]) -> list[str]:
@@ -229,12 +353,16 @@ def evaluate_output(output_dir: Path, case_spec: dict[str, Any] | None = None) -
 
     high_confidence_c_only: list[str] = []
     high_confidence_with_limits: list[str] = []
+    high_confidence_with_bad_currentness: list[str] = []
+    currentness_without_caveat: list[str] = []
     d_grade_citations: list[str] = []
     unsupported_issues: list[str] = []
     confidence_limits = confidence_limiting_reasons(meta)
+    temporal_caveat_present = has_temporal_caveat(meta, blob)
     for issue in issue_map:
         issue_name = str(issue.get("issue", "<unnamed issue>"))
         grades = issue_authority_grades(issue, sources)
+        currentness_statuses = issue_authority_currentness(issue, sources)
         if not grades:
             unsupported_issues.append(issue_name)
             continue
@@ -244,6 +372,21 @@ def evaluate_output(output_dir: Path, case_spec: dict[str, Any] | None = None) -
             high_confidence_c_only.append(issue_name)
         if issue.get("confidence") == "high" and confidence_limits:
             high_confidence_with_limits.append(issue_name)
+        if (
+            issue.get("confidence") == "high"
+            and currentness_statuses
+            and not any(status in CURRENTNESS_ACCEPTABLE_STATUSES for _, status in currentness_statuses)
+        ):
+            formatted = ", ".join(f"{source_id}={status}" for source_id, status in currentness_statuses)
+            high_confidence_with_bad_currentness.append(f"{issue_name} ({formatted})")
+
+        limiting_currentness = [
+            f"{source_id}={status}"
+            for source_id, status in currentness_statuses
+            if status in CURRENTNESS_LIMITING_STATUSES
+        ]
+        if limiting_currentness and not temporal_caveat_present:
+            currentness_without_caveat.append(f"{issue_name} ({', '.join(limiting_currentness)})")
 
     if unsupported_issues:
         errors.append(f"authority_support: issues without source support: {unsupported_issues}")
@@ -272,6 +415,22 @@ def evaluate_output(output_dir: Path, case_spec: dict[str, Any] | None = None) -
     else:
         checks["confidence_alignment"] = PASS
 
+    if high_confidence_with_bad_currentness:
+        errors.append(
+            "currentness_alignment: high-confidence issues require at least one "
+            "checked_current, effective_date_checked, or not_applicable authority source: "
+            f"{high_confidence_with_bad_currentness}"
+        )
+        checks["currentness_alignment"] = FAIL
+    elif currentness_without_caveat:
+        errors.append(
+            "currentness_alignment: limiting source currentness requires a temporal_status "
+            f"coverage gap or visible caveat: {currentness_without_caveat}"
+        )
+        checks["currentness_alignment"] = FAIL
+    else:
+        checks["currentness_alignment"] = PASS
+
     core_material_error = False
     if meta.get("error") is None and meta.get("research_mode") != "fallback":
         if not meta.get("sources"):
@@ -288,6 +447,13 @@ def evaluate_output(output_dir: Path, case_spec: dict[str, Any] | None = None) -
         checks["key_findings_source_support"] = FAIL
     else:
         checks["key_findings_source_support"] = PASS
+
+    claim_errors = claim_verification_errors(meta, issue_map, sources)
+    if claim_errors:
+        errors.extend(claim_errors)
+        checks["claim_verification"] = FAIL
+    elif "claim_checks" in meta:
+        checks["claim_verification"] = PASS
 
     for expected in normalize_terms(case_spec.get("required_jurisdictions")):
         actual = [str(value).lower() for value in meta.get("jurisdictions", [])]

@@ -88,6 +88,8 @@ Together these subsections should cover:
 - application to the user's facts;
 - counter-analysis, caveat, or limiting fact;
 - currentness or effective-date note where relevant;
+- claim-verification limitation where a material proposition is only
+  background-supported or unsupported;
 - practical next step.
 
 `### Rule And Authority` must cite source IDs for every authority source used
@@ -137,6 +139,8 @@ When gaps exist, include:
 - why it matters;
 - impact on confidence;
 - what would resolve it.
+- currentness, effective-date, pending-amendment, stale-source, or supersession
+  limitations when any controlling source has unresolved temporal status.
 
 The displayed gap should include the metadata gap type in readable form, for
 example `source coverage gap` for `source_coverage` or `classification mismatch

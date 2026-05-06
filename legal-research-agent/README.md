@@ -159,6 +159,8 @@ python3 tests/test_fixture_consistency.py
 python3 tests/test_citation_auditor_vendor.py
 python3 tests/test_citation_auditor_smoke.py
 python3 tests/test_token_comparison.py
+python3 tests/test_source_playbooks.py
+python3 scripts/check-source-playbooks.py
 python3 scripts/check-knowledge-coverage.py
 python3 scripts/check-formatter-output.py tests/fixtures/formatter
 python3 scripts/check-standalone-workflow.py tests/fixtures/standalone-workflow
@@ -234,12 +236,110 @@ python3 scripts/validate-intake-payload.py tests/fixtures/intake-payloads
 
 The local contract is documented in `docs/orchestrator-intake.md`.
 
+`scripts/create-source-playbook.py` creates and registers draft general-law
+source playbooks:
+
+```bash
+python3 scripts/create-source-playbook.py \
+  --jurisdiction KR \
+  --domain platform_service \
+  --title "KR Platform Service"
+```
+
+Generated playbooks intentionally contain TODO placeholders until the required
+source-layer, currentness, and fallback sections are filled. Validate playbooks
+with:
+
+```bash
+python3 scripts/check-source-playbooks.py
+```
+
+The authoring workflow is documented in:
+
+```text
+docs/source-playbook-authoring.md
+```
+
+General-law source planning now uses a compact domain checklist plus optional
+active playbooks:
+
+```text
+skills/general-law-source-playbook.md
+knowledge/general/domain-source-checklist.md
+knowledge/general/source-playbook-index.json
+knowledge/general/playbooks/kr-platform-service.md
+```
+
+Source metadata may also include optional currentness data for controlling
+authority:
+
+```json
+{
+  "currentness": {
+    "status": "checked_current",
+    "checked_as_of": "2026-05-06",
+    "effective_date": null,
+    "notes": "Official current version checked."
+  }
+}
+```
+
+The status vocabulary and confidence consequences are defined in:
+
+```text
+skills/currentness-check.md
+```
+
+Output metadata may also include optional claim-level checks:
+
+```json
+{
+  "claim_checks": [
+    {
+      "claim_id": "claim_001",
+      "issue_id": "issue_001",
+      "claim": "Material legal proposition.",
+      "authority_ids": ["src_001"],
+      "support_strength": "direct",
+      "currentness": "checked",
+      "confidence_impact": "supports_medium_or_high",
+      "limitation": "None identified."
+    }
+  ]
+}
+```
+
+The claim verification loop is defined in:
+
+```text
+skills/claim-verification-loop.md
+```
+
+Together these hardening gates are intentionally additive. Existing consumers
+can continue reading the original metadata fields, while local validators use
+the richer fields when present to catch stale authority, unsupported claims, and
+missing source layers before legacy parity testing.
+
 `scripts/evaluate-golden-set.py` runs all local golden-set quality specs against
 their matching output directories:
 
 ```bash
 python3 scripts/evaluate-golden-set.py
 python3 scripts/evaluate-golden-set.py --case-id kr_general_basic
+```
+
+General-only parity against the legacy `general-legal-research` agent is planned
+separately in:
+
+```text
+docs/general-legacy-parity-plan.md
+```
+
+Pre-parity quality hardening for source playbook authoring, general-law source
+planning, claim-level verification, and currentness checks is planned in:
+
+```text
+docs/general-quality-hardening-plan.md
 ```
 
 ## Citation Auditor Vendor

@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "playbooks": [
+    {
+      "id": "kr-platform-service",
+      "jurisdiction": "KR",
+      "domain": "platform_service",
+      "path": "knowledge/general/playbooks/kr-platform-service.md",
+      "status": "active"
+    }
+  ]
+}

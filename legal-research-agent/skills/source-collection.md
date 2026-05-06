@@ -97,6 +97,21 @@ Before analysis, compare collected sources against the required source minimum:
 Do not fill a minimum-source gap with secondary commentary unless the result is
 explicitly marked source-limited.
 
+## Source-Layer Stop Condition
+
+For `general` and general-law `game_plus_general` issues, apply
+`general-law-source-playbook.md` before final analysis. Compare the collected
+source envelopes against:
+
+- `knowledge/general/domain-source-checklist.md`; and
+- any active matching playbook from
+  `knowledge/general/source-playbook-index.json`.
+
+Do not proceed to high-confidence analysis when a required source layer is
+missing, currentness is unknown for controlling authority, or a secondary source
+is filling a primary-law role. Record the missing layer in `coverage_gaps` and
+carry the confidence ceiling into the issue map.
+
 ## Document Conversion
 
 For PDF, DOCX, PPTX, XLSX, HWP, or HWPX sources:
@@ -117,6 +132,11 @@ Apply temporal tags to statutes, regulations, agency rules, and guidance:
 - `[Repealed - YYYY-MM-DD]`
 
 Carry this into source metadata using `temporal_status` and `temporal_note`.
+When structured source metadata is available, also apply
+`skills/currentness-check.md` and populate `sources[*].currentness`.
+
+Use `coverage_gaps` with type `temporal_status` when currentness cannot be
+verified for a controlling source.
 
 ## Similar-Statute Guard
 

@@ -110,6 +110,95 @@ class QualityEvaluationTest(unittest.TestCase):
         self.assertEqual(result["status"], "fail")
         self.assertTrue(any("D-grade" in error for error in result["errors"]))
 
+    def test_not_checked_currentness_blocks_high_confidence(self) -> None:
+        meta = valid_meta()
+        meta["issue_map"][0]["confidence"] = "high"
+        meta["sources"][0]["currentness"] = {
+            "status": "not_checked",
+            "checked_as_of": None,
+            "effective_date": None,
+            "notes": "Current official version was not checked.",
+        }
+        meta["coverage_gaps"] = []
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("currentness_alignment" in error for error in result["errors"]))
+
+    def test_limiting_currentness_requires_temporal_gap_or_caveat(self) -> None:
+        meta = valid_meta()
+        meta["issue_map"][0]["confidence"] = "medium"
+        meta["sources"][0]["currentness"] = {
+            "status": "pending_change",
+            "checked_as_of": "2026-05-06",
+            "effective_date": None,
+            "notes": "Pending amendment may affect the answer.",
+        }
+        meta["coverage_gaps"] = []
+        output_dir = self.write_output(meta, result_text="Official source verification is required.")
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("visible caveat" in error for error in result["errors"]))
+
+        meta["coverage_gaps"] = [
+            {
+                "type": "temporal_status",
+                "description": "Pending change must be checked before final reliance.",
+            }
+        ]
+        output_dir = self.write_output(meta, result_text="Official source verification is required.")
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertFalse(any("visible caveat" in error for error in result["errors"]))
+
+    def test_claim_checks_must_cover_key_finding_source_anchors(self) -> None:
+        meta = valid_meta()
+        meta["claim_checks"] = []
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("key_findings[0]" in error for error in result["errors"]))
+        self.assertEqual(result["checks"].get("claim_verification"), "fail")
+
+    def test_high_confidence_requires_direct_claim_check_when_present(self) -> None:
+        meta = valid_meta()
+        meta["issue_map"][0]["confidence"] = "high"
+        meta["claim_checks"] = [
+            {
+                "claim_id": "claim_001",
+                "issue_id": "issue_001",
+                "claim": "Probability disclosure should be verified against official rules.",
+                "authority_ids": ["src_001"],
+                "support_strength": "background",
+                "currentness": "checked",
+                "confidence_impact": "does_not_support_high",
+                "limitation": "Background source only.",
+            }
+        ]
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("direct claim check" in error for error in result["errors"]))
+
+    def test_direct_claim_check_satisfies_high_confidence_claim_gate(self) -> None:
+        meta = valid_meta()
+        meta["issue_map"][0]["confidence"] = "high"
+        meta["claim_checks"] = [
+            {
+                "claim_id": "claim_001",
+                "issue_id": "issue_001",
+                "claim": "Probability disclosure should be verified against official rules.",
+                "authority_ids": ["src_001"],
+                "support_strength": "direct",
+                "currentness": "checked",
+                "confidence_impact": "supports_high",
+                "limitation": "None identified.",
+            }
+        ]
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertFalse(any("claim_verification" in error for error in result["errors"]))
+        self.assertEqual(result["checks"].get("claim_verification"), "pass")
+
     def test_key_findings_require_source_anchor(self) -> None:
         meta = valid_meta()
         meta["key_findings"] = ["Official source verification is required."]

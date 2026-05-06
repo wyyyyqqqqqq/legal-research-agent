@@ -100,6 +100,109 @@ class OutputContractTest(unittest.TestCase):
         with self.assertRaises(VALIDATOR.ValidationError):
             VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
 
+    def test_source_currentness_checked_status_is_valid(self) -> None:
+        meta = valid_meta()
+        meta["sources"][0]["currentness"] = {
+            "status": "checked_current",
+            "checked_as_of": "2026-05-06",
+            "effective_date": None,
+            "notes": "Official current version checked.",
+        }
+        output_dir = self.write_output(meta)
+        warnings = VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+        self.assertEqual(warnings, [])
+
+    def test_source_currentness_invalid_status_fails(self) -> None:
+        meta = valid_meta()
+        meta["sources"][0]["currentness"] = {
+            "status": "fresh_enough",
+            "checked_as_of": "2026-05-06",
+        }
+        output_dir = self.write_output(meta)
+        with self.assertRaisesRegex(VALIDATOR.ValidationError, "currentness.status"):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_source_currentness_checked_status_requires_checked_as_of(self) -> None:
+        meta = valid_meta()
+        meta["sources"][0]["currentness"] = {
+            "status": "checked_current",
+            "checked_as_of": None,
+        }
+        output_dir = self.write_output(meta)
+        with self.assertRaisesRegex(VALIDATOR.ValidationError, "checked_as_of"):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_claim_checks_valid_shape_passes(self) -> None:
+        meta = valid_meta()
+        meta["claim_checks"] = [
+            {
+                "claim_id": "claim_001",
+                "issue_id": "issue_001",
+                "claim": "Disclosure is required under the relevant game rules.",
+                "authority_ids": ["src_001"],
+                "support_strength": "direct",
+                "currentness": "checked",
+                "confidence_impact": "supports_high",
+                "limitation": "None identified.",
+            }
+        ]
+        output_dir = self.write_output(meta)
+        warnings = VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+        self.assertEqual(warnings, [])
+
+    def test_claim_checks_reject_duplicate_claim_id(self) -> None:
+        meta = valid_meta()
+        claim_check = {
+            "claim_id": "claim_001",
+            "issue_id": "issue_001",
+            "claim": "Disclosure is required under the relevant game rules.",
+            "authority_ids": ["src_001"],
+            "support_strength": "direct",
+            "currentness": "checked",
+            "confidence_impact": "supports_high",
+            "limitation": "None identified.",
+        }
+        meta["claim_checks"] = [claim_check, dict(claim_check)]
+        output_dir = self.write_output(meta)
+        with self.assertRaisesRegex(VALIDATOR.ValidationError, "duplicate claim id"):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_claim_checks_reject_unknown_source_id(self) -> None:
+        meta = valid_meta()
+        meta["claim_checks"] = [
+            {
+                "claim_id": "claim_001",
+                "issue_id": "issue_001",
+                "claim": "Disclosure is required under the relevant game rules.",
+                "authority_ids": ["src_missing"],
+                "support_strength": "direct",
+                "currentness": "checked",
+                "confidence_impact": "supports_high",
+                "limitation": "None identified.",
+            }
+        ]
+        output_dir = self.write_output(meta)
+        with self.assertRaisesRegex(VALIDATOR.ValidationError, "unknown source ids"):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_claim_checks_reject_invalid_support_strength(self) -> None:
+        meta = valid_meta()
+        meta["claim_checks"] = [
+            {
+                "claim_id": "claim_001",
+                "issue_id": "issue_001",
+                "claim": "Disclosure is required under the relevant game rules.",
+                "authority_ids": ["src_001"],
+                "support_strength": "vibes",
+                "currentness": "checked",
+                "confidence_impact": "supports_high",
+                "limitation": "None identified.",
+            }
+        ]
+        output_dir = self.write_output(meta)
+        with self.assertRaisesRegex(VALIDATOR.ValidationError, "support_strength"):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
     def test_summary_must_be_non_empty(self) -> None:
         meta = valid_meta()
         meta["summary"] = " "

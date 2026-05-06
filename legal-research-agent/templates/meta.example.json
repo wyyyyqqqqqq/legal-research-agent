@@ -29,10 +29,28 @@
       "grade": "A",
       "citation": "Article or section",
       "pinpoint": "Specific pinpoint",
-      "url_or_access": "URL, database path, or access note"
+      "url_or_access": "URL, database path, or access note",
+      "currentness": {
+        "status": "checked_current",
+        "checked_as_of": "2026-05-06",
+        "effective_date": null,
+        "notes": "Official current version checked."
+      }
     }
   ],
   "comparison_matrix": [],
   "coverage_gaps": [],
+  "claim_checks": [
+    {
+      "claim_id": "claim_001",
+      "issue_id": "issue_001",
+      "claim": "Short answer with source-backed conclusion.",
+      "authority_ids": ["src_001"],
+      "support_strength": "direct",
+      "currentness": "checked",
+      "confidence_impact": "supports_medium_or_high",
+      "limitation": "None identified from the checked source."
+    }
+  ],
   "error": null
 }

@@ -82,6 +82,7 @@ The agent must write exactly two files:
 - `specialist_handoff`
 - `temporal_status`
 - `other`
+- `claim_verification`
 
 ## Quality Relationship
 
@@ -90,6 +91,24 @@ result can still fail the legal-quality standard if it omits material issues,
 uses weak authority for controlling propositions, or hides unresolved source
 limits. Apply `legal-output-quality-standard.md` and `quality-check.md` before
 delivery.
+
+## Optional Claim Checks
+
+`claim_checks` is optional and additive. When present, every claim check should
+include:
+
+- `claim_id`
+- `issue_id`
+- `claim`
+- `authority_ids`
+- `support_strength`
+- `currentness`
+- `confidence_impact`
+- `limitation`
+
+`support_strength` must be one of `direct`, `indirect`, `background`, or
+`unsupported`. Every `authority_ids[*]` value must exist in `sources[*].id`.
+Apply `claim-verification-loop.md` before finalizing this field.
 
 ## Result Memo Structure
 

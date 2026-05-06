@@ -28,10 +28,28 @@
       "grade": "A",
       "citation": "Placeholder article",
       "pinpoint": "Placeholder pinpoint",
-      "url_or_access": "official source placeholder"
+      "url_or_access": "official source placeholder",
+      "currentness": {
+        "status": "checked_current",
+        "checked_as_of": "2026-05-06",
+        "effective_date": null,
+        "notes": "Fixture source currentness checked for validator coverage."
+      }
     }
   ],
   "comparison_matrix": [],
   "coverage_gaps": [],
+  "claim_checks": [
+    {
+      "claim_id": "claim_001",
+      "issue_id": "issue_001",
+      "claim": "Official source verification is required before final probability disclosure or sanction conclusions.",
+      "authority_ids": ["src_001"],
+      "support_strength": "direct",
+      "currentness": "checked",
+      "confidence_impact": "supports_medium",
+      "limitation": "Fixture source is a placeholder for deterministic validation."
+    }
+  ],
   "error": null
 }

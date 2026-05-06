@@ -26,6 +26,28 @@ Use source categories consistently:
 For every controlling proposition, try to connect at least one Grade A or strong
 Grade B source to the relevant `issue_map` entry.
 
+## Domain Playbooks
+
+Before source collection for `general` mode, apply
+`skills/general-law-source-playbook.md`.
+
+Default domain source-layer minimums live in:
+
+```text
+knowledge/general/domain-source-checklist.md
+```
+
+Registered focused playbooks live in:
+
+```text
+knowledge/general/source-playbook-index.json
+knowledge/general/playbooks/
+```
+
+Use active playbooks only when jurisdiction and domain match the issue. If no
+active playbook exists, use the domain checklist and record the limitation when
+it materially affects confidence.
+
 ## Korea
 
 Prefer `korean-law` MCP where available for:

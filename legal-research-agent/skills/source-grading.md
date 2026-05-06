@@ -58,13 +58,22 @@ Each source should include:
   "grade": "A",
   "citation": "Article, paragraph, decision number, or section",
   "pinpoint": "Specific pinpoint",
-  "url_or_access": "URL, database path, MCP source, or access note"
+  "url_or_access": "URL, database path, MCP source, or access note",
+  "currentness": {
+    "status": "checked_current",
+    "checked_as_of": "2026-05-06",
+    "effective_date": null,
+    "notes": "Official current version checked."
+  }
 }
 ```
 
 Use stable source IDs and reference them from `issue_map[*].authority_ids`.
 `url_or_access` is required and must also be displayed in the result memo's
 `## Sources` table as the `Access` cell.
+`currentness` is optional for compatibility, but controlling legal authority
+should include it when currentness was checked. Apply
+`currentness-check.md` for status values and confidence consequences.
 
 ## Korean and Translation Refinements
 

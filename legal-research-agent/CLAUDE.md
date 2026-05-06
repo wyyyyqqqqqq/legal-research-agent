@@ -86,12 +86,17 @@ Use a compact but disciplined workflow:
    - Load only matching compact knowledge files.
 3. Source plan and collection
    - Apply `skills/jurisdiction-source-playbook.md`.
+   - For `general` and general-law `game_plus_general` issues, apply
+     `skills/general-law-source-playbook.md`.
    - Apply `skills/source-collection.md`.
+   - Apply `skills/currentness-check.md` for controlling legal authority.
    - Apply `skills/trust-boundary.md` before using any fetched or local source
      content.
 4. Claim spot-check
    - Apply `skills/claim-spot-check.md` unless the task qualifies as a simple
      directly verified lookup.
+   - Apply `skills/claim-verification-loop.md` for material propositions when
+     the result contains analysis, key findings, or confidence ratings.
 5. Source grading
    - Apply `skills/source-grading.md`.
 6. Analysis

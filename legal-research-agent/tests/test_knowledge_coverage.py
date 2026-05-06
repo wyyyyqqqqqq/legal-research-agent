@@ -37,6 +37,30 @@ class KnowledgeCoverageTest(unittest.TestCase):
         self.assertIn("knowledge/legal-writing/ko-formatter-profile.md", required_paths)
         self.assertIn("knowledge/legal-writing/en-formatter-profile.md", required_paths)
 
+    def test_source_playbook_scaffold_is_required(self) -> None:
+        required_paths = set(CHECKER.REQUIRED_MARKERS)
+        self.assertIn("templates/source-playbook.example.md", required_paths)
+        self.assertIn("docs/source-playbook-authoring.md", required_paths)
+        self.assertIn("knowledge/general/source-playbook-index.json", required_paths)
+
+    def test_general_law_source_playbook_is_required(self) -> None:
+        required_paths = set(CHECKER.REQUIRED_MARKERS)
+        self.assertIn("skills/general-law-source-playbook.md", required_paths)
+        self.assertIn("knowledge/general/domain-source-checklist.md", required_paths)
+        self.assertIn("knowledge/general/playbooks/kr-platform-service.md", required_paths)
+
+    def test_currentness_gate_is_required(self) -> None:
+        required_paths = set(CHECKER.REQUIRED_MARKERS)
+        self.assertIn("skills/currentness-check.md", required_paths)
+        self.assertIn("skills/source-grading.md", required_paths)
+        self.assertIn("skills/quality-check.md", required_paths)
+
+    def test_claim_verification_gate_is_required(self) -> None:
+        required_paths = set(CHECKER.REQUIRED_MARKERS)
+        self.assertIn("skills/claim-verification-loop.md", required_paths)
+        self.assertIn("skills/claim-spot-check.md", required_paths)
+        self.assertIn("skills/output-contract.md", required_paths)
+
 
 if __name__ == "__main__":
     unittest.main()
