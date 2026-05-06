@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "description": "Deterministic local token-comparison fixture.",
+  "patterns": [
+    {
+      "case_id": "kr_general_basic",
+      "route_pattern": "general-only",
+      "quality_status": "pass",
+      "quality_report": "quality-reports/kr_general_basic.json",
+      "legacy": {
+        "label": "legacy general fixture",
+        "events": ["legacy-general.events.jsonl"],
+        "agent_calls": 3
+      },
+      "merged": {
+        "label": "merged general fixture",
+        "events": ["merged-general.events.jsonl"],
+        "agent_calls": 3
+      }
+    },
+    {
+      "case_id": "synthetic_game_plus_general",
+      "route_pattern": "game-plus-general",
+      "quality_status": "pass",
+      "quality_report": "quality-reports/synthetic_game_plus_general.json",
+      "legacy": {
+        "label": "legacy general plus game fixture",
+        "events": ["legacy-game-plus-general.events.jsonl"],
+        "agent_calls": 4
+      },
+      "merged": {
+        "label": "merged game plus general fixture",
+        "events": ["merged-game-plus-general.events.jsonl"],
+        "agent_calls": 3
+      }
+    }
+  ]
+}

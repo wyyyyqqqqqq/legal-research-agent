@@ -158,6 +158,7 @@ python3 tests/test_run_local_checks.py
 python3 tests/test_fixture_consistency.py
 python3 tests/test_citation_auditor_vendor.py
 python3 tests/test_citation_auditor_smoke.py
+python3 tests/test_token_comparison.py
 python3 scripts/check-knowledge-coverage.py
 python3 scripts/check-formatter-output.py tests/fixtures/formatter
 python3 scripts/check-standalone-workflow.py tests/fixtures/standalone-workflow
@@ -168,6 +169,7 @@ python3 scripts/check-result-structure.py tests/fixtures/output/valid
 python3 scripts/evaluate-golden-set.py
 python3 scripts/measure-prompt-footprint.py
 python3 scripts/measure-tokens.py path/to/events.jsonl
+python3 scripts/compare-token-runs.py path/to/token-comparison-manifest.json
 bash tests/lint_no_legacy_invocation.sh
 ```
 
@@ -201,6 +203,20 @@ python3 scripts/measure-prompt-footprint.py --include-vendor
 This is a stable rough-token proxy for repo instructions, not a substitute for
 end-to-end usage from real Claude Code `events.jsonl` runs.
 The current Phase 0 snapshot is recorded in `docs/prompt-footprint.md`.
+
+`scripts/compare-token-runs.py` compares legacy and merged runs by route
+pattern for Phase 2 diagnostics:
+
+```bash
+python3 scripts/compare-token-runs.py \
+  tests/fixtures/token-comparison/token-comparison-manifest.json
+```
+
+It prefers actual Claude Code `events.jsonl` usage. Proxy metrics are allowed
+only as clearly marked review data. A merged run that uses more tokens fails the
+local comparison gate unless the manifest records a `quality_reason`. Optional
+`quality_report` files can be attached so the manifest's `quality_status` is
+checked against the actual quality-gate result.
 
 `scripts/validate-intake-payload.py` checks the future orchestrator-to-agent
 payload shape without modifying the orchestrator repository:

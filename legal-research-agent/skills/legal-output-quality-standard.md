@@ -99,6 +99,7 @@ python3 scripts/check-knowledge-coverage.py
 python3 scripts/check-result-structure.py {OUTPUT_DIR}
 python3 scripts/evaluate-quality.py {OUTPUT_DIR} --case-spec {CASE_SPEC_JSON}
 python3 scripts/evaluate-golden-set.py
+python3 scripts/compare-token-runs.py {TOKEN_COMPARISON_MANIFEST_JSON}
 ```
 
 The quality gate is intentionally stricter than schema validation.
@@ -115,3 +116,10 @@ For multi-case evaluation, each quality spec must point to a stable `case_id`.
 When `requires_comparison_matrix`, `required_co_running_agents`, or
 `requires_privacy_handoff` is present, those checks are mandatory and cannot be
 offset by token savings.
+
+Token comparison is a separate evidence gate, not a quality substitute. Use
+actual Claude Code `events.jsonl` files when available. Proxy metrics may be
+recorded only as review data. A merged run that increases token usage must
+record a concrete `quality_reason`; otherwise the token comparison fails. When
+available, attach a `quality_report` to the token manifest so the comparison can
+verify that `quality_status` and `case_id` match the quality gate output.

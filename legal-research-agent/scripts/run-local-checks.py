@@ -109,6 +109,16 @@ CHECKS: list[dict[str, Any]] = [
         "description": "Verify token measurement parser against sample events.",
         "cmd": ["python3", "scripts/measure-tokens.py", "tests/fixtures/events/sample-events.jsonl"],
     },
+    {
+        "id": "token_comparison",
+        "description": "Compare legacy and merged token usage by route pattern.",
+        "cmd": [
+            "python3",
+            "scripts/compare-token-runs.py",
+            "tests/fixtures/token-comparison/token-comparison-manifest.json",
+            "--json",
+        ],
+    },
 ]
 
 

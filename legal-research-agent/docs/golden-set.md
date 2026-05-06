@@ -63,6 +63,7 @@ python3 scripts/validate-output.py /path/to/output
 python3 scripts/check-result-structure.py /path/to/output
 python3 scripts/evaluate-quality.py /path/to/output --case-spec /path/to/case-quality-spec.json
 python3 scripts/evaluate-golden-set.py
+python3 scripts/compare-token-runs.py /path/to/token-comparison-manifest.json
 ```
 
 `run-local-checks.py` is the repeatable local preflight and can write a JSON
@@ -84,7 +85,9 @@ confidence alignment for fallback/error/coverage-gap outputs, and case-specific
 material issue terms. It also checks that metadata key findings cite known
 source IDs. `evaluate-golden-set.py` applies those checks across every
 `tests/fixtures/quality/*-quality-spec.json` file and fails if any expected
-output directory is missing.
+output directory is missing. `compare-token-runs.py` turns Phase 2 token
+evidence into a route-pattern report and blocks token increases that lack a
+documented quality reason.
 
 Source detail integrity is mandatory:
 
@@ -200,7 +203,10 @@ Suggested pass line:
 Use `scripts/measure-prompt-footprint.py` for Phase 0 prompt/instruction
 footprint diagnostics; the current Phase 0 snapshot is recorded in
 `docs/prompt-footprint.md`. Use `scripts/measure-tokens.py` for actual Claude
-Code `events.jsonl` usage whenever legacy and merged runs are available.
+Code `events.jsonl` usage whenever legacy and merged runs are available. Use
+`scripts/compare-token-runs.py` to compare those measurements by route pattern.
+The comparison manifest must keep quality status visible because token savings
+cannot compensate for a failed legal-quality gate.
 
 | Route pattern | Legacy measured tokens | Merged measured tokens | Delta | Decision |
 |---|---:|---:|---:|---|
@@ -208,3 +214,26 @@ Code `events.jsonl` usage whenever legacy and merged runs are available.
 | `game-only` | TBD | TBD | TBD | TBD |
 | `game-plus-general` | TBD | TBD | TBD | TBD |
 | `game-plus-data-protection` | TBD | TBD | TBD | TBD |
+
+Minimal token-comparison manifest shape:
+
+```json
+{
+  "patterns": [
+    {
+      "case_id": "kr_general_basic",
+      "route_pattern": "general-only",
+      "quality_status": "pass",
+      "quality_report": "quality-reports/kr_general_basic.json",
+      "legacy": {"events": ["legacy-general.events.jsonl"]},
+      "merged": {"events": ["merged-general.events.jsonl"]}
+    }
+  ]
+}
+```
+
+If `merged` has a positive `total_billed_like` delta, add `quality_reason` or
+the comparison gate fails. If either side lacks actual `events`, proxy metrics
+may be recorded, but the decision remains proxy-only review data.
+When `quality_report` is present, its `status` and `case_id` must match the
+manifest entry so token evidence cannot drift away from the quality gate result.
