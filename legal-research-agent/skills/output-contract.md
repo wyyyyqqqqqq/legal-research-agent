@@ -40,6 +40,11 @@ The agent must write exactly two files:
 
 ## Integrity Rules
 
+- `meta_version`, `summary`, `active_profile`, and
+  `orchestrator_route_mode` must be non-empty strings.
+- `jurisdictions` and `domains` must be non-empty lists of non-empty strings.
+- `classification_warnings`, `co_running_agents`, and `key_findings` must be
+  lists; when present, every item must be a non-empty string.
 - `research_mode` must be one of:
   - `general`
   - `game_regulation`
@@ -49,6 +54,8 @@ The agent must write exactly two files:
   - `orchestrator`
   - `self_classified`
 - Every `issue_map[*].authority_ids` value must exist in `sources[*].id`.
+- Every `issue_map[*].issue`, `issue_map[*].answer`, and
+  `issue_map[*].authority_ids[*]` value must be a non-empty string.
 - Every source grade must be one of `A`, `B`, `C`, or `D`.
 - Every source must include non-empty `title`, `citation`, `pinpoint`, and
   `url_or_access`.
@@ -89,7 +96,12 @@ execution is available, run:
 python3 scripts/check-result-structure.py {OUTPUT_DIR}
 ```
 
-The result memo must expose issue analysis, source IDs, confidence, limits,
-coverage gaps, and handoff notes in the body. Metadata alone is not enough.
+The result memo must expose the actual user question, short-answer source
+anchoring, issue analysis, source IDs, confidence, limits, coverage gaps, and
+handoff notes in the body. Metadata alone is not enough.
+The `### Rule And Authority` subsection must visibly cite every authority source
+ID used by the issue map.
+When metadata `comparison_matrix` is non-empty, the result memo must include a
+visible `## Comparison Matrix` table before `## Sources`.
 The `## Sources` table must mirror metadata source `grade`, `title`,
 `citation`, and `pinpoint` exactly for each source ID.

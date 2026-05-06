@@ -167,6 +167,45 @@ class FixtureConsistencyTest(unittest.TestCase):
             errors = CHECKER.check_consistency(case_dir, quality_dir, golden_dir)
             self.assertTrue(any("requires_comparison_matrix mismatch" in error for error in errors), errors)
 
+    def test_golden_question_mismatch_is_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            case_dir = root / "cases"
+            quality_dir = root / "quality"
+            golden_dir = root / "golden-set"
+            case_dir.mkdir()
+            quality_dir.mkdir()
+            (golden_dir / "case_a").mkdir(parents=True)
+            write_json(
+                case_dir / "case_a.json",
+                {
+                    "id": "case_a",
+                    "title": "Case A",
+                    "user_question": "Original user question?",
+                    "expected_research_mode": "general",
+                    "jurisdictions": ["KR"],
+                    "domains": ["general"],
+                },
+            )
+            write_json(
+                quality_dir / "case_a-quality-spec.json",
+                {
+                    "id": "case_a_quality",
+                    "case_id": "case_a",
+                    "expected_research_mode": "general",
+                    "required_jurisdictions": ["KR"],
+                    "required_domains": ["general"],
+                },
+            )
+            (golden_dir / "case_a" / "legal-research-agent-result.md").write_text(
+                "# Legal Research Result\n\n## Question\n\nDifferent question.\n",
+                encoding="utf-8",
+            )
+            (golden_dir / "case_a" / "legal-research-agent-meta.json").write_text("{}", encoding="utf-8")
+
+            errors = CHECKER.check_consistency(case_dir, quality_dir, golden_dir)
+            self.assertTrue(any("golden result question mismatch" in error for error in errors), errors)
+
     def test_golden_output_without_case_is_reported(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

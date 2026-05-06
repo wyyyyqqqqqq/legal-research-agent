@@ -14,9 +14,10 @@
 
 ## Short Answer
 
-Privacy questions are delegated to the co-running specialist. This result keeps
-the game-law framing, event operation context, and handoff visible without
-duplicating detailed data-protection analysis.
+Privacy questions are delegated to pipa-specialist. This result keeps the
+game-law framing, event operation context, and handoff visible without
+duplicating detailed data-protection analysis; src_001 anchors the game-law
+framing.
 
 ## Issues
 

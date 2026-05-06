@@ -57,6 +57,92 @@ class ResultStructureTest(unittest.TestCase):
         errors = CHECKER.check_result_structure(output_dir)
         self.assertTrue(any("placeholder" in error for error in errors), errors)
 
+    def test_empty_question_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "## Question\n\n한국에서 모바일 게임의 확률형 아이템 확률 표시 의무와 위반 시 제재를 조사해줘.\n",
+                "## Question\n\n",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("question: section must not be empty" in error for error in errors), errors)
+
+    def test_non_substantive_question_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "한국에서 모바일 게임의 확률형 아이템 확률 표시 의무와 위반 시 제재를 조사해줘.",
+                "TBD",
+                1,
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("actual user question" in error for error in errors), errors)
+
+    def test_empty_short_answer_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "## Short Answer\n\n"
+                "Probability disclosure and enforcement exposure for randomized paid items should\n"
+                "verify the current official game-regulation source before final sanction\n"
+                "conclusions are used, with src_001 as the source anchor.\n",
+                "## Short Answer\n\n",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("short_answer: section must not be empty" in error for error in errors), errors)
+
+    def test_short_answer_requires_source_anchor(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(text.replace(" with src_001 as the source anchor", ""))
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("short_answer: must cite" in error for error in errors), errors)
+
+    def test_short_answer_with_coverage_gap_requires_limiting_language(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = valid_meta()
+        meta["coverage_gaps"] = [
+            {
+                "type": "source_coverage",
+                "description": "Official source coverage is incomplete.",
+            }
+        ]
+        output_dir = self.write_output(
+            text.replace(
+                "Probability disclosure and enforcement exposure for randomized paid items should\n"
+                "verify the current official game-regulation source before final sanction\n"
+                "conclusions are used, with src_001 as the source anchor.",
+                "Probability disclosure and enforcement exposure is resolved, with src_001 as the source anchor.",
+            ).replace(
+                "## Coverage Gaps\n\nThis fixture does not perform live source collection.\n",
+                "## Coverage Gaps\n\nsource coverage gap remains open.\n",
+            ),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("visible limiting language" in error for error in errors), errors)
+
+    def test_short_answer_with_co_running_agent_names_handoff_owner(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = valid_meta()
+        meta["co_running_agents"] = ["pipa-specialist"]
+        output_dir = self.write_output(
+            text.replace("- Co-running agents: `[]`", "- Co-running agents: `pipa-specialist`").replace(
+                "Probability disclosure and enforcement exposure for randomized paid items should\n"
+                "verify the current official game-regulation source before final sanction\n"
+                "conclusions are used, with src_001 as the source anchor.",
+                "Probability disclosure is anchored to src_001; privacy is delegated by handoff.",
+            ).replace(
+                "## Handoff Notes\n\nNone.\n",
+                "## Handoff Notes\n\npipa-specialist receives the privacy handoff.\n",
+            ),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("short_answer: missing co-running agent 'pipa-specialist'" in error for error in errors), errors)
+
     def test_unknown_source_id_fails(self) -> None:
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
         output_dir = self.write_output(text.replace("src_001", "src_missing", 1))
@@ -168,6 +254,58 @@ class ResultStructureTest(unittest.TestCase):
         )
         errors = CHECKER.check_result_structure(output_dir)
         self.assertTrue(any("empty analysis subsection" in error for error in errors), errors)
+
+    def test_rule_and_authority_requires_source_anchor(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "material. This fixture uses src_001 as the official-source marker.",
+                "material. This fixture identifies the official-source marker.",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("Rule And Authority must cite" in error for error in errors), errors)
+        self.assertTrue(any("Rule And Authority missing authority source ids" in error for error in errors), errors)
+
+    def test_rule_and_authority_requires_all_issue_authority_ids(self) -> None:
+        case_dir = GOLDEN_OUTPUT / "jp_kr_game_launch"
+        text = (case_dir / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = json.loads((case_dir / "legal-research-agent-meta.json").read_text(encoding="utf-8"))
+        output_dir = self.write_output(
+            text.replace(" and src_002 marks Japanese authority", " and the Japanese authority is marked"),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("missing authority source ids ['src_002']" in error for error in errors), errors)
+
+    def test_comparison_matrix_metadata_requires_visible_section(self) -> None:
+        case_dir = GOLDEN_OUTPUT / "jp_kr_game_launch"
+        text = (case_dir / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = json.loads((case_dir / "legal-research-agent-meta.json").read_text(encoding="utf-8"))
+        output_dir = self.write_output(
+            text.replace(
+                "## Comparison Matrix\n\n"
+                "| Issue | KR | JP | Status |\n"
+                "|---|---|---|---|\n"
+                "| Classification | Verify with official Korean game-regulation source. | Verify with official Japan source. | requires_current_source_check |\n"
+                "| Consumer notices | Verify with official Korean consumer/game source. | Verify with official Japan consumer/game source. | requires_current_source_check |\n\n",
+                "",
+            ),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("comparison_matrix exists but section is missing" in error for error in errors), errors)
+
+    def test_comparison_matrix_display_requires_all_cells(self) -> None:
+        case_dir = GOLDEN_OUTPUT / "jp_kr_game_launch"
+        text = (case_dir / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = json.loads((case_dir / "legal-research-agent-meta.json").read_text(encoding="utf-8"))
+        output_dir = self.write_output(
+            text.replace("Verify with official Japan consumer/game source.", ""),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("comparison_matrix[1].JP" in error for error in errors), errors)
 
     def test_analysis_subsection_order_mismatch_fails(self) -> None:
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")

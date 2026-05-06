@@ -21,6 +21,12 @@ Write these sections in this order:
 
 `Handoff Notes` may say `None.` when there is no specialist handoff.
 
+## Question
+
+Copy the actual user question into `## Question`. Do not leave this section
+empty, shorten it to `TBD`, or replace it with an internal route label. Local
+golden-set fixtures must match their case fixture `user_question` exactly.
+
 ## Route Context
 
 The `## Route Context` section must mirror metadata exactly:
@@ -31,6 +37,16 @@ The `## Route Context` section must mirror metadata exactly:
 - `Mode source` = `mode_source`
 - `Co-running agents` = `co_running_agents` in the same order, or `[]` when
   empty
+
+## Short Answer
+
+Write a substantive short answer, not `None`, `TBD`, or a generic process note.
+When metadata has sources, cite at least one `src_*` anchor in the short answer.
+When the output is fallback, error-bearing, or has `coverage_gaps`, include
+visible limiting language such as source-limited, coverage gap, fallback,
+unverified, conservative, insufficient, or needs verification. When
+`co_running_agents` is non-empty, name the specialist owner and use handoff or
+delegation language in the short answer.
 
 ## Issue Blocks
 
@@ -74,11 +90,19 @@ Together these subsections should cover:
 - currentness or effective-date note where relevant;
 - practical next step.
 
+`### Rule And Authority` must cite source IDs for every authority source used
+by the issue blocks. If `issue_map[*].authority_ids` includes `src_001` and
+`src_002`, both IDs must appear in `### Rule And Authority`, not only in the
+source table or metadata.
+
 For multi-jurisdiction work, analyze each jurisdiction first and synthesize only
 after jurisdiction-specific rows or paragraphs are complete.
 When the metadata uses `comparison_matrix`, every matrix row must have a clear
 issue label, one non-empty cell for each compared jurisdiction, and a status
 such as verified, tentative, or requires current-source checking.
+When `comparison_matrix` is non-empty, add a visible `## Comparison Matrix`
+markdown table before `## Sources`. The table must display every metadata row's
+`issue`, every compared jurisdiction cell, and `status`.
 
 ## Source Table
 
@@ -126,7 +150,7 @@ detail.
 
 ## Forbidden Shortcuts
 
-- Do not leave template placeholders such as `{{short_answer}}`.
+- Do not leave template placeholders such as `{{short_answer_with_source_anchor}}`.
 - Do not cite source IDs in the result that are absent from metadata.
 - Do not put all uncertainty only in metadata.
 - Do not collapse issue analysis into a single unstructured paragraph.

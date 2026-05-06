@@ -14,7 +14,7 @@
 
 ## Short Answer
 
-{{short_answer}}
+{{short_answer_with_source_anchor}}
 
 ## Issues
 
@@ -43,6 +43,8 @@
 ### Practical Next Step
 
 {{practical_next_step}}
+
+{{comparison_matrix_section_if_any}}
 
 ## Sources
 

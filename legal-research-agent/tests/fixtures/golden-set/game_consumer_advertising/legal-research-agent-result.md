@@ -15,7 +15,8 @@
 ## Short Answer
 
 Influencer advertising, consumer notice, and limited package sale terms must
-verify official sources before launch recommendations are finalized.
+verify official sources before launch recommendations are finalized, with
+src_001 as the source anchor.
 
 ## Issues
 

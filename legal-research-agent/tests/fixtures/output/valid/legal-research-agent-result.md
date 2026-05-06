@@ -16,7 +16,7 @@
 
 Probability disclosure and enforcement exposure for randomized paid items should
 verify the current official game-regulation source before final sanction
-conclusions are used.
+conclusions are used, with src_001 as the source anchor.
 
 ## Issues
 

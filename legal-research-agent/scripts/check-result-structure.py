@@ -40,6 +40,19 @@ ROUTE_CONTEXT_LABELS = {
 REQUIRED_ISSUE_FIELDS = ("Answer", "Sources", "Confidence", "Limits")
 GAME_RESEARCH_MODES = {"game_regulation", "game_plus_general"}
 EMPTY_FIELD_VALUES = {"", "-", "none", "none.", "n/a", "na", "tbd", "to be determined"}
+EMPTY_SECTION_VALUES = EMPTY_FIELD_VALUES | {"not specified", "unspecified"}
+LIMITING_SHORT_ANSWER_TERMS = (
+    "cannot",
+    "conservative",
+    "fallback",
+    "gap",
+    "insufficient",
+    "source-limited",
+    "source limited",
+    "unverified",
+    "verify",
+)
+HANDOFF_TERMS = ("handoff", "delegat")
 
 
 class StructureError(Exception):
@@ -85,6 +98,10 @@ def referenced_source_ids(text: str) -> set[str]:
 def section_text(text: str, heading: str) -> str:
     match = re.search(rf"(?ms)^{re.escape(heading)}\s*(.*?)(?=^## |\Z)", text)
     return match.group(1) if match else ""
+
+
+def normalize_display_text(value: str) -> str:
+    return re.sub(r"\s+", " ", value.strip().lower())
 
 
 def route_context_values(text: str) -> dict[str, str]:
@@ -248,6 +265,17 @@ def validate_route_context(text: str, meta: dict[str, Any]) -> list[str]:
     return errors
 
 
+def validate_question(text: str) -> list[str]:
+    question = section_text(text, "## Question").strip()
+    if not question:
+        return ["question: section must not be empty"]
+    if question.lower() in EMPTY_SECTION_VALUES:
+        return ["question: section must contain the actual user question"]
+    if len(question) < 8:
+        return ["question: section is too short to preserve the user question"]
+    return []
+
+
 def analysis_subsection_positions(analysis: str) -> dict[str, int]:
     positions: dict[str, int] = {}
     for heading in REQUIRED_ANALYSIS_HEADINGS:
@@ -262,7 +290,19 @@ def analysis_subsection_body(analysis: str, heading: str) -> str:
     return match.group(1).strip() if match else ""
 
 
-def validate_analysis_structure(text: str) -> list[str]:
+def authority_ids_from_issues(meta: dict[str, Any]) -> set[str]:
+    ids: set[str] = set()
+    for issue in meta.get("issue_map", []):
+        if not isinstance(issue, dict):
+            continue
+        for source_id in issue.get("authority_ids", []):
+            normalized = str(source_id).strip()
+            if normalized:
+                ids.add(normalized)
+    return ids
+
+
+def validate_analysis_structure(text: str, meta: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     analysis = section_text(text, "## Analysis")
     positions = analysis_subsection_positions(analysis)
@@ -277,6 +317,52 @@ def validate_analysis_structure(text: str) -> list[str]:
     ordered_positions = [positions[heading] for heading in REQUIRED_ANALYSIS_HEADINGS if heading in positions]
     if ordered_positions != sorted(ordered_positions):
         errors.append("analysis_structure: required analysis subsections are out of order")
+
+    rule_body = analysis_subsection_body(analysis, "### Rule And Authority")
+    displayed_rule_ids = referenced_source_ids(rule_body)
+    expected_rule_ids = authority_ids_from_issues(meta)
+    known_source_ids = source_ids(meta)
+    if known_source_ids and not (displayed_rule_ids & known_source_ids):
+        errors.append("analysis_structure: Rule And Authority must cite at least one metadata source id")
+    missing_rule_ids = sorted(expected_rule_ids - displayed_rule_ids)
+    if missing_rule_ids:
+        errors.append(
+            f"analysis_structure: Rule And Authority missing authority source ids {missing_rule_ids}"
+        )
+
+    return errors
+
+
+def validate_short_answer(text: str, meta: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    short_answer = section_text(text, "## Short Answer").strip()
+    if not short_answer:
+        return ["short_answer: section must not be empty"]
+
+    normalized = short_answer.lower()
+    if re.fullmatch(r"(?is)\s*(none|none\.|n/a|tbd|to be determined)\s*", short_answer):
+        errors.append("short_answer: section must contain a substantive answer")
+
+    known_source_ids = source_ids(meta)
+    if known_source_ids and not (referenced_source_ids(short_answer) & known_source_ids):
+        errors.append("short_answer: must cite at least one metadata source id")
+
+    has_structured_gap = any(isinstance(gap, dict) for gap in meta.get("coverage_gaps", []))
+    needs_limiting_language = (
+        has_structured_gap
+        or meta.get("error") is not None
+        or str(meta.get("research_mode", "")) == "fallback"
+    )
+    if needs_limiting_language and not any(term in normalized for term in LIMITING_SHORT_ANSWER_TERMS):
+        errors.append("short_answer: fallback, error, or coverage-gap output needs visible limiting language")
+
+    co_running_agents = [str(agent).strip() for agent in meta.get("co_running_agents", []) if str(agent).strip()]
+    if co_running_agents:
+        if not any(term in normalized for term in HANDOFF_TERMS):
+            errors.append("short_answer: co-running agents require visible handoff or delegation language")
+        for agent in co_running_agents:
+            if agent.lower() not in normalized:
+                errors.append(f"short_answer: missing co-running agent {agent!r}")
 
     return errors
 
@@ -333,6 +419,53 @@ def validate_handoff_notes_display(text: str, meta: dict[str, Any]) -> list[str]
     return errors
 
 
+def validate_comparison_matrix_display(text: str, meta: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    matrix = [row for row in meta.get("comparison_matrix", []) if isinstance(row, dict)]
+    if not matrix:
+        return errors
+
+    section = section_text(text, "## Comparison Matrix").strip()
+    if not section:
+        return ["comparison_matrix_display: metadata comparison_matrix exists but section is missing"]
+
+    normalized_section = normalize_display_text(section)
+    table_lines = [line for line in section.splitlines() if line.strip().startswith("|")]
+    if not table_lines:
+        errors.append("comparison_matrix_display: section must include a markdown table")
+
+    for label in ("issue", "status"):
+        if label not in normalized_section:
+            errors.append(f"comparison_matrix_display: table header missing {label!r}")
+
+    jurisdictions = [str(value).strip() for value in meta.get("jurisdictions", []) if str(value).strip()]
+    for jurisdiction in jurisdictions:
+        if normalize_display_text(jurisdiction) not in normalized_section:
+            errors.append(f"comparison_matrix_display: table header missing jurisdiction {jurisdiction!r}")
+
+    for index, row in enumerate(matrix):
+        field = f"comparison_matrix[{index}]"
+        issue = str(row.get("issue", "")).strip()
+        status = str(row.get("status", "")).strip()
+        if issue and normalize_display_text(issue) not in normalized_section:
+            errors.append(f"comparison_matrix_display: missing {field}.issue {issue!r}")
+        if status and normalize_display_text(status) not in normalized_section:
+            errors.append(f"comparison_matrix_display: missing {field}.status {status!r}")
+
+        row_keys = {str(key).strip().lower(): key for key in row}
+        for jurisdiction in jurisdictions:
+            key = row_keys.get(jurisdiction.lower())
+            if key is None:
+                continue
+            cell_value = str(row.get(key, "")).strip()
+            if cell_value and normalize_display_text(cell_value) not in normalized_section:
+                errors.append(
+                    f"comparison_matrix_display: missing {field}.{key} cell {cell_value!r}"
+                )
+
+    return errors
+
+
 def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[str]:
     result_path = output_dir / f"{agent_id}-result.md"
     meta_path = output_dir / f"{agent_id}-meta.json"
@@ -360,8 +493,11 @@ def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[s
     if ordered_positions != sorted(ordered_positions):
         errors.append("heading_order: required headings are out of order")
 
+    errors.extend(validate_question(text))
     errors.extend(validate_route_context(text, meta))
-    errors.extend(validate_analysis_structure(text))
+    errors.extend(validate_short_answer(text, meta))
+    errors.extend(validate_analysis_structure(text, meta))
+    errors.extend(validate_comparison_matrix_display(text, meta))
     errors.extend(validate_coverage_gap_display(text, meta))
     errors.extend(validate_handoff_notes_display(text, meta))
 

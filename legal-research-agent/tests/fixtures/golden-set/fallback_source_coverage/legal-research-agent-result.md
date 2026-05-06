@@ -15,7 +15,8 @@
 ## Short Answer
 
 Fallback is required. A definitive worldwide rule cannot be given without a
-jurisdiction and official source coverage for that jurisdiction.
+jurisdiction and official source coverage for that jurisdiction; src_001 is
+only an orientation source.
 
 ## Issues
 

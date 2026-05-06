@@ -100,6 +100,55 @@ class OutputContractTest(unittest.TestCase):
         with self.assertRaises(VALIDATOR.ValidationError):
             VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
 
+    def test_summary_must_be_non_empty(self) -> None:
+        meta = valid_meta()
+        meta["summary"] = " "
+        output_dir = self.write_output(meta)
+        with self.assertRaises(VALIDATOR.ValidationError):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_route_metadata_strings_must_be_non_empty(self) -> None:
+        meta = valid_meta()
+        meta["active_profile"] = ""
+        output_dir = self.write_output(meta)
+        with self.assertRaises(VALIDATOR.ValidationError):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_jurisdictions_must_be_non_empty_string_list(self) -> None:
+        meta = valid_meta()
+        meta["jurisdictions"] = [""]
+        output_dir = self.write_output(meta)
+        with self.assertRaises(VALIDATOR.ValidationError):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_domains_must_be_non_empty_list(self) -> None:
+        meta = valid_meta()
+        meta["domains"] = []
+        output_dir = self.write_output(meta)
+        with self.assertRaises(VALIDATOR.ValidationError):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_issue_text_fields_must_be_non_empty(self) -> None:
+        meta = valid_meta()
+        meta["issue_map"][0]["answer"] = ""
+        output_dir = self.write_output(meta)
+        with self.assertRaises(VALIDATOR.ValidationError):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_authority_ids_must_be_non_empty_strings(self) -> None:
+        meta = valid_meta()
+        meta["issue_map"][0]["authority_ids"] = [""]
+        output_dir = self.write_output(meta)
+        with self.assertRaises(VALIDATOR.ValidationError):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
+    def test_key_findings_items_must_be_non_empty_strings(self) -> None:
+        meta = valid_meta()
+        meta["key_findings"] = [" "]
+        output_dir = self.write_output(meta)
+        with self.assertRaises(VALIDATOR.ValidationError):
+            VALIDATOR.validate_output_dir(output_dir, "legal-research-agent")
+
     def test_fallback_requires_reason(self) -> None:
         meta = valid_meta()
         meta["research_mode"] = "fallback"

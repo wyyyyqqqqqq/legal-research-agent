@@ -15,7 +15,8 @@
 ## Short Answer
 
 The launch memo should compare Korea and Japan requirements for classification,
-consumer notices, and official source verification before any synthesis.
+consumer notices, and official source verification before any synthesis, using
+src_001 and src_002 as source anchors.
 
 ## Issues
 
@@ -47,6 +48,13 @@ procedures, consumer-notice guidance, or enforcement priorities.
 ### Practical Next Step
 
 Build a live comparison matrix from official KR and JP sources.
+
+## Comparison Matrix
+
+| Issue | KR | JP | Status |
+|---|---|---|---|
+| Classification | Verify with official Korean game-regulation source. | Verify with official Japan source. | requires_current_source_check |
+| Consumer notices | Verify with official Korean consumer/game source. | Verify with official Japan consumer/game source. | requires_current_source_check |
 
 ## Sources
 

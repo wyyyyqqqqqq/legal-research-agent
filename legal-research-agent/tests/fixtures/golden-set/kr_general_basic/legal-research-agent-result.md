@@ -15,7 +15,8 @@
 ## Short Answer
 
 Terms-change notice analysis must verify current official Korean law and
-regulator material before final conclusions are used.
+regulator material before final conclusions are used, with src_001 as the
+source anchor.
 
 ## Issues
 

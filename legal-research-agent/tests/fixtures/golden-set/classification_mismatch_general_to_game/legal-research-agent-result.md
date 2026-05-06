@@ -16,7 +16,8 @@
 
 The agent keeps the routed general mode but records a classification mismatch
 because the facts appear game-regulation specific. This routed-mode result
-should be treated as source-limited until the coverage gap is reviewed.
+should be treated as source-limited until the coverage gap is reviewed, with
+src_001 as the source anchor.
 
 ## Issues
 

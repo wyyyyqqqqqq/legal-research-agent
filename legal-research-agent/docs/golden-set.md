@@ -33,6 +33,9 @@ The current deterministic fixture set covers:
   quality criterion.
 - Result and metadata files exist.
 - Metadata validates.
+- Metadata text fields are substantive: no empty `summary`, route fields,
+  jurisdictions, domains, issue labels, issue answers, authority IDs, or
+  key-finding items.
 - No fabricated sources.
 - Each key legal conclusion maps to at least one source.
 - No critical legal issue found by legacy or reviewer is omitted.
@@ -86,6 +89,11 @@ Source detail integrity is mandatory:
 - the table's `Grade`, `Title`, `Citation`, and `Pinpoint` cells must match
   metadata for the same source ID.
 
+Question fidelity is mandatory. The result memo's `## Question` section must be
+substantive. In local golden-set fixtures, it must match the case fixture
+`user_question` exactly so that evaluation does not drift away from the prompt
+being tested.
+
 Analysis structure is mandatory. The result memo's `## Analysis` section must
 include non-empty subsections in this order:
 
@@ -93,6 +101,10 @@ include non-empty subsections in this order:
 - `### Application`
 - `### Counter-Analysis Or Caveat`
 - `### Practical Next Step`
+
+`### Rule And Authority` must display every authority source ID used by
+`issue_map[*].authority_ids`. Source IDs appearing only in metadata, issue
+blocks, or the source table are not enough for the rule paragraph.
 
 Coverage gap display is mandatory. The result memo's `## Coverage Gaps` section
 must not be empty. When metadata `coverage_gaps` is non-empty, the visible
@@ -103,6 +115,12 @@ Handoff display is mandatory. The result memo's `## Handoff Notes` section must
 not be empty. When metadata `co_running_agents` is non-empty, the visible
 section must not say `None`; it must name every co-running agent and include
 handoff or delegation language.
+
+Short answer source anchoring is mandatory. The result memo's `## Short Answer`
+section must be substantive and, when metadata sources exist, cite at least one
+metadata source ID. Fallback, error, or coverage-gap outputs must show limiting
+language in the short answer. Specialist handoff outputs must name the
+co-running owner and use handoff or delegation language in the short answer.
 
 Issue block field integrity is mandatory. Every `### Issue` block must carry
 its own non-empty `Answer`, `Sources`, `Confidence`, and `Limits` lines. Game
@@ -132,6 +150,10 @@ non-empty list of object rows. Each row must include:
 - one non-empty cell for every `required_jurisdictions` value;
 - non-empty `status` describing whether the row is verified, tentative, or
   requires current-source checking.
+
+When metadata `comparison_matrix` is non-empty, the result memo must also show
+a `## Comparison Matrix` markdown table before `## Sources`. The visible table
+must display each row's issue, every compared jurisdiction cell, and status.
 
 ## Quality-First Rule
 

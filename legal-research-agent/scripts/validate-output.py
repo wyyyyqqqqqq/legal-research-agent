@@ -86,6 +86,20 @@ def require_type(value: Any, expected_type: type, field: str) -> None:
         raise ValidationError(f"{field}: expected {expected_type.__name__}")
 
 
+def require_non_empty_string(value: Any, field: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValidationError(f"{field}: expected non-empty string")
+    return value
+
+
+def validate_string_list(value: Any, field: str, require_non_empty: bool = False) -> None:
+    require_type(value, list, field)
+    if require_non_empty and not value:
+        raise ValidationError(f"{field}: expected non-empty list")
+    for index, item in enumerate(value):
+        require_non_empty_string(item, f"{field}[{index}]")
+
+
 def validate_sources(meta: dict[str, Any]) -> set[str]:
     sources = meta["sources"]
     require_type(sources, list, "sources")
@@ -120,7 +134,11 @@ def validate_issue_map(meta: dict[str, Any], source_ids: set[str]) -> None:
         for key in ("issue", "answer", "authority_ids", "confidence"):
             if key not in issue:
                 raise ValidationError(f"{field}: missing {key}")
+        require_non_empty_string(issue["issue"], f"{field}.issue")
+        require_non_empty_string(issue["answer"], f"{field}.answer")
         require_type(issue["authority_ids"], list, f"{field}.authority_ids")
+        for authority_index, source_id in enumerate(issue["authority_ids"]):
+            require_non_empty_string(source_id, f"{field}.authority_ids[{authority_index}]")
         missing = [source_id for source_id in issue["authority_ids"] if source_id not in source_ids]
         if missing:
             raise ValidationError(f"{field}.authority_ids: unknown source ids {missing}")
@@ -165,15 +183,18 @@ def validate_meta(meta: dict[str, Any]) -> None:
     if meta["error"] not in ERROR_VALUES:
         raise ValidationError(f"error: invalid value {meta['error']!r}")
 
-    for key in (
-        "classification_warnings",
-        "co_running_agents",
-        "jurisdictions",
-        "domains",
-        "key_findings",
-        "comparison_matrix",
-    ):
-        require_type(meta[key], list, key)
+    for key in ("meta_version", "summary", "active_profile", "orchestrator_route_mode"):
+        require_non_empty_string(meta[key], key)
+
+    if meta["fallback_reason"] is not None:
+        require_non_empty_string(meta["fallback_reason"], "fallback_reason")
+
+    validate_string_list(meta["classification_warnings"], "classification_warnings")
+    validate_string_list(meta["co_running_agents"], "co_running_agents")
+    validate_string_list(meta["jurisdictions"], "jurisdictions", require_non_empty=True)
+    validate_string_list(meta["domains"], "domains", require_non_empty=True)
+    validate_string_list(meta["key_findings"], "key_findings")
+    require_type(meta["comparison_matrix"], list, "comparison_matrix")
 
     if meta["research_mode"] == "fallback" and not meta["fallback_reason"]:
         raise ValidationError("fallback_reason: required when research_mode is fallback")

@@ -18,6 +18,21 @@ DEFAULT_TAXONOMY_PATH = ROOT / "knowledge" / "game-regulation" / "issue-taxonomy
 AGENT_ID = "legal-research-agent"
 
 
+def result_question(result_text: str) -> str:
+    lines = result_text.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() != "## Question":
+            continue
+        collected: list[str] = []
+        for body_line in lines[index + 1 :]:
+            if body_line.startswith("## "):
+                break
+            if body_line.strip():
+                collected.append(body_line.strip())
+        return "\n".join(collected).strip()
+    return ""
+
+
 def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -189,6 +204,14 @@ def check_consistency(
         meta_path = output_dir / f"{agent_id}-meta.json"
         if not result_path.exists():
             errors.append(f"{case_id}: missing golden result file {result_path.name}")
+        else:
+            expected_question = str(cases[case_id]["data"].get("user_question", "")).strip()
+            displayed_question = result_question(result_path.read_text(encoding="utf-8"))
+            if expected_question and displayed_question != expected_question:
+                errors.append(
+                    f"{case_id}: golden result question mismatch "
+                    f"case={expected_question!r} result={displayed_question!r}"
+                )
         if not meta_path.exists():
             errors.append(f"{case_id}: missing golden metadata file {meta_path.name}")
 
