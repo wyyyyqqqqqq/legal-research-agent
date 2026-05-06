@@ -94,6 +94,23 @@ include non-empty subsections in this order:
 - `### Counter-Analysis Or Caveat`
 - `### Practical Next Step`
 
+Coverage gap display is mandatory. The result memo's `## Coverage Gaps` section
+must not be empty. When metadata `coverage_gaps` is non-empty, the visible
+section must not say `None` and must display each gap `type` in readable form
+such as `source coverage` or `classification mismatch`.
+
+Handoff display is mandatory. The result memo's `## Handoff Notes` section must
+not be empty. When metadata `co_running_agents` is non-empty, the visible
+section must not say `None`; it must name every co-running agent and include
+handoff or delegation language.
+
+Issue block field integrity is mandatory. Every `### Issue` block must carry
+its own non-empty `Answer`, `Sources`, `Confidence`, and `Limits` lines. Game
+research modes must also include a non-empty `Taxonomy` line in every issue
+block. The issue block's `Confidence` value must match the corresponding
+`issue_map[*].confidence`, and every `issue_map[*].authority_ids` value must
+appear in that block's `Sources` line.
+
 Case specs may require route-specific gates:
 
 - `requires_comparison_matrix` for multi-jurisdiction comparison cases;

@@ -36,18 +36,25 @@ The `## Route Context` section must mirror metadata exactly:
 
 Under `## Issues`, create one `### Issue` block for each material issue.
 
-Each issue block should include:
+Each issue block must include non-empty values for:
 
 - `Answer`
 - `Sources`
 - `Confidence`
-- `Taxonomy` for game-regulation issues
 - `Limits`
+
+When `research_mode` is `game_regulation` or `game_plus_general`, every issue
+block must also include a non-empty `Taxonomy` line. If an issue is a general
+law issue inside `game_plus_general`, state that boundary explicitly rather
+than omitting the field.
 
 Every source listed in an issue block must exist in
 `legal-research-agent-meta.json` under `sources[*].id`.
 Every `issue_map[*].authority_ids` source must appear in the matching issue
 block's `Sources` line.
+Every issue block's `Confidence` value must match the matching
+`issue_map[*].confidence` value. Put confidence caveats in `Limits`, not inside
+the `Confidence` value.
 
 ## Analysis Requirements
 
@@ -101,6 +108,10 @@ When gaps exist, include:
 - impact on confidence;
 - what would resolve it.
 
+The displayed gap should include the metadata gap type in readable form, for
+example `source coverage gap` for `source_coverage` or `classification mismatch
+coverage gap` for `classification_mismatch`.
+
 ## Handoff Notes
 
 Use this section for:
@@ -109,8 +120,9 @@ Use this section for:
 - IP, tax, finance, employment, or other specialist boundaries;
 - unresolved facts needed by another specialist.
 
-If a specialist is co-running, name the specialist owner and state what this
-agent did not analyze in detail.
+If a specialist is co-running, name every `co_running_agents` owner, use visible
+handoff or delegation language, and state what this agent did not analyze in
+detail.
 
 ## Forbidden Shortcuts
 

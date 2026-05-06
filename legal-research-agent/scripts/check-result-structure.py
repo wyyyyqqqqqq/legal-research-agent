@@ -37,6 +37,9 @@ ROUTE_CONTEXT_LABELS = {
     "Research mode": "research_mode",
     "Mode source": "mode_source",
 }
+REQUIRED_ISSUE_FIELDS = ("Answer", "Sources", "Confidence", "Limits")
+GAME_RESEARCH_MODES = {"game_regulation", "game_plus_general"}
+EMPTY_FIELD_VALUES = {"", "-", "none", "none.", "n/a", "na", "tbd", "to be determined"}
 
 
 class StructureError(Exception):
@@ -148,11 +151,75 @@ def issue_blocks(text: str) -> list[str]:
     return blocks
 
 
-def issue_source_ids(block: str) -> set[str]:
-    match = re.search(r"(?m)^-\s*Sources:\s*(.+)$", block)
+def issue_field_value(block: str, field: str) -> str | None:
+    match = re.search(rf"(?m)^-[ \t]*{re.escape(field)}:[ \t]*(.*)$", block)
     if not match:
+        return None
+    return match.group(1).strip()
+
+
+def is_meaningful_issue_value(value: str | None) -> bool:
+    if value is None:
+        return False
+    normalized = value.strip().lower()
+    return normalized not in EMPTY_FIELD_VALUES
+
+
+def normalize_issue_value(value: str | None) -> str:
+    if value is None:
+        return ""
+    return value.strip().strip("`").strip().lower()
+
+
+def issue_source_ids(block: str) -> set[str]:
+    value = issue_field_value(block, "Sources")
+    if value is None:
         return set()
-    return referenced_source_ids(match.group(1))
+    return referenced_source_ids(value)
+
+
+def validate_issue_blocks(blocks: list[str], meta: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    meta_issues = [issue for issue in meta.get("issue_map", []) if isinstance(issue, dict)]
+    research_mode = str(meta.get("research_mode", ""))
+    required_fields = list(REQUIRED_ISSUE_FIELDS)
+    if research_mode in GAME_RESEARCH_MODES:
+        required_fields.append("Taxonomy")
+
+    for block_index, block in enumerate(blocks):
+        issue_number = block_index + 1
+        for field in required_fields:
+            value = issue_field_value(block, field)
+            if value is None:
+                errors.append(f"issue_blocks: issue {issue_number} missing field {field!r}")
+                continue
+            if not is_meaningful_issue_value(value):
+                errors.append(f"issue_blocks: issue {issue_number} empty field {field!r}")
+
+        if issue_field_value(block, "Sources") is not None and not issue_source_ids(block):
+            errors.append(f"issue_blocks: issue {issue_number} Sources field has no source ids")
+
+    for index, issue in enumerate(meta_issues):
+        if index >= len(blocks):
+            continue
+        expected_ids = {str(source_id) for source_id in issue.get("authority_ids", []) if str(source_id)}
+        displayed_ids = issue_source_ids(blocks[index])
+        missing_issue_sources = sorted(expected_ids - displayed_ids)
+        if missing_issue_sources:
+            errors.append(
+                f"issue_blocks: issue {index + 1} missing authority source ids {missing_issue_sources}"
+            )
+
+        expected_confidence = normalize_issue_value(str(issue.get("confidence", "")))
+        displayed_confidence = normalize_issue_value(issue_field_value(blocks[index], "Confidence"))
+        if expected_confidence and displayed_confidence and expected_confidence != displayed_confidence:
+            errors.append(
+                "issue_blocks: issue "
+                f"{index + 1} confidence mismatch result={displayed_confidence!r} "
+                f"metadata={expected_confidence!r}"
+            )
+
+    return errors
 
 
 def validate_route_context(text: str, meta: dict[str, Any]) -> list[str]:
@@ -214,6 +281,58 @@ def validate_analysis_structure(text: str) -> list[str]:
     return errors
 
 
+def validate_coverage_gap_display(text: str, meta: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    coverage = section_text(text, "## Coverage Gaps").strip()
+    if not coverage:
+        return ["coverage_gaps: section must not be empty"]
+
+    metadata_gaps = [gap for gap in meta.get("coverage_gaps", []) if isinstance(gap, dict)]
+    if not metadata_gaps:
+        return errors
+
+    normalized_coverage = coverage.lower().replace("_", " ")
+    if re.fullmatch(r"(?is)\s*(none|none\.|none identified\.?|n/a)\s*", coverage):
+        errors.append("coverage_gaps: metadata gaps exist but result says none")
+
+    for index, gap in enumerate(metadata_gaps):
+        gap_type = str(gap.get("type", "")).strip()
+        if not gap_type:
+            continue
+        terms = [term for term in gap_type.lower().replace("_", " ").split() if term]
+        missing_terms = [term for term in terms if term not in normalized_coverage]
+        if missing_terms:
+            errors.append(
+                f"coverage_gaps: gap {index + 1} type {gap_type!r} not displayed in result"
+            )
+
+    return errors
+
+
+def validate_handoff_notes_display(text: str, meta: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    handoff = section_text(text, "## Handoff Notes").strip()
+    if not handoff:
+        return ["handoff_notes: section must not be empty"]
+
+    co_running_agents = [str(agent).strip() for agent in meta.get("co_running_agents", []) if str(agent).strip()]
+    if not co_running_agents:
+        return errors
+
+    normalized_handoff = handoff.lower()
+    if re.fullmatch(r"(?is)\s*(none|none\.|n/a)\s*", handoff):
+        errors.append("handoff_notes: co-running agents exist but result says none")
+
+    if "handoff" not in normalized_handoff and "delegat" not in normalized_handoff:
+        errors.append("handoff_notes: co-running agents require visible handoff or delegation language")
+
+    for agent in co_running_agents:
+        if agent.lower() not in normalized_handoff:
+            errors.append(f"handoff_notes: missing co-running agent {agent!r}")
+
+    return errors
+
+
 def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[str]:
     result_path = output_dir / f"{agent_id}-result.md"
     meta_path = output_dir / f"{agent_id}-meta.json"
@@ -243,6 +362,8 @@ def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[s
 
     errors.extend(validate_route_context(text, meta))
     errors.extend(validate_analysis_structure(text))
+    errors.extend(validate_coverage_gap_display(text, meta))
+    errors.extend(validate_handoff_notes_display(text, meta))
 
     issue_count = len(re.findall(r"(?m)^### Issue\b", text))
     material_issue_count = len([issue for issue in meta.get("issue_map", []) if isinstance(issue, dict)])
@@ -253,10 +374,6 @@ def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[s
         )
     elif issue_count == 0:
         errors.append("issue_blocks: result must include at least one '### Issue' block")
-
-    for label in ("Answer:", "Sources:", "Confidence:", "Limits:"):
-        if label not in text:
-            errors.append(f"issue_fields: missing {label!r} in issue blocks")
 
     if SOURCE_TABLE_HEADER not in text:
         errors.append("sources_table: missing required source table header")
@@ -306,18 +423,7 @@ def check_result_structure(output_dir: Path, agent_id: str = AGENT_ID) -> list[s
     if detail_mismatches:
         errors.append(f"sources_table: detail mismatch {sorted(detail_mismatches)}")
 
-    blocks = issue_blocks(text)
-    meta_issues = [issue for issue in meta.get("issue_map", []) if isinstance(issue, dict)]
-    for index, issue in enumerate(meta_issues):
-        if index >= len(blocks):
-            continue
-        expected_ids = {str(source_id) for source_id in issue.get("authority_ids", []) if str(source_id)}
-        displayed_ids = issue_source_ids(blocks[index])
-        missing_issue_sources = sorted(expected_ids - displayed_ids)
-        if missing_issue_sources:
-            errors.append(
-                f"issue_blocks: issue {index + 1} missing authority source ids {missing_issue_sources}"
-            )
+    errors.extend(validate_issue_blocks(issue_blocks(text), meta))
 
     return errors
 

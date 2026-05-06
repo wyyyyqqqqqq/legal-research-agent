@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 STRUCTURE_PATH = ROOT / "scripts" / "check-result-structure.py"
 VALID_OUTPUT = ROOT / "tests" / "fixtures" / "output" / "valid"
+GOLDEN_OUTPUT = ROOT / "tests" / "fixtures" / "golden-set"
 
 
 def load_checker():
@@ -112,6 +113,45 @@ class ResultStructureTest(unittest.TestCase):
         errors = CHECKER.check_result_structure(output_dir)
         self.assertTrue(any("missing authority source ids" in error for error in errors), errors)
 
+    def test_issue_block_empty_answer_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "- Answer: Probability disclosure and sanction exposure require official-source verification.",
+                "- Answer:",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("issue 1 empty field 'Answer'" in error for error in errors), errors)
+
+    def test_issue_block_confidence_mismatch_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(text.replace("- Confidence: medium", "- Confidence: low"))
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("issue 1 confidence mismatch" in error for error in errors), errors)
+
+    def test_game_issue_block_missing_taxonomy_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace("- Taxonomy: Randomized Rewards; Enforcement and Remedies\n", "")
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("issue 1 missing field 'Taxonomy'" in error for error in errors), errors)
+
+    def test_each_issue_block_requires_own_fields(self) -> None:
+        case_dir = GOLDEN_OUTPUT / "game_consumer_advertising"
+        text = (case_dir / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = json.loads((case_dir / "legal-research-agent-meta.json").read_text(encoding="utf-8"))
+        output_dir = self.write_output(
+            text.replace(
+                "- Limits: This fixture does not verify live consumer-protection guidance.\n",
+                "",
+            ),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("issue 2 missing field 'Limits'" in error for error in errors), errors)
+
     def test_missing_analysis_subsection_fails(self) -> None:
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
         output_dir = self.write_output(text.replace("### Application\n\n", ""))
@@ -140,6 +180,69 @@ class ResultStructureTest(unittest.TestCase):
         )
         errors = CHECKER.check_result_structure(output_dir)
         self.assertTrue(any("analysis subsections are out of order" in error for error in errors), errors)
+
+    def test_empty_coverage_gap_section_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(
+            text.replace(
+                "## Coverage Gaps\n\nThis fixture does not perform live source collection.\n",
+                "## Coverage Gaps\n\n",
+            )
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("section must not be empty" in error for error in errors), errors)
+
+    def test_metadata_coverage_gap_must_be_displayed(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = valid_meta()
+        meta["coverage_gaps"] = [
+            {
+                "type": "source_coverage",
+                "description": "Official source coverage is incomplete.",
+            }
+        ]
+        output_dir = self.write_output(
+            text.replace(
+                "## Coverage Gaps\n\nThis fixture does not perform live source collection.\n",
+                "## Coverage Gaps\n\nNone.\n",
+            ),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("metadata gaps exist" in error for error in errors), errors)
+        self.assertTrue(any("source_coverage" in error for error in errors), errors)
+
+    def test_empty_handoff_notes_section_fails(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        output_dir = self.write_output(text.replace("## Handoff Notes\n\nNone.\n", "## Handoff Notes\n\n"))
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("handoff_notes: section must not be empty" in error for error in errors), errors)
+
+    def test_co_running_agent_must_be_displayed_in_handoff_notes(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = valid_meta()
+        meta["co_running_agents"] = ["pipa-specialist"]
+        output_dir = self.write_output(
+            text.replace("- Co-running agents: `[]`", "- Co-running agents: `pipa-specialist`"),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("co-running agents exist" in error for error in errors), errors)
+        self.assertTrue(any("missing co-running agent 'pipa-specialist'" in error for error in errors), errors)
+
+    def test_co_running_agent_requires_handoff_language(self) -> None:
+        text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
+        meta = valid_meta()
+        meta["co_running_agents"] = ["pipa-specialist"]
+        output_dir = self.write_output(
+            text.replace("- Co-running agents: `[]`", "- Co-running agents: `pipa-specialist`").replace(
+                "## Handoff Notes\n\nNone.\n",
+                "## Handoff Notes\n\npipa-specialist owns this area.\n",
+            ),
+            meta=meta,
+        )
+        errors = CHECKER.check_result_structure(output_dir)
+        self.assertTrue(any("handoff or delegation language" in error for error in errors), errors)
 
     def test_route_context_research_mode_mismatch_fails(self) -> None:
         text = (VALID_OUTPUT / "legal-research-agent-result.md").read_text(encoding="utf-8")
