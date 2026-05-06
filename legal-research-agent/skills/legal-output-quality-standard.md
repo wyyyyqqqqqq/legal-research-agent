@@ -59,6 +59,9 @@ For multi-jurisdiction work:
 - Do not cite self-regulatory material as binding law unless an official source
   gives it legal effect.
 - Mark stale, pending, repealed, or not-yet-effective law inline.
+- Do not mark an issue `high` confidence when the result is fallback,
+  source-limited, access-limited, jurisdiction-limited, temporally uncertain, or
+  affected by a classification mismatch.
 
 ## Practicality
 
@@ -104,6 +107,8 @@ core source-planning and jurisdiction markers must remain present. A result can
 be well-formed JSON and still fail if it lacks source support, cites weak
 authority for high-confidence conclusions, omits a required jurisdiction, or
 misses a material issue term from the case spec.
+It can also fail when metadata reports an error or material coverage gap while
+issue confidence remains high.
 
 For multi-case evaluation, each quality spec must point to a stable `case_id`.
 When `requires_comparison_matrix`, `required_co_running_agents`, or

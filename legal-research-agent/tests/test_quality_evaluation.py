@@ -56,6 +56,52 @@ class QualityEvaluationTest(unittest.TestCase):
         self.assertEqual(result["status"], "fail")
         self.assertTrue(any("high-confidence" in error for error in result["errors"]))
 
+    def test_error_output_blocks_high_confidence(self) -> None:
+        meta = valid_meta()
+        meta["issue_map"][0]["confidence"] = "high"
+        meta["error"] = "source_coverage_insufficient"
+        meta["coverage_gaps"] = [
+            {
+                "type": "source_coverage",
+                "description": "Current official source coverage is incomplete.",
+            }
+        ]
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("confidence_alignment" in error for error in result["errors"]))
+
+    def test_fallback_output_blocks_high_confidence(self) -> None:
+        meta = valid_meta()
+        meta["research_mode"] = "fallback"
+        meta["fallback_reason"] = "source_coverage_insufficient"
+        meta["issue_map"][0]["confidence"] = "high"
+        meta["issue_map"][0]["answer"] = "Only a conservative fallback answer is available."
+        meta["error"] = "source_coverage_insufficient"
+        meta["coverage_gaps"] = [
+            {
+                "type": "source_coverage",
+                "description": "Current official source coverage is incomplete.",
+            }
+        ]
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertEqual(result["status"], "fail")
+        self.assertTrue(any("confidence_alignment" in error for error in result["errors"]))
+
+    def test_specialist_handoff_gap_does_not_automatically_block_high_confidence(self) -> None:
+        meta = valid_meta()
+        meta["issue_map"][0]["confidence"] = "high"
+        meta["coverage_gaps"] = [
+            {
+                "type": "specialist_handoff",
+                "description": "Privacy analysis is delegated to a co-running specialist.",
+            }
+        ]
+        output_dir = self.write_output(meta)
+        result = EVALUATOR.evaluate_output(output_dir)
+        self.assertFalse(any("confidence_alignment" in error for error in result["errors"]))
+
     def test_d_grade_legal_basis_fails(self) -> None:
         meta = valid_meta()
         meta["sources"][0]["grade"] = "D"

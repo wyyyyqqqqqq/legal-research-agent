@@ -22,6 +22,14 @@ STRUCTURE_CHECK_PATH = ROOT / "scripts" / "check-result-structure.py"
 AGENT_ID = "legal-research-agent"
 PASS = "pass"
 FAIL = "fail"
+LIMITING_CONFIDENCE_GAP_TYPES = {
+    "classification_mismatch",
+    "jurisdiction",
+    "other",
+    "source_access",
+    "source_coverage",
+    "temporal_status",
+}
 
 
 def load_validator():
@@ -99,6 +107,18 @@ def coverage_gap_types(meta: dict[str, Any]) -> set[str]:
         for gap in meta.get("coverage_gaps", [])
         if isinstance(gap, dict) and str(gap.get("type", "")).strip()
     }
+
+
+def confidence_limiting_reasons(meta: dict[str, Any]) -> list[str]:
+    reasons: list[str] = []
+    if meta.get("error") is not None:
+        reasons.append(f"error={meta.get('error')}")
+    if meta.get("research_mode") == "fallback":
+        reasons.append("research_mode=fallback")
+    limiting_gaps = sorted(coverage_gap_types(meta) & LIMITING_CONFIDENCE_GAP_TYPES)
+    if limiting_gaps:
+        reasons.append(f"coverage_gaps={','.join(limiting_gaps)}")
+    return reasons
 
 
 def comparison_jurisdictions(meta: dict[str, Any], case_spec: dict[str, Any]) -> list[str]:
@@ -184,8 +204,10 @@ def evaluate_output(output_dir: Path, case_spec: dict[str, Any] | None = None) -
         checks["issue_map_present"] = PASS
 
     high_confidence_c_only: list[str] = []
+    high_confidence_with_limits: list[str] = []
     d_grade_citations: list[str] = []
     unsupported_issues: list[str] = []
+    confidence_limits = confidence_limiting_reasons(meta)
     for issue in issue_map:
         issue_name = str(issue.get("issue", "<unnamed issue>"))
         grades = issue_authority_grades(issue, sources)
@@ -196,6 +218,8 @@ def evaluate_output(output_dir: Path, case_spec: dict[str, Any] | None = None) -
             d_grade_citations.append(issue_name)
         if issue.get("confidence") == "high" and not has_any_grade(grades, {"A", "B"}):
             high_confidence_c_only.append(issue_name)
+        if issue.get("confidence") == "high" and confidence_limits:
+            high_confidence_with_limits.append(issue_name)
 
     if unsupported_issues:
         errors.append(f"authority_support: issues without source support: {unsupported_issues}")
@@ -214,6 +238,15 @@ def evaluate_output(output_dir: Path, case_spec: dict[str, Any] | None = None) -
         )
     else:
         checks["high_confidence_has_primary_or_official_support"] = PASS
+
+    if high_confidence_with_limits:
+        errors.append(
+            "confidence_alignment: high-confidence issues are not allowed when "
+            f"{', '.join(confidence_limits)}: {high_confidence_with_limits}"
+        )
+        checks["confidence_alignment"] = FAIL
+    else:
+        checks["confidence_alignment"] = PASS
 
     core_material_error = False
     if meta.get("error") is None and meta.get("research_mode") != "fallback":

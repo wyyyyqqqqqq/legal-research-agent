@@ -40,6 +40,9 @@ omission, do the extra work and record why.
 - `fallback_reason` is populated for fallback results.
 - `coverage_gaps` is populated when `error` is non-null or mode is `fallback`.
 - Each coverage gap has a type and a concrete description.
+- High confidence is not allowed when the output has a fallback mode, non-null
+  error, or material coverage gap such as source coverage, source access,
+  jurisdiction, temporal status, or classification mismatch.
 
 ## Game Check
 

@@ -38,6 +38,9 @@ The current deterministic fixture set covers:
   IDs, or key-finding items. `summary` must stay within 500 rough tokens.
 - No fabricated sources.
 - Each key legal conclusion maps to at least one source.
+- Confidence is conservative: fallback, error, source/access/jurisdiction,
+  temporal-status, and classification-mismatch gaps cannot pair with high
+  issue confidence.
 - No critical legal issue found by legacy or reviewer is omitted.
 - Required jurisdictions are not omitted.
 - Game cases cover relevant taxonomy categories.
@@ -76,8 +79,8 @@ checks that the result memo exposes question, route context, issue blocks,
 analysis, sources, coverage gaps, and handoff notes. `evaluate-quality.py`
 checks minimum legal-quality signals such as source support, Grade A/B support
 for high-confidence conclusions, no D-grade legal basis, jurisdiction coverage,
-and case-specific material issue terms. `evaluate-golden-set.py` applies those
-checks across every
+confidence alignment for fallback/error/coverage-gap outputs, and case-specific
+material issue terms. `evaluate-golden-set.py` applies those checks across every
 `tests/fixtures/quality/*-quality-spec.json` file and fails if any expected
 output directory is missing.
 
