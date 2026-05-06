@@ -1,3 +1,9 @@
+---
+name: legal-writing-formatter
+description: Use only after the research result and metadata are complete, or when the user explicitly asks for a standalone legal research deliverable.
+disable-model-invocation: true
+---
+
 # Legal Writing Formatter
 
 Use this skill only after the research result and metadata are complete, or when

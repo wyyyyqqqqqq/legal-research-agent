@@ -1,3 +1,9 @@
+---
+name: result-memo-composition
+description: Use when writing `legal-research-agent-result.md` — enforces the required section structure and source-anchor discipline.
+disable-model-invocation: true
+---
+
 # Result Memo Composition
 
 Use this skill when writing `legal-research-agent-result.md`.

@@ -1,3 +1,9 @@
+---
+name: classify-research-mode
+description: Use only when the orchestrator route is missing or uncertain — self-classifies the research mode.
+disable-model-invocation: true
+---
+
 # Classify Research Mode
 
 Use this skill only when the orchestrator did not provide a valid

@@ -1,3 +1,9 @@
+---
+name: game-regulation-research
+description: Use in `game_regulation` mode and for the game-law core of `game_plus_general`.
+disable-model-invocation: true
+---
+
 # Game-Regulation Research
 
 Use this skill in `game_regulation` mode and for the game-law core of

@@ -1,3 +1,9 @@
+---
+name: source-collection
+description: Use for source planning and retrieval in all research modes — emits compact source envelopes and enforces source-layer minimums.
+disable-model-invocation: true
+---
+
 # Source Collection
 
 Use this skill for source planning and retrieval in all research modes.

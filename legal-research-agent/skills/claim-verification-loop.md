@@ -1,3 +1,9 @@
+---
+name: claim-verification-loop
+description: Use after source collection, grading, and currentness checks before final analysis — verifies material claims with structured authority links.
+disable-model-invocation: true
+---
+
 # Claim Verification Loop
 
 Use this skill after source collection, source grading, and currentness checks,

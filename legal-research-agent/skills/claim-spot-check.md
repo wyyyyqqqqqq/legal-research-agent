@@ -1,3 +1,9 @@
+---
+name: claim-spot-check
+description: Use after source collection and before final analysis — guards against source laundering and unverified claims.
+disable-model-invocation: true
+---
+
 # Claim Spot-Check and Source Laundering Guard
 
 Use this skill after source collection and before final analysis.

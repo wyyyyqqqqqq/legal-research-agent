@@ -1,3 +1,9 @@
+---
+name: quality-check
+description: Use before finalizing result and metadata — runs the contract, source, mode, game, and practical quality gates.
+disable-model-invocation: true
+---
+
 # Quality Check
 
 Run this check before finalizing result and metadata.

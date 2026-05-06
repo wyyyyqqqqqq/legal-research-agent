@@ -1,3 +1,9 @@
+---
+name: jurisdiction-source-playbook
+description: Use after mode classification and before source collection — turns the user question into a jurisdiction-specific source plan.
+disable-model-invocation: true
+---
+
 # Jurisdiction Source Playbook
 
 Use this skill after mode classification and before source collection. Its job

@@ -1,3 +1,9 @@
+---
+name: general-research
+description: Use in `general` mode and as the general-law portion of `game_plus_general`.
+disable-model-invocation: true
+---
+
 # General Legal Research
 
 Use this skill in `general` mode and as the general-law portion of

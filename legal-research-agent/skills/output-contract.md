@@ -1,3 +1,9 @@
+---
+name: output-contract
+description: Defines the two required output files and their metadata schema for orchestrator-compatible runs.
+disable-model-invocation: true
+---
+
 # Output Contract
 
 The agent must write exactly two files:

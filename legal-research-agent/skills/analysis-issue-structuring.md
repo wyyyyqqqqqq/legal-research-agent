@@ -1,3 +1,9 @@
+---
+name: analysis-issue-structuring
+description: Use after source collection and claim spot-checking — turns sources into structured evidence cards and an issue map.
+disable-model-invocation: true
+---
+
 # Analysis and Issue Structuring
 
 Use this skill after source collection and claim spot-checking.

@@ -1,3 +1,9 @@
+---
+name: game-library
+description: Use at intake for `game_regulation` and `game_plus_general` modes — loads only the matching compact game knowledge files.
+disable-model-invocation: true
+---
+
 # Game Knowledge Loading
 
 Use this skill at intake for `game_regulation` and `game_plus_general`.

@@ -1,3 +1,9 @@
+---
+name: currentness-check
+description: Use whenever statutes, regulations, or agency guidance support a controlling proposition — prevents stale, pending, or superseded law from supporting confident answers.
+disable-model-invocation: true
+---
+
 # Currentness Check
 
 Use this skill whenever statutes, regulations, delegated rules, agency guidance,

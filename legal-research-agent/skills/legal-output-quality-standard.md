@@ -1,3 +1,9 @@
+---
+name: legal-output-quality-standard
+description: Use before writing `legal-research-agent-result.md` — applies the non-negotiable legal-quality standard.
+disable-model-invocation: true
+---
+
 # Legal Output Quality Standard
 
 Use this skill before writing `legal-research-agent-result.md`.

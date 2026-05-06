@@ -1,3 +1,9 @@
+---
+name: citation-hierarchy
+description: Use when preparing the result memo and metadata — applies citation hierarchy and source-failure handling.
+disable-model-invocation: true
+---
+
 # Citation Hierarchy and Failure Handling
 
 Use this skill when preparing the result memo and metadata.

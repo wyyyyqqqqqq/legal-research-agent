@@ -1,3 +1,9 @@
+---
+name: general-law-source-playbook
+description: Use in `general` mode and the general-law branch of `game_plus_general`, after `jurisdiction-source-playbook` and before final source collection.
+disable-model-invocation: true
+---
+
 # General Law Source Playbook
 
 Use this skill in `general` mode and for the general-law branch of

@@ -1,3 +1,9 @@
+---
+name: source-grading
+description: Use after source collection — applies grades A/B/C/D and records integrity flags.
+disable-model-invocation: true
+---
+
 # Source Grading
 
 Use this skill whenever adding a source to metadata.
