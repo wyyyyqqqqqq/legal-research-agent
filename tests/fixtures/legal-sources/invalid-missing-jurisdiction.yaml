@@ -1,0 +1,4 @@
+schema_version: "1.0"
+
+# Missing the required `jurisdictions:` top-level key. The validator
+# must reject this fixture.

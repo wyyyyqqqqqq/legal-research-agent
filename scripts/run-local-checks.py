@@ -58,6 +58,11 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-specialist-skills.py"],
     },
     {
+        "id": "legal_sources",
+        "description": "Validate legal_sources.yaml schema.",
+        "cmd": ["python3", "scripts/check-legal-sources.py"],
+    },
+    {
         "id": "output_modes",
         "description": "Verify output-mode templates and frameworks (executive brief / comparative matrix / enforcement / black-letter).",
         "cmd": ["python3", "scripts/check-output-modes.py"],

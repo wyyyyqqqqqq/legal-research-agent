@@ -1,0 +1,20 @@
+schema_version: "1.0"
+
+jurisdictions:
+  KR:
+    primary:
+      - name: "law.go.kr"
+        url: "https://www.law.go.kr"
+        scope: "Statutes"
+    secondary: []
+    mcp_fallback:
+      mcp_id: "mcp__claude_ai_Korean-law__"
+      on_unavailable: "WebFetch fallback"
+
+  US:
+    primary:
+      - name: "congress.gov"
+        url: "https://www.congress.gov"
+        scope: "Federal legislation"
+    secondary: []
+    mcp_fallback: null
