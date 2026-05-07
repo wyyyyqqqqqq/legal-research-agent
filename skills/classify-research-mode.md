@@ -26,6 +26,23 @@ explicitly uncertain.
 4. If no route is usable, self-classify.
 5. If self-classification is uncertain, use `fallback`.
 
+## User Config Precedence
+
+When `user-config.json` is present and the run is standalone:
+
+1. If the user-supplied question explicitly names a research mode, use it.
+2. Else if `output_preferences.default_research_mode` is set in the
+   config, use it as the starting hypothesis.
+3. Else self-classify per the rules below.
+
+When the run is a subagent dispatch (orchestrator-supplied intake
+payload), the standard `## Precedence` rules apply — `user-config.json`
+is ignored because the orchestrator owns classification.
+
+If the config-suggested mode is inconsistent with the question facts,
+record `classification_warnings: ["config_mismatch"]` and continue
+with the routed mode rather than silently switching.
+
 ## Self-Classification Rules
 
 Use `game_regulation` when the facts involve:
