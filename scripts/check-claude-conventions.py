@@ -70,7 +70,11 @@ def check_skills(root: Path) -> list[str]:
     skills_dir = root / "skills"
     if not skills_dir.is_dir():
         return [f"skills/: directory missing"]
-    for path in sorted(skills_dir.glob("*.md")):
+    skill_paths = sorted(skills_dir.glob("*.md"))
+    specialist_dir = skills_dir / "specialists"
+    if specialist_dir.is_dir():
+        skill_paths.extend(sorted(specialist_dir.glob("*.md")))
+    for path in skill_paths:
         rel = path.relative_to(root).as_posix()
         text = path.read_text(encoding="utf-8")
         front = parse_frontmatter(text)
