@@ -52,5 +52,8 @@
       "limitation": "None identified from the checked source."
     }
   ],
+  "output_mode": "canonical",
+  "output_mode_audience": null,
+  "output_mode_format": "markdown",
   "error": null
 }

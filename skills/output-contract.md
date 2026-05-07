@@ -116,6 +116,29 @@ include:
 `unsupported`. Every `authority_ids[*]` value must exist in `sources[*].id`.
 Apply `claim-verification-loop.md` before finalizing this field.
 
+## Optional Output Mode
+
+`output_mode` is optional and additive. Existing readers ignore it. When
+present, it must be one of:
+
+- `executive_brief`
+- `comparative_matrix`
+- `enforcement_case_law`
+- `black_letter_commentary`
+- `canonical` (default; equivalent to omitting the field)
+
+Optional companion fields:
+
+- `output_mode_audience`: free-text audience descriptor (e.g. `C-suite`,
+  `compliance team`, `litigation lead`).
+- `output_mode_format`: one of `markdown`, `docx_ready`, or `docx`.
+  When `docx`, the deliverable is generated via `scripts/render-docx.py`
+  on top of `docx_ready_markdown` packaging.
+
+Apply `skills/output-mode-composition.md` whenever a non-`canonical`
+mode is selected for a standalone deliverable. The orchestrator-compatible
+`legal-research-agent-result.md` is unchanged regardless of `output_mode`.
+
 ## Result Memo Structure
 
 Apply `result-memo-composition.md` before writing the result file. When local
