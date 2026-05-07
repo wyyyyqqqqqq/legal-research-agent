@@ -90,6 +90,8 @@ Open the project in Claude Code and either:
 
 or just describe your question in plain language. The agent reads `CLAUDE.md`, picks a mode, and produces the two contract files plus an optional polished deliverable.
 
+For repeated standalone use, capture your default scope once with `/onboard` (industry, area-of-law focus, jurisdictions, language, preferred output mode). The wizard can also build a starter knowledge directory for your domain — see [Personal Configuration](docs/en/how-to-use.md#personal-configuration).
+
 ### Subagent dispatch
 
 From an orchestrator session:
