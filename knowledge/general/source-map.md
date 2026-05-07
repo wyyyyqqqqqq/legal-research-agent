@@ -1,5 +1,9 @@
 # General Legal Research Source Map
 
+> **Source of truth:** `legal_sources.yaml` at the project root. This
+> document is a human-readable narrative; URLs and grades come from
+> the registry.
+
 This file lists source categories. It is not a cached legal database.
 
 ## General Priority

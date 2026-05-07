@@ -11,6 +11,13 @@ Use this skill for source planning and retrieval in all research modes.
 Apply `jurisdiction-source-playbook.md` first when jurisdiction, legal hierarchy,
 or source minimums are not obvious.
 
+The canonical jurisdiction-source priority registry is
+`legal_sources.yaml` at the project root. Use it via
+`scripts/legal_source_registry.py show <jurisdiction>` to retrieve
+the controlling primary-source list and MCP fallback policy. The
+prose below describes the strategy; the registry is the source of
+truth for URLs and Grade defaults.
+
 ## Source Payload Envelope
 
 Pass compact source records downstream. Do not inject full text by default.

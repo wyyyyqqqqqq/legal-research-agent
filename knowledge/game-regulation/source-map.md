@@ -1,5 +1,9 @@
 # Game-Regulation Source Map
 
+> **Source of truth:** `legal_sources.yaml` at the project root. This
+> document is a human-readable narrative; URLs and grades come from
+> the registry.
+
 This file is a compact source category map. It is not a cached law database.
 Prefer live official sources when researching.
 

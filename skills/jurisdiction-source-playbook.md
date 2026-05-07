@@ -9,6 +9,13 @@ disable-model-invocation: true
 Use this skill after mode classification and before source collection. Its job
 is to turn a user question into a jurisdiction-specific source plan.
 
+The canonical jurisdiction-source priority registry is
+`legal_sources.yaml` at the project root. Use it via
+`scripts/legal_source_registry.py show <jurisdiction>` to retrieve
+the controlling primary-source list and MCP fallback policy. The
+prose below describes the strategy; the registry is the source of
+truth for URLs and Grade defaults.
+
 ## Jurisdiction Profile
 
 Create a compact jurisdiction profile for each requested jurisdiction:
