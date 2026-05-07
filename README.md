@@ -9,6 +9,8 @@
 [![Modes](https://img.shields.io/badge/Research_modes-4-2196F3)](#research-modes)
 [![Local checks](https://img.shields.io/badge/Local_preflight-20_checks-4caf50)](#local-preflight)
 
+**[How to Use](docs/en/how-to-use.md)** · **[Disclaimer](docs/en/disclaimer.md)** · **[MCP Setup Guide](docs/en/mcp-setup-guide.md)** · **[Citation Audit Spec](docs/citation-audit.md)** · **[Release Process](docs/release-process.md)**
+
 **[Standalone Workflow](docs/standalone-workflow.md)** · **[Orchestrator Intake](docs/orchestrator-intake.md)** · **[Source Playbook Authoring](docs/source-playbook-authoring.md)** · **[Migration Notes](docs/migration-notes.md)**
 
 **Language:** [**English**](README.md) · [한국어](README.ko.md)
@@ -29,7 +31,7 @@
 - [Workflow](#workflow)
 - [Output Contract](#output-contract)
 - [Source Reliability Model](#source-reliability-model)
-- [Standalone Deliverables](#standalone-deliverables)
+- [Output Modes](#output-modes)
 - [Citation Audit](#citation-audit)
 - [Local Preflight](#local-preflight)
 - [Token Discipline](#token-discipline)
@@ -392,15 +394,40 @@ Every byte from outside the trusted instruction surface (`CLAUDE.md`, `skills/`,
 
 ---
 
-## Standalone Deliverables
+## Output Modes
 
-When used standalone, the agent can produce a polished deliverable on top of the research contract. The mandatory two-file contract still runs first.
+Two orthogonal axes shape every standalone deliverable: the **deliverable shape** (output mode) and the **output format** (packaging mode). The orchestrator-compatible `legal-research-agent-result.md` always uses the canonical 9-section structure regardless of either axis. Mode-shaped deliverables sit under `deliverables/` and are recorded in `standalone-deliverable-manifest.json`.
 
-| Mode | Use when | Output |
-|:---|:---|:---|
-| `standalone_markdown` | Default polished memo or opinion-style note | Markdown deliverable with the standard memo structure |
-| `handoff_packet` | A downstream legal-writing agent will draft | Compact packet preserving issues, sources, gaps, and style target |
-| `docx_ready_markdown` | Word-ready source or binary DOCX requested | Markdown with stable headings, tables, and citation anchors; no chat-only commentary |
+### Deliverable shape
+
+| Mode | Slug | Best for | Default packaging |
+|:---|:---|:---|:---|
+| Executive Brief (Mode A) | `executive_brief` | Decision-makers, C-suite | `standalone_markdown` |
+| Comparative Matrix (Mode B) | `comparative_matrix` | Multi-jurisdiction compliance | `standalone_markdown` |
+| Enforcement and Case Law (Mode C) | `enforcement_case_law` | Litigation, enforcement strategy | `standalone_markdown` |
+| Black-letter and Commentary (Mode D) | `black_letter_commentary` | Statute or regulation deep dive | `docx_ready_markdown` |
+| Canonical research memo *(default)* | `canonical` | Orchestrator-compatible record | `standalone_markdown` |
+
+### Packaging mode
+
+| Mode | Use when |
+|:---|:---|
+| `standalone_markdown` | Default polished memo or opinion-style note |
+| `handoff_packet` | A downstream legal-writing agent will draft |
+| `docx_ready_markdown` | Word-ready source or binary DOCX requested |
+
+A given run picks one mode from each axis (5 × 3 = 15 valid combinations). Selection rules and slug-to-template resolution live in [`knowledge/output-modes/mode-index.md`](knowledge/output-modes/mode-index.md).
+
+### Frameworks and discipline
+
+Every non-canonical mode shares two common framework references:
+
+- [`knowledge/output-modes/comparative-framework.md`](knowledge/output-modes/comparative-framework.md) — ten standard comparison axes (required for `comparative_matrix`)
+- [`knowledge/output-modes/counter-analysis-checklist.md`](knowledge/output-modes/counter-analysis-checklist.md) — six counter-analysis dimensions plus per-mode minimums
+
+Each mode also has a structural template under [`templates/output-modes/`](templates/output-modes/) that the validator [`scripts/check-output-modes.py`](scripts/check-output-modes.py) enforces.
+
+### Standalone workflow
 
 The full artifact layout, naming rules, manifest, and citation-audit sequencing live in [`docs/standalone-workflow.md`](docs/standalone-workflow.md). Render to DOCX with:
 

@@ -9,6 +9,8 @@
 [![Modes](https://img.shields.io/badge/리서치_모드-4종-2196F3)](#research-modes)
 [![Local checks](https://img.shields.io/badge/로컬_프리플라이트-20개-4caf50)](#local-preflight)
 
+**[사용 가이드](docs/ko/how-to-use.md)** · **[면책조항](docs/ko/disclaimer.md)** · **[MCP 설정 가이드](docs/ko/mcp-setup-guide.md)** · **[Citation Audit 사양](docs/citation-audit.md)** · **[릴리즈 프로세스](docs/release-process.md)**
+
 **[스탠드얼론 워크플로우](docs/standalone-workflow.md)** · **[오케스트레이터 인테이크](docs/orchestrator-intake.md)** · **[소스 플레이북 작성](docs/source-playbook-authoring.md)** · **[마이그레이션 노트](docs/migration-notes.md)**
 
 **Language:** [English](README.md) · [**한국어**](README.ko.md)
@@ -29,7 +31,7 @@
 - [Workflow](#workflow)
 - [Output Contract](#output-contract)
 - [Source Reliability Model](#source-reliability-model)
-- [Standalone Deliverables](#standalone-deliverables)
+- [Output Modes](#output-modes)
 - [Citation Audit](#citation-audit)
 - [Local Preflight](#local-preflight)
 - [Token Discipline](#token-discipline)
@@ -392,15 +394,40 @@ C 등급은 출처 발굴 또는 low/medium-confidence 맥락 보강에 쓸 수 
 
 ---
 
-## Standalone Deliverables
+## Output Modes
 
-스탠드얼론으로 사용할 때, 에이전트는 리서치 계약 위에 폴리쉬된 산출물을 생성할 수 있습니다. 필수 두 파일 계약은 항상 먼저 실행됩니다.
+두 개의 직교 축이 모든 스탠드얼론 산출물을 형성합니다: **deliverable shape** (output mode)와 **output format** (packaging mode). 오케스트레이터 호환의 `legal-research-agent-result.md`는 어느 축과도 무관하게 항상 정식 9-section 구조를 사용합니다. 모드형 산출물은 `deliverables/` 아래에 위치하며 `standalone-deliverable-manifest.json`에 기록됩니다.
 
-| 모드 | 사용 시점 | 산출 |
-|:---|:---|:---|
-| `standalone_markdown` | 기본 폴리쉬 메모 또는 의견서형 노트 | 표준 메모 구조의 마크다운 산출물 |
-| `handoff_packet` | 다운스트림 legal-writing 에이전트가 작성을 이어받을 때 | 쟁점·출처·갭·스타일 타깃을 보존한 컴팩트 패킷 |
-| `docx_ready_markdown` | Word-ready 소스 또는 바이너리 DOCX 요청 시 | 안정 헤딩, 표, 인용 앵커가 보존된 마크다운; 채팅 톤 코멘터리 없음 |
+### Deliverable shape
+
+| 모드 | 슬러그 | 적합한 경우 | 기본 패키징 |
+|:---|:---|:---|:---|
+| Executive Brief (Mode A) | `executive_brief` | 의사결정자, C-suite | `standalone_markdown` |
+| Comparative Matrix (Mode B) | `comparative_matrix` | 다관할 컴플라이언스 | `standalone_markdown` |
+| Enforcement and Case Law (Mode C) | `enforcement_case_law` | 소송, 집행 전략 | `standalone_markdown` |
+| Black-letter and Commentary (Mode D) | `black_letter_commentary` | 법령 deep dive | `docx_ready_markdown` |
+| Canonical research memo *(기본)* | `canonical` | 오케스트레이터 호환 기록 | `standalone_markdown` |
+
+### Packaging mode
+
+| 모드 | 사용 시점 |
+|:---|:---|
+| `standalone_markdown` | 기본 폴리쉬 메모 또는 의견서형 노트 |
+| `handoff_packet` | 다운스트림 legal-writing 에이전트가 작성을 이어받을 때 |
+| `docx_ready_markdown` | Word-ready 소스 또는 바이너리 DOCX 요청 시 |
+
+한 실행은 각 축에서 하나씩 선택합니다 (5 × 3 = 15가지 조합). 선택 규칙과 슬러그→템플릿 매핑은 [`knowledge/output-modes/mode-index.md`](knowledge/output-modes/mode-index.md)에 있습니다.
+
+### 프레임워크와 디시플린
+
+비-canonical 모드는 두 공통 프레임워크 참조를 공유합니다:
+
+- [`knowledge/output-modes/comparative-framework.md`](knowledge/output-modes/comparative-framework.md) — 10개 표준 비교 axes (`comparative_matrix` 필수)
+- [`knowledge/output-modes/counter-analysis-checklist.md`](knowledge/output-modes/counter-analysis-checklist.md) — 6개 counter-analysis 차원 + 모드별 최소요건
+
+각 모드는 [`templates/output-modes/`](templates/output-modes/)에 구조 템플릿을 두며, [`scripts/check-output-modes.py`](scripts/check-output-modes.py) validator가 강제합니다.
+
+### 스탠드얼론 워크플로우
 
 전체 산출물 레이아웃, 네이밍 규칙, 매니페스트, citation-audit 시퀀싱은 [`docs/standalone-workflow.md`](docs/standalone-workflow.md)에 있습니다. DOCX 렌더:
 
