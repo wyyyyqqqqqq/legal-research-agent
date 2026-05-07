@@ -25,6 +25,13 @@ This skill does not change the canonical research record. It composes a
   `docx_ready_markdown`). Default per
   `knowledge/output-modes/mode-index.md`.
 - Output language (`ko` / `en` / `bilingual`).
+- When `output_mode` is unset on the request and `user-config.json`
+  declares `output_preferences.default_output_mode`, use the config
+  value as the default. The user's per-request override still wins.
+- When `output_preferences.default_packaging` and
+  `output_preferences.default_language` are present in the config and
+  not overridden by the request, apply them as defaults to the
+  packaging and language selections respectively.
 
 ## Steps
 
