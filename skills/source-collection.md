@@ -76,6 +76,19 @@ Fallback order when MCP is unavailable:
 Record `mcp_unavailable` or `partial_sources` when Korean primary source coverage
 is materially limited.
 
+## User Config Jurisdiction Priority
+
+When `user-config.json` declares `jurisdictions.primary` and
+`jurisdictions.secondary`, use them as the source-priority order:
+primary jurisdictions first, then secondary, then any explicitly named
+jurisdictions in the question. This shapes the order of MCP calls and
+`WebFetch` against official portals — not the rule of what counts as a
+primary source.
+
+This precedence applies in standalone use only. In subagent dispatch,
+the orchestrator-supplied jurisdiction list (when present) wins per
+the operating rules in `CLAUDE.md`.
+
 ## EU Law Strategy
 
 Prefer structured official EUR-Lex or regulator sources where available. Check
