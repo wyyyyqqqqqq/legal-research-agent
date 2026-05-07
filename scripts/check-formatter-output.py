@@ -70,6 +70,56 @@ FORBIDDEN_DOCX_READY_CHAT_TERMS = (
     "chatgpt",
 )
 
+OUTPUT_MODE_SLUGS = (
+    "canonical",
+    "executive_brief",
+    "comparative_matrix",
+    "enforcement_case_law",
+    "black_letter_commentary",
+)
+
+REQUIRED_OUTPUT_MODE_SECTIONS: dict[str, list[str]] = {
+    "executive_brief": [
+        "## Scope and As-of Date",
+        "## Key Conclusions",
+        "## Counter-Analysis and Risk Assessment",
+        "## Risk and Priority Ranking",
+        "## Practical Implications",
+        "## Immediate Action Checklist",
+        "## Top Sources",
+        "## Verification Guide",
+    ],
+    "comparative_matrix": [
+        "## Scope and As-of Date",
+        "## Comparative Matrix",
+        "## Divergence Commentary",
+        "## Counter-Analysis",
+        "## Practical Implications",
+        "## Annotated Bibliography",
+        "## Verification Guide",
+    ],
+    "enforcement_case_law": [
+        "## Scope and As-of Date",
+        "## Conclusion Summary",
+        "## Enforcement Timeline",
+        "## Case and Decision Summaries",
+        "## Counter-Analysis",
+        "## Practical Implications",
+        "## Annotated Bibliography",
+        "## Verification Guide",
+    ],
+    "black_letter_commentary": [
+        "## Scope and As-of Date",
+        "## Legal System Overview",
+        "## Core Definitions and Scope",
+        "## Article-by-Article Commentary",
+        "## Implementation Relationships",
+        "## Practical Implications",
+        "## Annotated Bibliography",
+        "## Verification Guide",
+    ],
+}
+
 
 def load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -301,6 +351,58 @@ def validate_formatter_output(
     return errors
 
 
+def validate_mode_shaped_deliverable(
+    formatted_path: Path,
+    meta_path: Path,
+    *,
+    output_mode: str,
+) -> list[str]:
+    """Validate a mode-shaped deliverable (executive_brief / comparative_matrix /
+    enforcement_case_law / black_letter_commentary).
+
+    Mode-shaped deliverables use template-specific H2 headings, not the
+    canonical standalone-memo headings. This validator therefore replaces
+    the standalone heading check with the per-mode required-section check,
+    while still validating source-anchor parity against metadata.
+    """
+    if output_mode not in REQUIRED_OUTPUT_MODE_SECTIONS:
+        return [
+            f"{formatted_path}: unsupported output_mode {output_mode!r}; "
+            f"expected one of {sorted(REQUIRED_OUTPUT_MODE_SECTIONS)}"
+        ]
+
+    text = formatted_path.read_text(encoding="utf-8")
+    meta = load_json(meta_path)
+    errors: list[str] = []
+
+    errors.extend(validate_title(text))
+
+    for section in REQUIRED_OUTPUT_MODE_SECTIONS[output_mode]:
+        if section not in text:
+            errors.append(
+                f"{formatted_path}: missing required section for "
+                f"output_mode={output_mode!r}: {section!r}"
+            )
+
+    known_ids = source_ids(meta)
+    referenced = referenced_source_ids(text)
+    for ref in sorted(referenced):
+        if ref not in known_ids:
+            errors.append(
+                f"{formatted_path}: source anchor {ref!r} not present in "
+                f"meta sources"
+            )
+
+    meta_output_mode = meta.get("output_mode")
+    if meta_output_mode is not None and meta_output_mode != output_mode:
+        errors.append(
+            f"{meta_path}: meta output_mode={meta_output_mode!r} does not "
+            f"match requested {output_mode!r}"
+        )
+
+    return errors
+
+
 def validate_fixture_root(root: Path, mode: str | None = None) -> list[str]:
     errors: list[str] = []
     formatted_files = sorted(root.rglob("formatted.md"))
@@ -337,6 +439,16 @@ def main(argv: list[str] | None = None) -> int:
         choices=("standalone_markdown", "handoff_packet", "docx_ready_markdown"),
         default=None,
     )
+    parser.add_argument(
+        "--output-mode",
+        choices=OUTPUT_MODE_SLUGS,
+        default=None,
+        help=(
+            "Optional output-mode-specific structural check. Non-canonical "
+            "modes use the per-mode template required-sections instead of "
+            "the canonical standalone headings."
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.path.is_dir() and args.meta is None:
@@ -345,9 +457,16 @@ def main(argv: list[str] | None = None) -> int:
         if args.meta is None:
             print("FAIL: --meta is required when path is a file", file=sys.stderr)
             return 1
-        language = args.language or infer_language(args.path)
-        mode = args.mode or "standalone_markdown"
-        errors = validate_formatter_output(args.path, args.meta, language=language, mode=mode)
+        if args.output_mode and args.output_mode != "canonical":
+            errors = validate_mode_shaped_deliverable(
+                args.path, args.meta, output_mode=args.output_mode
+            )
+        else:
+            language = args.language or infer_language(args.path)
+            mode = args.mode or "standalone_markdown"
+            errors = validate_formatter_output(
+                args.path, args.meta, language=language, mode=mode
+            )
 
     if errors:
         for error in errors:
