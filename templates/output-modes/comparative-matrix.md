@@ -2,6 +2,8 @@
 Output mode: comparative_matrix
 Audience: multi-jurisdiction decision support
 Required framework: knowledge/output-modes/comparative-framework.md
+Length target: matrix-driven; commentary 1-3 paragraphs per section
+Typical jurisdiction count: 2-4
 -->
 
 # {Title}
@@ -9,14 +11,16 @@ Required framework: knowledge/output-modes/comparative-framework.md
 ## Scope and As-of Date
 - Jurisdictions:
 - As-of date:
-- Assumptions:
+- Assumptions: (especially temporal — different jurisdictions have different last-checked dates)
 - Exclusions:
 
 ## Comparative Matrix
 
 Use the ten standard axes from
 `knowledge/output-modes/comparative-framework.md`. Mark inapplicable
-axes `N/A`.
+axes `N/A` rather than removing the row. Add extended axes only when
+the matter requires them. Each cell cites a source ID; uncited cells
+should be marked `[Unverified]` or moved to coverage gaps.
 
 | Axis | {Jurisdiction A} | {Jurisdiction B} | Divergence Note |
 |------|------------------|------------------|-----------------|
@@ -32,13 +36,21 @@ axes `N/A`.
 | Pending Reforms | | | |
 
 ## Divergence Commentary
+
+Discuss only material differences — same-rule jurisdictions go in a
+single sentence. For each material divergence, state which jurisdiction
+is the strictest standard and why it matters operationally.
+
 - Material differences with practical impact
 - Strictest standard per axis
 - Convergence trends
 
 ## Counter-Analysis
+
 Per `knowledge/output-modes/counter-analysis-checklist.md`. At least one
-counter-argument per material divergence point.
+counter-argument per material divergence point. Similar-statute confusion
+verification is mandatory when adjacent same-jurisdiction laws cover the
+same subject (e.g., PIPA vs. Credit Information Act in Korea).
 
 ## Practical Implications
 ### Compliance Strategy
@@ -54,6 +66,11 @@ counter-argument per material divergence point.
 - Expected regulatory guidance
 
 ## Annotated Bibliography
+
+Group by jurisdiction. Primary first, then secondary. Note unofficial
+translations and cap them at Grade B unless the source is the official
+publisher.
+
 - Primary:
 - Secondary:
 
