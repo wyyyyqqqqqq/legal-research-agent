@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "industry": "other",
+  "industry_freetext": "US-listed SaaS company, M&A focus",
+  "area_of_law": ["general", "contract", "competition"],
+  "jurisdictions": {"primary": ["US"], "secondary": ["EU"]},
+  "output_preferences": {
+    "default_research_mode": "general",
+    "default_output_mode": "executive_brief",
+    "default_packaging": "standalone_markdown",
+    "default_language": "en"
+  },
+  "specialist_handoff_owners": [],
+  "generated_knowledge_directories": [],
+  "created_at": "2026-05-08",
+  "updated_at": "2026-05-08"
+}

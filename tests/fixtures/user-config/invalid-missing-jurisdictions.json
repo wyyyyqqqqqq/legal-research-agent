@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "industry": "game",
+  "industry_freetext": null,
+  "area_of_law": ["regulatory"],
+  "jurisdictions": {"primary": [], "secondary": []},
+  "output_preferences": {
+    "default_research_mode": "game_regulation",
+    "default_output_mode": "canonical",
+    "default_packaging": "standalone_markdown",
+    "default_language": "ko"
+  },
+  "specialist_handoff_owners": [],
+  "generated_knowledge_directories": [],
+  "created_at": "2026-05-08",
+  "updated_at": "2026-05-08"
+}
