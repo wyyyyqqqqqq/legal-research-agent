@@ -1,0 +1,79 @@
+schema_version: "1.0"
+
+# Each jurisdiction declares its primary-source portals, secondary
+# practitioner publications, and the Korean-law MCP fallback policy
+# (only the KR jurisdiction uses MCP today; other jurisdictions
+# default to WebFetch).
+
+jurisdictions:
+  KR:
+    primary:
+      - name: "law.go.kr"
+        url: "https://www.law.go.kr"
+        scope: "Statutes, enforcement decrees, ministerial rules"
+        prefer_mcp: "korean-law"
+      - name: "supremecourt.go.kr"
+        url: "https://www.scourt.go.kr"
+        scope: "Court decisions"
+    secondary:
+      - name: "Practitioner law-firm newsletters (KR)"
+        scope: "Sector-specific commentary"
+        grade: "B"
+    mcp_fallback:
+      mcp_id: "mcp__claude_ai_Korean-law__"
+      on_unavailable: "WebFetch against law.go.kr; record mcp_unavailable"
+
+  US:
+    primary:
+      - name: "congress.gov"
+        url: "https://www.congress.gov"
+        scope: "Federal legislation"
+      - name: "ecfr.gov"
+        url: "https://www.ecfr.gov"
+        scope: "Code of Federal Regulations"
+      - name: "federalregister.gov"
+        url: "https://www.federalregister.gov"
+        scope: "Federal agency rulemaking"
+      - name: "courtlistener.com"
+        url: "https://www.courtlistener.com"
+        scope: "US court decisions"
+    secondary:
+      - name: "Practitioner US law-firm newsletters"
+        grade: "B"
+    mcp_fallback: null
+
+  EU:
+    primary:
+      - name: "eur-lex.europa.eu"
+        url: "https://eur-lex.europa.eu"
+        scope: "EU regulations, directives, CJEU case law"
+      - name: "edpb.europa.eu"
+        url: "https://edpb.europa.eu"
+        scope: "European Data Protection Board guidance"
+    secondary:
+      - name: "Practitioner EU law-firm newsletters"
+        grade: "B"
+    mcp_fallback: null
+
+  UK:
+    primary:
+      - name: "legislation.gov.uk"
+        url: "https://www.legislation.gov.uk"
+        scope: "UK statutes and statutory instruments"
+    secondary: []
+    mcp_fallback: null
+
+  JP:
+    primary:
+      - name: "laws.e-gov.go.jp"
+        url: "https://laws.e-gov.go.jp"
+        scope: "Japanese statutes and cabinet orders"
+      - name: "moj.go.jp"
+        url: "https://www.moj.go.jp"
+        scope: "Ministry of Justice"
+    secondary: []
+    mcp_fallback: null
+
+# Add additional jurisdictions per /onboard wizard demand. The
+# wizard's question catalog at knowledge/onboarding/wizard-flow.md
+# enumerates the supported jurisdiction codes.
