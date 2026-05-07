@@ -33,3 +33,19 @@ reports/
 # Local planning/build notes
 implementation-build-log.md
 merged-legal-research-agent*.md
+
+# Local user configuration (created by /onboard)
+user-config.json
+!templates/user-config.example.json
+
+# Generated knowledge directories (created by /onboard --build-knowledge).
+# Tracked dirs are listed in user-config.json's
+# generated_knowledge_directories. By default they are gitignored;
+# remove specific paths from the ignore list only when intentionally
+# committing reviewed knowledge to share.
+knowledge/*-*/
+!knowledge/game-regulation/
+!knowledge/general/
+!knowledge/legal-writing/
+!knowledge/onboarding/
+!knowledge/output-modes/
