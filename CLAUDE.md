@@ -21,6 +21,30 @@ If any required tool or MCP server is missing, the agent should record
 the limitation in `coverage_gaps` and lower confidence rather than
 guessing at primary law.
 
+## Stage 0: User Configuration
+
+If `user-config.json` exists at the project root, load it before
+Stage 1 intake. Use it as the default source for research mode,
+jurisdictions, output mode, packaging, and language.
+
+- **Standalone use:** the config defaults are primary. The user's
+  per-question overrides still win when explicit.
+- **Subagent dispatch:** orchestrator classification stays primary
+  per `Operating Rules` below. The config fills only fields the
+  orchestrator did not specify.
+
+If `user-config.json` lists `generated_knowledge_directories`, load
+each one according to its `review_status` (per the Generated
+Knowledge Gate rule in `skills/source-collection.md`):
+`verified` directories are treated like hand-curated knowledge;
+`draft` directories surface a `[GENERATED — DRAFT]` warning whenever
+they are the controlling reference for a material proposition.
+
+If `user-config.json` is missing on standalone use and the user has
+not declared their scope inline, suggest running `/onboard`. Do not
+require it — the agent must continue to work without a config when
+the user asks a one-off question.
+
 ## Operating Rules
 
 1. Use the orchestrator classification as the primary routing authority.
