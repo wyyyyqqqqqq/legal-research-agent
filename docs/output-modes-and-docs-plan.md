@@ -19,6 +19,19 @@ keeps its current 9-section structure unchanged. Existing skills,
 contracts, scripts, and tests remain untouched except for additive
 extension points.
 
+**Locked design decisions** (confirmed before plan execution):
+
+- **Output mode and packaging mode are orthogonal.** A run picks one
+  output-mode slug and one packaging-mode slug independently, giving
+  5 × 3 = 15 valid combinations. The four named output modes mirror
+  the predecessor's Mode A/B/C/D catalog; the fifth (`canonical`)
+  preserves the existing 9-section memo. The three packaging modes
+  (`standalone_markdown`, `handoff_packet`, `docx_ready_markdown`)
+  stay untouched.
+- **License is Apache 2.0**, matching the predecessor README badge.
+  Task 14 lands `LICENSE` at the repo root before any disclaimer
+  references it.
+
 **Tech Stack:** Python 3.11+, YAML frontmatter, Markdown, Mermaid,
 existing `marko`/`pydantic`/`python-docx` runtime.
 
@@ -98,7 +111,7 @@ legal-research-agent/
   CLAUDE.md                                    # MODIFY: add output-mode workflow note
   README.md                                    # MODIFY: replace Standalone Deliverables with Output Modes section
   README.ko.md                                 # MODIFY: mirror
-  LICENSE                                      # CREATE: project license (TBD with user)
+  LICENSE                                      # CREATE: Apache 2.0
   .claude/
     commands/
       research.md                              # MODIFY: argument hint includes output mode
@@ -1361,13 +1374,19 @@ limitations (hallucinations / fabricated citations / outdated rules /
 jurisdiction conflation / source-hierarchy misclassification), data
 handling, no warranty, scope of responsibility.
 
-- [ ] **Step 1: Choose the license**
+- [ ] **Step 1: Add the LICENSE file (Apache 2.0)**
 
-The current repo has no `LICENSE`. The disclaimer must reference one.
-Apache 2.0 and MIT are both reasonable. Default to **Apache 2.0** to
-match the predecessor `general-legal-research` README badge unless the
-user requests otherwise. Add a `LICENSE` file at the repo root with the
-chosen text before committing the disclaimer.
+Place the standard Apache 2.0 license text at the repo root as `LICENSE`.
+Source: <https://www.apache.org/licenses/LICENSE-2.0.txt>. The license
+choice is locked: Apache 2.0, matching the predecessor
+`general-legal-research` README badge. Set the copyright line to:
+
+```text
+Copyright 2026 Legal Research Agent contributors
+```
+
+The disclaimer in this task references this LICENSE file with a link
+to `../../LICENSE` from `docs/en/disclaimer.md` and `docs/ko/disclaimer.md`.
 
 - [ ] **Step 2: English version**
 
