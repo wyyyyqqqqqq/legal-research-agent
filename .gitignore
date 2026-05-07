@@ -49,3 +49,9 @@ knowledge/*-*/
 !knowledge/legal-writing/
 !knowledge/onboarding/
 !knowledge/output-modes/
+
+# Library ingest workspace (gitignored — local source materials).
+# Excludes contents (inbox/, grade-{a,b,c}/, etc.) but keeps the
+# placeholder _index.md so the path always exists on a fresh clone.
+library/*
+!library/_index.md
