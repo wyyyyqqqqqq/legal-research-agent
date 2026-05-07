@@ -115,11 +115,55 @@ Strategy) and `skills/output-contract.md` (Error Vocabulary).
 
 ## Other MCP Servers
 
-`legal-research-agent` does not require any other MCP server. The vendored
-[`citation-auditor`](../../citation_auditor/) skill dispatches verifier
-subagents that may call MCP tools when available, but the standalone
-deterministic smoke (`scripts/check-citation-auditor-smoke.py`) does not
-depend on any MCP server.
+`legal-research-agent` does not require any other MCP server. The
+vendored [`citation-auditor`](../../citation_auditor/) skill dispatches
+verifier subagents that may call MCP tools when available, but the
+standalone deterministic smoke
+(`scripts/check-citation-auditor-smoke.py`) does not depend on any MCP
+server.
+
+### Optional MCP Servers (when available)
+
+These are not required, but the agent will use them when registered:
+
+| MCP Server | Toolset prefix | Purpose | Status |
+|:---|:---|:---|:---|
+| `markitdown` | `mcp__markitdown__convert_to_markdown` | PDF / DOCX / PPTX / XLSX / HTML → Markdown for source ingestion | Recommended; allowlisted in `.claude/settings.json` |
+| `eur-lex` (community) | `mcp__eur-lex__*` (when registered) | EUR-Lex SOAP/REST → consolidated text, effective dates | Plug-in pattern; the agent currently uses `WebFetch` against `eur-lex.europa.eu` |
+| `us-law` (community) | `mcp__us-law__*` or similar | Congress.gov, eCFR, Federal Register, CourtListener | Plug-in pattern; not widely available as of 2026-05 |
+
+**Plug-in pattern.** When you add a new MCP server in your Claude.ai
+integrations panel or `.mcp.json`, also add its toolset prefix to the
+`permissions.allow` list in `.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Korean-law__*",
+      "mcp__markitdown__*",
+      "mcp__eur-lex__*"
+    ]
+  }
+}
+```
+
+The agent's source-collection skill (`skills/source-collection.md`)
+already prefers MCP-backed retrieval over `WebFetch` when the server is
+present. For Korean primary law, the dedicated Korean Law strategy
+applies; for other jurisdictions, the agent falls back to `WebSearch`
+and `WebFetch` against the whitelisted official portals listed in the
+project README.
+
+### When NOT to add an MCP server
+
+- Subscription-gated tools (e.g., commercial legal-AI platforms) only
+  add value if every team member has a seat. Otherwise the agent
+  produces inconsistent results across users.
+- General-purpose web-search MCPs (`tavily`, `brave`) are largely
+  redundant with `WebSearch` and `WebFetch` for legal research; add
+  them only when you have a specific reason (rate limits, regional
+  blocking, etc.).
 
 For the standalone deliverable workflow (DOCX rendering, citation audit
 sequencing, manifest validation), see

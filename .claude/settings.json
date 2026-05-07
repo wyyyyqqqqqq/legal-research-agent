@@ -26,7 +26,8 @@
       "Bash(bash tests/lint_no_legacy_invocation.sh:*)",
       "WebFetch",
       "WebSearch",
-      "mcp__claude_ai_Korean-law__*"
+      "mcp__claude_ai_Korean-law__*",
+      "mcp__markitdown__*"
     ]
   }
 }
