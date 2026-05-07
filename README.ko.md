@@ -17,7 +17,7 @@
 
 </div>
 
-> **계보:** v2 — [`general-legal-research`](https://github.com/lowtidebuild/general-legal-research)와 [`game-legal-research`](https://github.com/lowtidebuild/game-legal-research)를 단일 Claude Code 에이전트로 통합. 동일한 법률 품질 기준, 더 작은 토큰 풋프린트, 단일 디스패치 경로.
+> **계보:** v2 — `general-legal-research`와 `game-legal-research`를 단일 Claude Code 에이전트로 통합. 동일한 법률 품질 기준, 더 작은 토큰 풋프린트, 단일 디스패치 경로.
 
 ---
 
@@ -61,8 +61,8 @@ KP Legal Orchestrator는 여러 전문 에이전트를 디스패치합니다. �
 
 | 전신 | v1 역할 | v2에서의 위치 |
 |:---|:---|:---|
-| [`general-legal-research`](https://github.com/lowtidebuild/general-legal-research) | 17개 이상 관할의 일반법 전문 에이전트 | `general` 모드로 대체 |
-| [`game-legal-research`](https://github.com/lowtidebuild/game-legal-research) | 게임산업 전문 에이전트 (확률형 아이템, 등급분류, 가상자산, 플랫폼 컴플라이언스) | `game_regulation` 모드로 대체 |
+| `general-legal-research` | 17개 이상 관할의 일반법 전문 에이전트 | `general` 모드로 대체 |
+| `game-legal-research` | 게임산업 전문 에이전트 (확률형 아이템, 등급분류, 가상자산, 플랫폼 컴플라이언스) | `game_regulation` 모드로 대체 |
 
 통합 계약:
 
@@ -676,8 +676,8 @@ legal-research-agent/
 | 에이전트 | 역할 | 전문 영역 |
 |:---|:---|:---|
 | **`legal-research-agent`** *(이 리포)* | **법률 리서치 전문가 (v2)** | **일반법 + 게임산업 규제** |
-| ~~[`general-legal-research`](https://github.com/lowtidebuild/general-legal-research)~~ | ~~일반법 전문~~ | 이 리포의 `general` 모드로 대체 |
-| ~~[`game-legal-research`](https://github.com/lowtidebuild/game-legal-research)~~ | ~~게임산업 전문~~ | 이 리포의 `game_regulation` 모드로 대체 |
+| ~~`general-legal-research`~~ | ~~일반법 전문~~ | 이 리포의 `general` 모드로 대체 |
+| ~~`game-legal-research`~~ | ~~게임산업 전문~~ | 이 리포의 `game_regulation` 모드로 대체 |
 | [`legal-translation-agent`](https://github.com/lowtidebuild/legal-translation-agent) | 법률 번역 전문 | 법률 번역 |
 | [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) | 프라이버시 전문 (한국) | 한국 개인정보보호법 |
 | [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) | 프라이버시 전문 (EU) | GDPR |

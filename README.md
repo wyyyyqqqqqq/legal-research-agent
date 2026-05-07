@@ -17,7 +17,7 @@
 
 </div>
 
-> **Heritage:** v2 — merges [`general-legal-research`](https://github.com/lowtidebuild/general-legal-research) and [`game-legal-research`](https://github.com/lowtidebuild/game-legal-research) into one Claude Code agent. Same legal-quality floor, smaller token footprint, single dispatch path.
+> **Heritage:** v2 — merges `general-legal-research` and `game-legal-research` into one Claude Code agent. Same legal-quality floor, smaller token footprint, single dispatch path.
 
 ---
 
@@ -61,8 +61,8 @@ A Codex-tuned sibling agent is planned. The merge here is the prerequisite: once
 
 | Predecessor | v1 role | Status in v2 |
 |:---|:---|:---|
-| [`general-legal-research`](https://github.com/lowtidebuild/general-legal-research) | General-law specialist across 17+ jurisdictions | Replaced by `general` mode |
-| [`game-legal-research`](https://github.com/lowtidebuild/game-legal-research) | Game-industry specialist (loot boxes, ratings, virtual goods, platform compliance) | Replaced by `game_regulation` mode |
+| `general-legal-research` | General-law specialist across 17+ jurisdictions | Replaced by `general` mode |
+| `game-legal-research` | Game-industry specialist (loot boxes, ratings, virtual goods, platform compliance) | Replaced by `game_regulation` mode |
 
 The merge contract:
 
@@ -676,8 +676,8 @@ This agent is part of the **KP Legal Orchestrator** series of specialist legal w
 | Agent | Role | Specialty |
 |:---|:---|:---|
 | **`legal-research-agent`** *(this repo)* | **Legal Research Specialist (v2)** | **General law + game-industry regulation** |
-| ~~[`general-legal-research`](https://github.com/lowtidebuild/general-legal-research)~~ | ~~General-law specialist~~ | Superseded by this repo's `general` mode |
-| ~~[`game-legal-research`](https://github.com/lowtidebuild/game-legal-research)~~ | ~~Game-industry specialist~~ | Superseded by this repo's `game_regulation` mode |
+| ~~`general-legal-research`~~ | ~~General-law specialist~~ | Superseded by this repo's `general` mode |
+| ~~`game-legal-research`~~ | ~~Game-industry specialist~~ | Superseded by this repo's `game_regulation` mode |
 | [`legal-translation-agent`](https://github.com/lowtidebuild/legal-translation-agent) | Legal Translation Specialist | Legal translation |
 | [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) | Privacy Specialist (Korea) | Korean data privacy law |
 | [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) | Privacy Specialist (EU) | Data protection law (GDPR) |
