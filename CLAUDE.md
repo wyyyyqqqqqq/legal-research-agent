@@ -157,6 +157,9 @@ Use a compact but disciplined workflow:
      apply `skills/output-mode-composition.md` after
      `skills/legal-writing-formatter.md` so the canonical research record
      stays unchanged.
+   - For `.html` distribution, render the deliverable Markdown via
+     `scripts/render-html.py`. HTML is a derived format alongside
+     `.docx`; both are produced from the same Markdown.
 8. Quality check
    - Apply `skills/quality-check.md`.
    - Run `scripts/validate-output.py` when local execution is available.

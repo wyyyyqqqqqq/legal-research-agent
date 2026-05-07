@@ -146,6 +146,25 @@ again and material source anchors survived extraction.
    - Treat the DOCX as MVP rendering: headings, simple tables, lists, block
      quotes, and visible text are supported; native footnotes, tracked changes,
      comments, and complex page layout are not.
+
+### Optional `.html` rendering
+
+For client-facing distribution via email or browser, render any
+deliverable Markdown to styled HTML:
+
+```bash
+python3 scripts/render-html.py /path/to/deliverable.md \
+  /path/to/deliverable.html \
+  --title "<deliverable title>" \
+  --lang ko
+```
+
+The renderer uses `marko` (already in project dependencies). It
+produces a single self-contained HTML file with inline CSS — no
+external assets — so the file is portable as an email attachment or
+a static web upload. Banner blocks (`[GENERATED — DRAFT]`,
+`[VERIFIED]`, etc.) are preserved as styled blockquotes.
+
 6. Citation audit
    - Run citation audit on the formatted deliverable, not only on the internal
      result memo, when the deliverable is intended for external or client-facing
