@@ -8,6 +8,10 @@ disable-model-invocation: true
 
 Use this skill after source collection and claim spot-checking.
 
+For comparative analysis across jurisdictions, apply
+`references/comparative-framework.md`. For counter-analysis on
+material conclusions, apply `references/counter-analysis-checklist.md`.
+
 ## Evidence Cards
 
 Use compact evidence cards as the default analysis input:

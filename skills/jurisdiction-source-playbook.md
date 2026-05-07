@@ -16,6 +16,10 @@ the controlling primary-source list and MCP fallback policy. The
 prose below describes the strategy; the registry is the source of
 truth for URLs and Grade defaults.
 
+For Korean-law jurisdictional structure (statute hierarchy, ministerial
+rule conventions, court-system layout), consult
+`references/korean-law-reference.md`.
+
 ## Jurisdiction Profile
 
 Create a compact jurisdiction profile for each requested jurisdiction:

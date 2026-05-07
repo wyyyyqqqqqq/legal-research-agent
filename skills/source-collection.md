@@ -18,6 +18,11 @@ the controlling primary-source list and MCP fallback policy. The
 prose below describes the strategy; the registry is the source of
 truth for URLs and Grade defaults.
 
+The detailed source-payload contract (envelope fields, optional
+fields, validation rules) is in `references/source-payload-contract.md`.
+The compact JSON envelope below is a summary; the contract document
+is the source of truth when fields conflict.
+
 ## Source Payload Envelope
 
 Pass compact source records downstream. Do not inject full text by default.
