@@ -162,3 +162,24 @@ matter, create a boundary table before analysis:
 
 Use it to avoid conflating adjacent statutes, delegated rules, guidance, or
 agency interpretations.
+
+## Generated Knowledge Gate
+
+Generated knowledge directories listed in `user-config.json`'s
+`generated_knowledge_directories` are loaded with awareness of their
+`review_status`:
+
+- `verified` (gate lifted via `/review-knowledge`): treat the directory
+  like a hand-curated `knowledge/<area>/` directory. Sources cited from
+  these files inherit the grade declared in the file's frontmatter.
+- `draft` (gate not lifted): the directory may be loaded for structural
+  orientation only. Sources cited from `draft` files cannot alone
+  support a high-confidence conclusion. Surface a `[GENERATED — DRAFT]`
+  warning in `coverage_gaps` whenever a `draft` knowledge file is the
+  controlling reference for a material proposition.
+
+The `/onboard --build-knowledge` workflow always writes new directories
+with `review_status: "draft"`. The user explicitly lifts the gate after
+reviewing the content via `/review-knowledge`. Banner conventions and
+recipe details are documented in `docs/knowledge-construction-recipe.md`
+and enforced by `scripts/check-generated-knowledge.py`.
