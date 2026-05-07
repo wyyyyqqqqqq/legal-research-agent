@@ -127,6 +127,12 @@ Use a compact but disciplined workflow:
    - For explicit standalone deliverables, apply
      `skills/legal-writing-formatter.md` and load only the selected compact
      formatter profile from `knowledge/legal-writing/`.
+   - For standalone deliverables, the `output_mode` (default `canonical`)
+     selects the deliverable shape per
+     `knowledge/output-modes/mode-index.md`. When the mode is non-canonical,
+     apply `skills/output-mode-composition.md` after
+     `skills/legal-writing-formatter.md` so the canonical research record
+     stays unchanged.
 8. Quality check
    - Apply `skills/quality-check.md`.
    - Run `scripts/validate-output.py` when local execution is available.
