@@ -92,6 +92,8 @@ Claude Code에서 프로젝트를 열고 다음과 같이 호출합니다:
 
 표준 사용을 반복할 때는 `/onboard`로 기본 스코프(산업, 법 영역 포커스, 관할, 언어, 선호 출력 모드)를 한 번에 캡처할 수 있습니다. 마법사가 도메인용 시작 지식 디렉터리도 함께 구축할 수 있습니다 — [Personal Configuration](docs/ko/how-to-use.md#personal-configuration) 참고.
 
+자료 인입(ingest)이 필요하면 `library/inbox/`에 파일을 드롭하고 `/ingest`를 실행하세요. 클라이언트 배포용 HTML 산출물은 `scripts/render-html.py`로 렌더링합니다.
+
 ### 서브에이전트 디스패치
 
 오케스트레이터 세션에서:

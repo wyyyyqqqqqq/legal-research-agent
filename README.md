@@ -92,6 +92,8 @@ or just describe your question in plain language. The agent reads `CLAUDE.md`, p
 
 For repeated standalone use, capture your default scope once with `/onboard` (industry, area-of-law focus, jurisdictions, language, preferred output mode). The wizard can also build a starter knowledge directory for your domain — see [Personal Configuration](docs/en/how-to-use.md#personal-configuration).
 
+For document ingestion, run `/ingest` after dropping files into `library/inbox/`. For client-facing HTML deliverables, render with `scripts/render-html.py`.
+
 ### Subagent dispatch
 
 From an orchestrator session:
