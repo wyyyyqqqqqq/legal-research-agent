@@ -46,6 +46,21 @@ asks for DOCX, first produce and validate `docx_ready_markdown`, then render the
 DOCX and run DOCX extraction or audit checks. Do not promise native Word
 footnotes, tracked changes, comments, or complex page layout.
 
+## Cross-Cutting Output Mode
+
+When `output_mode` is set to `executive_brief`, `comparative_matrix`,
+`enforcement_case_law`, or `black_letter_commentary`, apply
+`skills/output-mode-composition.md` after deliverable selection but
+before legal prose rewrite. The composition skill resolves the mode
+template, applies the per-mode counter-analysis minimum, and produces
+the mode-shaped deliverable file.
+
+The packaging mode (`standalone_markdown` / `handoff_packet` /
+`docx_ready_markdown`) is independent. A given run can produce
+`comparative_matrix` + `docx_ready_markdown` or `executive_brief` +
+`handoff_packet`. Defaults are recorded in
+`knowledge/output-modes/mode-index.md`.
+
 ## Transformation Workflow
 
 The formatter rewrites research work product into a deliverable. It does not
