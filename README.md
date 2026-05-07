@@ -94,6 +94,8 @@ For repeated standalone use, capture your default scope once with `/onboard` (in
 
 For document ingestion, run `/ingest` after dropping files into `library/inbox/`. For client-facing HTML deliverables, render with `scripts/render-html.py`.
 
+For specialist topics (antitrust, gambling, IP, privacy, etc.) the agent automatically applies the matching `skills/specialists/*` skill — see [CLAUDE.md → Specialist Topic Skills](CLAUDE.md#specialist-topic-skills).
+
 ### Subagent dispatch
 
 From an orchestrator session:

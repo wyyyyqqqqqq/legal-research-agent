@@ -184,10 +184,14 @@ the matching specialist skill in addition to the workflow skills:
   `skills/specialists/case-briefs.md`
 - judgment summary / final order / appellate disposition →
   `skills/specialists/judgment-summary.md`
+- legal terminology / glossary management / translation memory →
+  `skills/specialists/glossary-manager.md`
 - privacy law updates →
   `skills/specialists/privacy-law-updates.md`
 - regulatory market entry, sectoral compliance →
   `skills/specialists/regulatory-summary.md`
+- source conflicts (definitions, scope, obligations, recency) →
+  `skills/specialists/conflict-detector.md`
 
 A specialist skill complements the chosen `output_mode` — it shapes
 the substantive content patterns and required sections, not the

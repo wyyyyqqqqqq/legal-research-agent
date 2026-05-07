@@ -94,6 +94,8 @@ Claude Code에서 프로젝트를 열고 다음과 같이 호출합니다:
 
 자료 인입(ingest)이 필요하면 `library/inbox/`에 파일을 드롭하고 `/ingest`를 실행하세요. 클라이언트 배포용 HTML 산출물은 `scripts/render-html.py`로 렌더링합니다.
 
+전문 주제(공정거래, 도박/사행성, IP, 프라이버시 등)는 에이전트가 자동으로 해당 `skills/specialists/*` 스킬을 적용합니다 — [CLAUDE.md → Specialist Topic Skills](CLAUDE.md#specialist-topic-skills)를 참고하세요.
+
 ### 서브에이전트 디스패치
 
 오케스트레이터 세션에서:
