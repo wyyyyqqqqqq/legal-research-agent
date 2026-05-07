@@ -63,6 +63,11 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-user-config.py"],
     },
     {
+        "id": "generated_knowledge",
+        "description": "Validate generated knowledge directories against the construction recipe (skips when none exist).",
+        "cmd": ["python3", "scripts/check-generated-knowledge.py"],
+    },
+    {
         "id": "formatter_output",
         "description": "Validate standalone formatter output fixtures.",
         "cmd": ["python3", "scripts/check-formatter-output.py", "tests/fixtures/formatter"],
