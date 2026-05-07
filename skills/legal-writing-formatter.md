@@ -9,6 +9,13 @@ disable-model-invocation: true
 Use this skill only after the research result and metadata are complete, or when
 the user explicitly asks for a standalone legal research deliverable.
 
+The detailed formatting reference (typography, headings, citation
+form, table style, list patterns) is in
+`references/legal-writing-formatting-guide.md`. Load that file when
+preparing a polished standalone deliverable. The compact instructions
+below summarize the high-level shape; the guide is the source of
+truth on typographic choices.
+
 This is a formatter for research work product. It is not a separate drafting
 agent, and it must not invent legal conclusions, authorities, risk assessments,
 or recommendations beyond `legal-research-agent-result.md` and

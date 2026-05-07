@@ -14,6 +14,7 @@ EXPECTED_REFERENCES = {
     "comparative-framework",
     "counter-analysis-checklist",
     "korean-law-reference",
+    "legal-writing-formatting-guide",
     "source-payload-contract",
 }
 
