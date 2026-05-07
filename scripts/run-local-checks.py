@@ -53,6 +53,11 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-claude-conventions.py"],
     },
     {
+        "id": "output_modes",
+        "description": "Verify output-mode templates and frameworks (executive brief / comparative matrix / enforcement / black-letter).",
+        "cmd": ["python3", "scripts/check-output-modes.py"],
+    },
+    {
         "id": "formatter_output",
         "description": "Validate standalone formatter output fixtures.",
         "cmd": ["python3", "scripts/check-formatter-output.py", "tests/fixtures/formatter"],
