@@ -1,0 +1,15 @@
+{
+  "industry": "other",
+  "area_of_law": "regulatory",
+  "jurisdiction": "KR",
+  "review_status": "draft",
+  "source_audit_status": "live_passed",
+  "audit_summary": {
+    "total_facts": 1,
+    "verified_facts": 1,
+    "unverified_facts": 0
+  },
+  "created_at": "2026-05-08",
+  "lifted_at": null,
+  "recipe_version": "1.0"
+}
