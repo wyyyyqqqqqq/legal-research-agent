@@ -7,7 +7,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Powered-blueviolet?logo=anthropic)](https://claude.ai/code)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Modes](https://img.shields.io/badge/Research_modes-4-2196F3)](#research-modes)
-[![Local checks](https://img.shields.io/badge/Local_preflight-20_checks-4caf50)](#local-preflight)
+[![Local checks](https://img.shields.io/badge/Local_preflight-21_checks-4caf50)](#local-preflight)
 
 **[How to Use](docs/en/how-to-use.md)** · **[Disclaimer](docs/en/disclaimer.md)** · **[MCP Setup Guide](docs/en/mcp-setup-guide.md)** · **[Citation Audit Spec](docs/citation-audit.md)** · **[Release Process](docs/release-process.md)**
 
@@ -17,14 +17,14 @@
 
 </div>
 
-> **Heritage:** v2 — merges `general-legal-research` and `game-legal-research` into one Claude Code agent. Same legal-quality floor, smaller token footprint, single dispatch path.
+> **Heritage:** This agent supersedes two predecessor Claude Code agents — `general-legal-research` (general-law specialist) and `game-legal-research` (game-industry regulation specialist). Their dispatch paths overlapped, so the orchestrator could bill token cost twice for one matter while producing duplicate research with no quality benefit. v2 collapses the pair into one agent with four explicit research modes, preserving every quality discipline as compact skills.
 
 ---
 
 ## Table of Contents
 
-- [Why This Repo Exists](#why-this-repo-exists)
-- [Heritage and v2 Story](#heritage-and-v2-story)
+- [Overview](#overview)
+- [Core Design Principles](#core-design-principles)
 - [Quick Start](#quick-start)
 - [Research Modes](#research-modes)
 - [Architecture](#architecture)
@@ -42,40 +42,30 @@
 
 ---
 
-## Why This Repo Exists
+## Overview
 
-The KP Legal Orchestrator dispatches a portfolio of specialist agents. Two of them — `general-legal-research` and `game-legal-research` — overlapped substantially: the same source-first discipline, the same MCP and web-fetch surface, the same orchestrator-compatible output contract. Their dispatch paths could collide, billing the orchestrator twice for one matter while producing duplicate research with no quality benefit.
+`legal-research-agent` is a Claude Code agent that performs structured, source-grounded legal research across **general legal questions** and **game-industry regulation**. It runs entirely within a local Claude Code session — no external backend required — and produces an orchestrator-compatible research record (`legal-research-agent-result.md` + `legal-research-agent-meta.json`) plus optional mode-shaped deliverables (executive brief, comparative matrix, enforcement and case-law summary, black-letter commentary, or the canonical 9-section research memo).
 
-`legal-research-agent` collapses that pair into one canonical agent with four explicit research modes. The orchestrator dispatches at most once per route branch. Mode-specific behavior survives as compact skills rather than two separate prompt surfaces. Token cost goes down. Legal quality does not.
+The agent works in two invocation modes. As a **subagent** inside the **KP Legal Orchestrator** dispatch graph, it consumes an intake payload and writes the contract files into the orchestrator-supplied output directory. As a **standalone** tool launched by the user directly, it accepts a natural-language question (Korean or English) via the `/research` slash command and produces the same contract files plus, optionally, a polished mode-shaped deliverable. The same eight-stage workflow — intake → source plan → collection → claim verification → grading → analysis → output → quality check — runs in either path.
 
-Maintenance is the second reason to merge. When two specialists share patterns — the currentness vocabulary, the claim spot-check, the source-laundering guard, the citation hierarchy — a one-line fix has to be written twice, tested twice, and audited twice. Collapsing them gives back one place to upgrade: one PR, one regression sweep, one rollout. The same logic motivates an in-progress parallel merger of [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) and [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) into a single privacy specialist.
+What sits underneath is **discipline encoded as compact skills**: source-layer minimums per jurisdiction and domain, currentness checks for every controlling rule, claim-level verification against authority, per-mode counter-analysis, and prompt-injection defense at the trust boundary. The agent is built to fail loud rather than guess: when a controlling source cannot be verified, the result records `mcp_unavailable` or a `coverage_gaps` entry and lowers confidence rather than fabricating primary law.
 
 > [!IMPORTANT]
 > Token savings are a secondary optimization. They count only when source coverage, issue spotting, currentness discipline, and citation integrity are preserved. The agent will spend more tokens — not fewer — when the alternative is a quality regression.
 
-A Codex-tuned sibling agent is planned. The merge here is the prerequisite: once general-law and game-law live in one rule set, porting to `AGENTS.md`-first Codex conventions is a metadata change, not a re-implementation.
-
 ---
 
-## Heritage and v2 Story
+## Core Design Principles
 
-| Predecessor | v1 role | Status in v2 |
-|:---|:---|:---|
-| `general-legal-research` | General-law specialist across 17+ jurisdictions | Replaced by `general` mode |
-| `game-legal-research` | Game-industry specialist (loot boxes, ratings, virtual goods, platform compliance) | Replaced by `game_regulation` mode |
-
-The merge contract:
-
-| Property | Constraint |
+| Principle | Description |
 |:---|:---|
-| Quality floor | At least matches each predecessor on its native domain |
-| Output contract | Identical to legacy: `*-result.md` and `*-meta.json` |
-| Dispatch | One canonical `agent_research_mode` per matter; orchestrator deduplicates |
-| Game expertise | Preserved as a dedicated mode plus compact taxonomy in `knowledge/game-regulation/` |
-| Privacy / specialist handoff | Recorded in metadata; this agent does not duplicate co-running specialist analysis |
-| Token comparison | Gated by `scripts/compare-token-runs.py` against legacy baselines; merged-run token regressions block rollout unless explained by a quality reason |
-
-Pre-rollout parity is documented in [`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md). Pre-parity quality hardening — source playbook authoring, claim-level verification, currentness checks — is documented in [`docs/general-quality-hardening-plan.md`](docs/general-quality-hardening-plan.md).
+| **No Hallucination** | Every key conclusion traces to a directly-fetched, pinpoint-cited primary source. The agent prefers live MCP retrieval (`mcp__claude_ai_Korean-law__*`) and `WebFetch` against whitelisted official portals over guessing from training data. |
+| **Source Hierarchy** | Grades A through D. Primary law (statutes, regulations, official agency and court decisions) over secondary commentary. Grade C is never alone for a high-confidence conclusion. Grade D is never cited for a legal proposition. |
+| **Currentness Discipline** | Every controlling rule is verified against the current text. Pending amendments, stale guidance, and superseded sources block high confidence and surface as `temporal_status` coverage gaps. The status vocabulary lives in [`skills/currentness-check.md`](skills/currentness-check.md). |
+| **Trust Boundary** | Every byte from outside the trusted instruction surface (`CLAUDE.md`, `skills/`) is treated as data, not instruction. Prompt-injection defense is applied before any source enters the reasoning context. See [`skills/trust-boundary.md`](skills/trust-boundary.md). |
+| **Counter-Analysis** | Material conclusions are tested against alternative interpretations, minority views, jurisdictional risk, factual sensitivity, practical enforcement risk, and similar-statute confusion before publication. Per-mode minimums in [`knowledge/output-modes/counter-analysis-checklist.md`](knowledge/output-modes/counter-analysis-checklist.md). |
+| **Mode Discipline** | Research mode (general / game_regulation / game_plus_general / fallback), output mode (executive_brief / comparative_matrix / enforcement_case_law / black_letter_commentary / canonical), and packaging (standalone_markdown / handoff_packet / docx_ready_markdown) are explicit, orthogonal, and never silently switched. |
+| **Specialist Handoff** | When a co-running specialist (privacy, IP, tax, finance, employment) is named in the intake payload, the agent records the handoff boundary in metadata and does not duplicate deep analysis in that specialist's domain. |
 
 ---
 

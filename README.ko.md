@@ -7,7 +7,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Powered-blueviolet?logo=anthropic)](https://claude.ai/code)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Modes](https://img.shields.io/badge/리서치_모드-4종-2196F3)](#research-modes)
-[![Local checks](https://img.shields.io/badge/로컬_프리플라이트-20개-4caf50)](#local-preflight)
+[![Local checks](https://img.shields.io/badge/로컬_프리플라이트-21개-4caf50)](#local-preflight)
 
 **[사용 가이드](docs/ko/how-to-use.md)** · **[면책조항](docs/ko/disclaimer.md)** · **[MCP 설정 가이드](docs/ko/mcp-setup-guide.md)** · **[Citation Audit 사양](docs/citation-audit.md)** · **[릴리즈 프로세스](docs/release-process.md)**
 
@@ -17,14 +17,14 @@
 
 </div>
 
-> **계보:** v2 — `general-legal-research`와 `game-legal-research`를 단일 Claude Code 에이전트로 통합. 동일한 법률 품질 기준, 더 작은 토큰 풋프린트, 단일 디스패치 경로.
+> **계보:** 본 에이전트는 두 전신 Claude Code 에이전트 — `general-legal-research`(일반법 전문)와 `game-legal-research`(게임산업 규제 전문) — 를 대체합니다. 두 디스패치 경로가 겹쳐 한 건의 매터에 토큰이 두 번 청구되고 중복된 리서치가 생산되었습니다. v2는 이 둘을 4가지 명시적 리서치 모드를 가진 단일 에이전트로 통합하면서, 모든 품질 디시플린은 컴팩트한 스킬로 보존합니다.
 
 ---
 
 ## 목차
 
-- [Why This Repo Exists](#why-this-repo-exists)
-- [Heritage and v2 Story](#heritage-and-v2-story)
+- [Overview](#overview)
+- [Core Design Principles](#core-design-principles)
 - [Quick Start](#quick-start)
 - [Research Modes](#research-modes)
 - [Architecture](#architecture)
@@ -42,40 +42,30 @@
 
 ---
 
-## Why This Repo Exists
+## Overview
 
-KP Legal Orchestrator는 여러 전문 에이전트를 디스패치합니다. 그중 두 개 — `general-legal-research`와 `game-legal-research` — 는 상당 부분이 겹쳤습니다. 동일한 출처 우선 원칙, 동일한 MCP / 웹 페치 표면, 동일한 오케스트레이터 호환 출력 계약. 이 둘의 디스패치 경로가 충돌하면 한 건의 매터에 대해 토큰이 두 번 소모되었고, 품질 이득 없이 중복된 리서치만 청구되었습니다.
+`legal-research-agent`는 **일반 법률 쟁점**과 **게임산업 규제**를 다루는 출처 기반의 구조화된 리서치를 수행하는 Claude Code 에이전트입니다. 외부 백엔드 없이 로컬 Claude Code 세션 내에서 모두 동작하며, 오케스트레이터 호환의 리서치 기록(`legal-research-agent-result.md` + `legal-research-agent-meta.json`)을 생성하고, 선택적으로 모드형 산출물(executive brief, comparative matrix, enforcement and case-law summary, black-letter commentary, 또는 정식 9-section 메모)을 함께 산출합니다.
 
-`legal-research-agent`는 이 둘을 4가지 명시적 리서치 모드를 가진 단일 정식 에이전트로 통합합니다. 오케스트레이터는 라우트 분기당 최대 한 번만 디스패치하며, 모드별 동작은 두 개의 별도 프롬프트 표면이 아니라 컴팩트한 스킬로 보존됩니다. 결과적으로 토큰 비용은 내려가고 법률 품질은 유지됩니다.
+에이전트는 두 가지 호출 방식으로 동작합니다. **KP Legal Orchestrator** 디스패치 그래프 내의 **서브에이전트**로 호출되면 인테이크 페이로드를 받아 오케스트레이터가 지정한 출력 디렉터리에 계약 파일을 작성합니다. 사용자가 직접 실행하는 **스탠드얼론** 도구로 호출되면 자연어 질문(한국어 또는 영어)을 `/research` 슬래시 커맨드로 받아 동일한 계약 파일과 (선택적으로) 폴리쉬된 모드형 산출물을 생성합니다. 어느 경로든 동일한 8단계 워크플로우(인테이크 → 소스 플랜 → 수집 → 청구 검증 → 등급 → 분석 → 출력 → 품질 점검)가 작동합니다.
 
-통합의 두 번째 이유는 **유지보수**입니다. 두 전문가가 패턴 — 현행성 어휘, 청구 스팟체크, 소스 세탁 가드, 인용 계층 — 을 공유하면, 한 줄짜리 수정도 두 번 작성하고 두 번 테스트하고 두 번 감사해야 합니다. 통합하면 업그레이드 지점이 하나로 줄어듭니다. PR 하나, 회귀 점검 한 번, 롤아웃 한 번이면 끝납니다. 같은 논리로 [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert)와 [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert)를 단일 프라이버시 전문가로 통합하는 작업도 병행 진행 중입니다.
+밑단을 받치는 것은 **컴팩트한 스킬에 인코딩된 디시플린**입니다 — 관할/도메인별 source-layer 최소요건, 통제 규범의 현행성 점검, 권위 대비 청구 검증, 모드별 counter-analysis, 신뢰 경계의 prompt-injection 방어. 에이전트는 추측보다 **명시적 실패**를 택합니다: 통제 자료가 검증되지 않으면 결과에 `mcp_unavailable` 또는 `coverage_gaps` 항목을 기록하고 confidence를 낮출 뿐, 1차 법령을 날조하지 않습니다.
 
 > [!IMPORTANT]
 > **토큰 절감은 부수적 최적화입니다.** 출처 커버리지, 쟁점 도출, 현행성 점검, 인용 무결성이 보존될 때만 의미가 있습니다. 품질이 떨어지는 것이 대안이라면, 이 에이전트는 토큰을 더 씁니다 — 덜 쓰지 않습니다.
 
-별도의 Codex 전용 형제 에이전트도 출시 예정입니다. 이번 통합이 그 전제 조건입니다 — 일반법과 게임법이 하나의 규칙 셋 안에 들어와야 `AGENTS.md` 우선의 Codex 컨벤션으로 포팅하는 작업이 메타데이터 변경 수준에서 끝납니다.
-
 ---
 
-## Heritage and v2 Story
+## Core Design Principles
 
-| 전신 | v1 역할 | v2에서의 위치 |
-|:---|:---|:---|
-| `general-legal-research` | 17개 이상 관할의 일반법 전문 에이전트 | `general` 모드로 대체 |
-| `game-legal-research` | 게임산업 전문 에이전트 (확률형 아이템, 등급분류, 가상자산, 플랫폼 컴플라이언스) | `game_regulation` 모드로 대체 |
-
-통합 계약:
-
-| 항목 | 제약 |
+| 원칙 | 설명 |
 |:---|:---|
-| 품질 기준선 | 각 전신의 고유 영역에서 최소한 동등한 품질 |
-| 출력 계약 | 레거시와 동일: `*-result.md`와 `*-meta.json` |
-| 디스패치 | 매터당 단일 정식 `agent_research_mode`; 오케스트레이터가 디스패치 전 중복 제거 |
-| 게임 전문성 | 전용 모드와 컴팩트 분류 체계(`knowledge/game-regulation/`)로 보존 |
-| 프라이버시 / 전문가 인계 | 메타데이터에 기록; 동시 실행 중인 전문가의 분석을 중복 수행하지 않음 |
-| 토큰 비교 | `scripts/compare-token-runs.py`로 레거시 베이스라인 대비 검증; `quality_reason` 없는 토큰 회귀는 롤아웃 차단 |
-
-롤아웃 전 패리티 검증은 [`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md)에 정의되어 있습니다. 패리티 전 품질 강화 (소스 플레이북 작성, 청구 단위 검증, 현행성 체크)는 [`docs/general-quality-hardening-plan.md`](docs/general-quality-hardening-plan.md)에 정의되어 있습니다.
+| **No Hallucination** | 모든 핵심 결론은 직접 fetch한 pinpoint 인용 1차 자료로 추적 가능합니다. 학습 데이터에서 추측하지 않고 라이브 MCP(`mcp__claude_ai_Korean-law__*`)와 화이트리스트된 공식 포털에 대한 `WebFetch`를 우선합니다. |
+| **Source Hierarchy** | A부터 D까지 등급. 1차 법령(법률·시행령·공식 행정/사법 결정)이 2차 코멘터리보다 우선. C 등급은 단독으로 high-confidence 결론을 지지하지 못하고, D 등급은 어떠한 법적 명제도 인용하지 않습니다. |
+| **Currentness Discipline** | 모든 통제 규범은 현행본 대비 검증됩니다. 진행 중인 개정안, 효력을 잃은 가이드, 대체된 자료는 high confidence를 차단하고 `temporal_status` coverage gap으로 표면화됩니다. 상태 어휘는 [`skills/currentness-check.md`](skills/currentness-check.md)에 있습니다. |
+| **Trust Boundary** | 신뢰 명령 표면(`CLAUDE.md`, `skills/`) 외부에서 들어오는 모든 바이트는 명령이 아닌 데이터로 취급됩니다. Prompt-injection 방어는 어떤 자료도 추론 컨텍스트에 들어가기 전에 적용됩니다. [`skills/trust-boundary.md`](skills/trust-boundary.md) 참고. |
+| **Counter-Analysis** | 핵심 결론은 발표 전 대안 해석, 소수 의견, 관할 리스크, 사실 민감도, 실제 집행 위험, 유사 법령 혼동에 대해 시험됩니다. 모드별 최소요건은 [`knowledge/output-modes/counter-analysis-checklist.md`](knowledge/output-modes/counter-analysis-checklist.md)에 정의되어 있습니다. |
+| **Mode Discipline** | 리서치 모드(general / game_regulation / game_plus_general / fallback), 출력 모드(executive_brief / comparative_matrix / enforcement_case_law / black_letter_commentary / canonical), 패키징(standalone_markdown / handoff_packet / docx_ready_markdown)은 명시적이고 직교이며 절대 조용히 전환되지 않습니다. |
+| **Specialist Handoff** | 인테이크 페이로드에 동시 실행 중인 전문가(프라이버시·IP·세무·금융·노동)가 명시되면, 에이전트는 인계 경계를 메타데이터에 기록하고 해당 전문 영역의 깊은 분석을 중복 수행하지 않습니다. |
 
 ---
 
