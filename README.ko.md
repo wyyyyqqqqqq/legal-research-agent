@@ -7,7 +7,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Powered-blueviolet?logo=anthropic)](https://claude.ai/code)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Modes](https://img.shields.io/badge/리서치_모드-4종-2196F3)](#research-modes)
-[![Local checks](https://img.shields.io/badge/로컬_프리플라이트-21개-4caf50)](#local-preflight)
+[![Local checks](https://img.shields.io/badge/로컬_프리플라이트-27개-4caf50)](#local-preflight)
 
 **[사용 가이드](docs/ko/how-to-use.md)** · **[면책조항](docs/ko/disclaimer.md)** · **[MCP 설정 가이드](docs/ko/mcp-setup-guide.md)** · **[Citation Audit 사양](docs/citation-audit.md)** · **[릴리즈 프로세스](docs/release-process.md)**
 
@@ -112,7 +112,7 @@ Task(subagent_type='legal-research-agent', prompt=<intake payload JSON>)
 python3 scripts/run-local-checks.py
 ```
 
-깨끗한 리포지토리는 20/20을 통과해야 합니다. 자세한 내용은 아래 [Local Preflight](#local-preflight) 참조.
+깨끗한 리포지토리는 27/27을 통과해야 합니다. 자세한 내용은 아래 [Local Preflight](#local-preflight) 참조.
 
 ---
 
@@ -152,7 +152,7 @@ flowchart TD
 
 ```mermaid
 graph TD
-    A["CLAUDE.md\n(메인 에이전트)"] --> B["19개 스킬\n워크플로우 + 품질"]
+    A["CLAUDE.md\n(메인 에이전트)"] --> B["22개 워크플로우 스킬\n+ 12개 specialist"]
     A --> C["지식 파일\ngame / general / legal-writing"]
     A --> D["로컬 스크립트\n검증 + 렌더러"]
     A --> E["MCP / Web\nkorean-law, WebFetch, WebSearch"]
@@ -171,7 +171,7 @@ graph TD
 
 ### 스킬
 
-[`skills/`](skills/) 아래 19개 컴팩트 지시 문서. 모두 Claude Code frontmatter (`name`, `description`, `disable-model-invocation: true`)를 갖습니다. 워크플로우 단계가 작은 파일들로 쪼개져 있어 에이전트는 필요한 것만 로드합니다.
+[`skills/`](skills/) 아래에는 컴팩트한 워크플로우 지시문과 specialist catalog가 있습니다. 모두 Claude Code frontmatter (`name`, `description`, `disable-model-invocation: true`)를 갖습니다. 워크플로우 단계가 작은 파일들로 쪼개져 있어 에이전트는 필요한 것만 로드합니다.
 
 <details>
 <summary><strong>스킬 전체 보기</strong></summary>
@@ -481,7 +481,7 @@ python3 scripts/run-local-checks.py
 python3 scripts/run-local-checks.py --report
 ```
 
-깨끗한 리포지토리는 1초 미만에 20/20을 통과합니다. 실패는 check id별로 분리되어 어느 표면이 깨졌는지 정확히 가리킵니다.
+깨끗한 리포지토리는 1초 안팎에 27/27을 통과합니다. 실패는 check id별로 분리되어 어느 표면이 깨졌는지 정확히 가리킵니다.
 
 <details>
 <summary><strong>개별 체크 명령</strong></summary>
@@ -599,7 +599,7 @@ legal-research-agent/
 │       ├── citation-auditor/
 │       └── verifiers/                 # kr / us / uk / eu / scholarly / wikipedia / general-web
 │
-├── skills/                            # 19개 메인 에이전트 워크플로우/품질 스킬
+├── skills/                            # 워크플로우/품질 스킬 + specialist catalog
 ├── knowledge/
 │   ├── game-regulation/               # 분류 체계, 규제기관 맵, 소스 맵, 라이브러리 인덱스
 │   ├── general/                       # 도메인 체크리스트, 소스 맵, 플레이북 인덱스 + 활성 플레이북
@@ -609,7 +609,7 @@ legal-research-agent/
 ├── templates/                         # result.md / meta.example.json / source-playbook.example.md
 │
 ├── scripts/
-│   ├── run-local-checks.py            # 전체 프리플라이트 (20개 체크)
+│   ├── run-local-checks.py            # 전체 프리플라이트 (27개 체크)
 │   ├── validate-output.py             # 오케스트레이터 호환 스키마
 │   ├── check-result-structure.py      # 결과 메모 구조 게이트
 │   ├── evaluate-quality.py            # 스키마 너머의 법률 품질 게이트
@@ -630,7 +630,7 @@ legal-research-agent/
 │   ├── compare-token-runs.py          # 레거시 vs 통합 토큰/품질/호출 카운트 비교
 │   └── smoke-check.py                 # 스모크 fixture 검증
 │
-├── tests/                             # pytest 스타일 unittest (165 tests)
+├── tests/                             # unittest suite
 │   ├── fixtures/
 │   └── test_*.py
 │
@@ -638,9 +638,9 @@ legal-research-agent/
     ├── standalone-workflow.md         # 스탠드얼론 산출물 명세
     ├── orchestrator-intake.md         # 인테이크 페이로드 계약
     ├── source-playbook-authoring.md   # 컨트리뷰터 스캐폴드
-    ├── general-quality-hardening-plan.md
     ├── general-legacy-parity-plan.md
-    ├── claude-code-scaffolding-plan.md
+    ├── archive/
+    │   └── plans/                     # 완료된 구현/설계 계획서
     ├── golden-set.md
     ├── prompt-footprint.md            # 동결된 Phase 0 베이스라인
     └── migration-notes.md

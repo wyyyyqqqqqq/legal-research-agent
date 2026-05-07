@@ -71,7 +71,7 @@ Update:
 ```text
 scripts/run-local-checks.py
 README.md
-docs/general-quality-hardening-plan.md
+docs/archive/plans/general-quality-hardening-plan.md
 scripts/check-knowledge-coverage.py
 tests/test_knowledge_coverage.py
 ```

@@ -49,7 +49,7 @@ MCP for ingest, existing test/validator harness.
 | `/ingest` backend | `mcp__markitdown__convert_to_markdown` | Already allowlisted; covers PDF/DOCX/PPTX/XLSX/HTML. HWP/HWPX surface as fallback gap. |
 | `library/` location | Project root, gitignored | Mirrors general-legal-research convention. |
 | `.html` rendering | `scripts/render-html.py` consuming any deliverable Markdown | Keeps the three existing packaging modes unchanged; html is a derived format like `.docx`. |
-| Plan path | `docs/quality-parity-plan.md` | Matches existing plan naming convention. |
+| Plan path | `docs/archive/plans/quality-parity-plan.md` | Archived after completion. |
 
 ## Architecture
 

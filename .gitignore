@@ -34,6 +34,9 @@ reports/
 implementation-build-log.md
 merged-legal-research-agent*.md
 
+# Local agent workbench for scratch plans, session notes, and logs.
+.agent-work/
+
 # Local user configuration (created by /onboard)
 user-config.json
 !templates/user-config.example.json

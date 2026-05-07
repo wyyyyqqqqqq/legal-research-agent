@@ -220,7 +220,7 @@ fabricates Korean primary law to fill an MCP gap.
 
 ## Local Preflight
 
-Run all 21 validators in well under a second:
+Run all 27 validators in well under a second:
 
 ```bash
 python3 scripts/run-local-checks.py

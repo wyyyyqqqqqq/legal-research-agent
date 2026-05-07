@@ -7,7 +7,7 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Powered-blueviolet?logo=anthropic)](https://claude.ai/code)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![Modes](https://img.shields.io/badge/Research_modes-4-2196F3)](#research-modes)
-[![Local checks](https://img.shields.io/badge/Local_preflight-21_checks-4caf50)](#local-preflight)
+[![Local checks](https://img.shields.io/badge/Local_preflight-27_checks-4caf50)](#local-preflight)
 
 **[How to Use](docs/en/how-to-use.md)** · **[Disclaimer](docs/en/disclaimer.md)** · **[MCP Setup Guide](docs/en/mcp-setup-guide.md)** · **[Citation Audit Spec](docs/citation-audit.md)** · **[Release Process](docs/release-process.md)**
 
@@ -112,7 +112,7 @@ The agent definition lives at [`.claude/agents/legal-research-agent.md`](.claude
 python3 scripts/run-local-checks.py
 ```
 
-A clean repo passes 20/20. See [Local Preflight](#local-preflight) below.
+A clean repo passes 27/27. See [Local Preflight](#local-preflight) below.
 
 ---
 
@@ -152,7 +152,7 @@ If the orchestrator-supplied route looks inconsistent with the question, the age
 
 ```mermaid
 graph TD
-    A["CLAUDE.md\n(main agent)"] --> B["19 Skills\nworkflow + quality"]
+    A["CLAUDE.md\n(main agent)"] --> B["22 workflow skills\n+ 12 specialists"]
     A --> C["Knowledge files\ngame / general / legal-writing"]
     A --> D["Local Scripts\nvalidators + renderers"]
     A --> E["MCP / Web\nkorean-law, WebFetch, WebSearch"]
@@ -171,7 +171,7 @@ graph TD
 
 ### Skills
 
-19 compact instruction documents under [`skills/`](skills/), each with Claude Code frontmatter (`name`, `description`, `disable-model-invocation: true`). Workflow stages are split across small files so the agent loads only what it needs.
+Compact workflow instructions plus the specialist catalog live under [`skills/`](skills/), each with Claude Code frontmatter (`name`, `description`, `disable-model-invocation: true`). Workflow stages are split across small files so the agent loads only what it needs.
 
 <details>
 <summary><strong>View all skills</strong></summary>
@@ -481,7 +481,7 @@ python3 scripts/run-local-checks.py
 python3 scripts/run-local-checks.py --report
 ```
 
-A clean repo passes 20/20 in well under a second. Failures break out by check id so a regression points at exactly the surface that broke.
+A clean repo passes 27/27 in well under a second. Failures break out by check id so a regression points at exactly the surface that broke.
 
 <details>
 <summary><strong>Individual checks</strong></summary>
@@ -599,7 +599,7 @@ legal-research-agent/
 │       ├── citation-auditor/
 │       └── verifiers/                 # kr / us / uk / eu / scholarly / wikipedia / general-web
 │
-├── skills/                            # 19 main-agent workflow / quality skills
+├── skills/                            # workflow / quality skills + specialist catalog
 ├── knowledge/
 │   ├── game-regulation/               # taxonomy, regulator map, source map, library index
 │   ├── general/                       # domain checklist, source map, playbook index + active playbooks
@@ -609,7 +609,7 @@ legal-research-agent/
 ├── templates/                         # result.md / meta.example.json / source-playbook.example.md
 │
 ├── scripts/
-│   ├── run-local-checks.py            # full preflight (20 checks)
+│   ├── run-local-checks.py            # full preflight (27 checks)
 │   ├── validate-output.py             # orchestrator-compatibility schema
 │   ├── check-result-structure.py      # result memo structural gates
 │   ├── evaluate-quality.py            # legal-quality gates beyond schema
@@ -630,7 +630,7 @@ legal-research-agent/
 │   ├── compare-token-runs.py          # legacy vs merged token / quality / call-count comparison
 │   └── smoke-check.py                 # smoke fixture validator
 │
-├── tests/                             # pytest-style unittests (165 tests)
+├── tests/                             # unittest suite
 │   ├── fixtures/
 │   └── test_*.py
 │
@@ -638,9 +638,9 @@ legal-research-agent/
     ├── standalone-workflow.md         # standalone deliverable spec
     ├── orchestrator-intake.md         # intake payload contract
     ├── source-playbook-authoring.md   # contributor scaffold
-    ├── general-quality-hardening-plan.md
     ├── general-legacy-parity-plan.md
-    ├── claude-code-scaffolding-plan.md
+    ├── archive/
+    │   └── plans/                     # completed implementation/design plans
     ├── golden-set.md
     ├── prompt-footprint.md            # frozen Phase 0 baseline
     └── migration-notes.md

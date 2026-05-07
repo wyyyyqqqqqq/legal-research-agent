@@ -8,7 +8,7 @@ The default assumption is conservative: the merged agent is not proven to be a
 drop-in replacement for general-only work until it beats this plan.
 
 Before running this parity plan, complete or explicitly defer the hardening
-items in `docs/general-quality-hardening-plan.md`.
+items in `docs/archive/plans/general-quality-hardening-plan.md`.
 
 ## Objective
 

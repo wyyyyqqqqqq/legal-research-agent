@@ -8,7 +8,7 @@ For pure general-law replacement testing, use
 evidence that `legal-research-agent` matches `general-legal-research`.
 Pre-parity improvements for source playbook authoring, general source planning,
 claim verification, and currentness discipline are tracked in
-`docs/general-quality-hardening-plan.md`.
+`docs/archive/plans/general-quality-hardening-plan.md`.
 
 ## Candidate Cases
 
