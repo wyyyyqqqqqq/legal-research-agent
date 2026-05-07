@@ -198,6 +198,7 @@ REQUIRED_MARKERS: dict[str, list[str]] = {
     "docs/en/how-to-use.md": [
         "## Prerequisites",
         "## Quick Start",
+        "## Personal Configuration",
         "## Research Modes",
         "## Output Modes",
         "## Packaging Modes",
@@ -208,6 +209,7 @@ REQUIRED_MARKERS: dict[str, list[str]] = {
     "docs/ko/how-to-use.md": [
         "## Prerequisites",
         "## Quick Start",
+        "## Personal Configuration",
         "## Research Modes",
         "## Output Modes",
         "## Packaging Modes",

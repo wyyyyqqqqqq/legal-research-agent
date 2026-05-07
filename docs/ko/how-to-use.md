@@ -46,6 +46,81 @@
    `standalone-deliverable-manifest.json`을 갱신합니다. [`docs/standalone-workflow.md`](../standalone-workflow.md)
    참고.
 
+## Personal Configuration
+
+표준 사용을 반복할 때, `/onboard` 슬래시 커맨드가 기본 스코프(산업,
+법 영역, 관할, 언어, 선호 출력 모드)를 `user-config.json`으로 캡처해
+모든 세션이 동일 default를 재사용하게 합니다. 마법사는 개인 식별 정보를
+수집하지 않습니다 — preferences만 저장합니다.
+
+```text
+/onboard
+```
+
+마법사는 5개 질문 + 선택적 6번째 질문:
+
+1. **산업** — `game`, `fintech`, `healthcare`, `platform`,
+   `e_commerce`, `media`, `other` 중 하나.
+2. **법 영역 포커스** — `general`, `regulatory`, `contract`,
+   `consumer_protection`, `intellectual_property`, `employment`,
+   `privacy`, `tax`, `competition`, `other` 중 multi-select.
+3. **주 관할** — ISO 국가 코드 (또는 `EU` / `UK` 단축) 1개 이상.
+4. **부 관할** — 선택사항.
+5. **출력 선호** — `output_mode` + 패키징 + 언어를 한 번에 묶는 단축
+   번들.
+6. *(선택)* 시작 지식 디렉터리를 지금 구축할까? — `yes`이면 마법사가
+   [`docs/knowledge-construction-recipe.md`](../knowledge-construction-recipe.md)의
+   recipe를 실행해 `knowledge/<industry>-<area>/`를 생성합니다 (regulator
+   map, source map, issue taxonomy, library index). 디렉터리는
+   `[GENERATED — REQUIRES HUMAN REVIEW]` 게이트 상태로 시작하며,
+   사용자가 `/review-knowledge`로 게이트 해제하기 전까지 trusted로
+   취급되지 않습니다.
+
+전체 스키마는
+[`templates/user-config.example.json`](../../templates/user-config.example.json)
+에 있고,
+[`scripts/check-user-config.py`](../../scripts/check-user-config.py)
+validator가 로컬 프리플라이트에서 자동 실행됩니다.
+
+### 설정 교체 또는 갱신
+
+```text
+/onboard --reset             # 명시적 확인 후 전체 재실행
+/onboard --build-knowledge   # 지식 디렉터리만 재구축
+/onboard --skip-knowledge    # 지식 미터치, preference만 갱신
+```
+
+### 생성된 지식 디렉터리 검토
+
+마법사가 지식 디렉터리를 만들면(질문 6 = `yes`), 모든 `.md` 파일이
+`[GENERATED — REQUIRES HUMAN REVIEW]`로 시작합니다. 내용을 검토하고
+(필요 시) 편집한 후 게이트 해제:
+
+```text
+/review-knowledge knowledge/<industry>-<area>/
+```
+
+슬래시 커맨드가 `scripts/check-generated-knowledge.py`로 디렉터리
+구조를 검증하고, 배너를 `[VERIFIED]`로 교체하며,
+`user-config.json`의 해당 entry를 갱신합니다.
+
+### 우선순위
+
+| 실행 방식 | Primary | Fallback |
+|:---|:---|:---|
+| 표준 사용 | `user-config.json` defaults | 명시적 per-question 오버라이드가 이김 |
+| 서브에이전트 디스패치 | 오케스트레이터 분류 | 오케스트레이터가 지정하지 않은 필드만 `user-config.json`이 채움 |
+
+### 프라이버시와 파일 위치
+
+`user-config.json`은 프로젝트 루트에 있고, gitignored 처리되어 있어
+사용자 머신에만 존재합니다. `knowledge/<industry>-<area>/` 생성 디렉터리도
+기본 gitignored 처리되어 있고, 검토 완료된 지식을 의도적으로 공유할 때만
+ignore list에서 제거합니다.
+
+마법사는 이름·소속·자격증을 수집하지 않습니다. preferences(산업, 관할,
+출력 모드, 언어)만 저장합니다.
+
 ## Research Modes
 
 에이전트는 오케스트레이터 분류, `/research` 인자, 또는 자체 분류에 따라

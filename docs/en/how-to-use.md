@@ -48,6 +48,85 @@ deliverables.
    `deliverables/` and updates `standalone-deliverable-manifest.json`.
    See [`docs/standalone-workflow.md`](../standalone-workflow.md).
 
+## Personal Configuration
+
+For repeated standalone use, the `/onboard` slash command captures your
+default scope (industry, area-of-law focus, jurisdictions, language,
+preferred output mode) into `user-config.json` so the agent reuses the
+same defaults every session. The wizard never collects personal
+identifiers — preferences only.
+
+```text
+/onboard
+```
+
+The wizard asks five questions plus an optional sixth:
+
+1. Industry — `game`, `fintech`, `healthcare`, `platform`, `e_commerce`,
+   `media`, or `other`.
+2. Area-of-law focus — multi-select from `general`, `regulatory`,
+   `contract`, `consumer_protection`, `intellectual_property`,
+   `employment`, `privacy`, `tax`, `competition`, `other`.
+3. Primary jurisdictions — at least one ISO country code (or `EU` /
+   `UK` shortcuts).
+4. Secondary jurisdictions — optional.
+5. Output preference — a shortcut bundle that sets default
+   `output_mode`, packaging, and language together.
+6. *(Optional)* Build a starter knowledge directory now? — when
+   `yes`, the wizard executes the recipe in
+   [`docs/knowledge-construction-recipe.md`](../knowledge-construction-recipe.md)
+   to generate a `knowledge/<industry>-<area>/` directory with
+   regulator map, source map, issue taxonomy, and library index. The
+   directory is gated `[GENERATED — REQUIRES HUMAN REVIEW]` until the
+   user lifts the gate via `/review-knowledge`.
+
+The full schema lives at
+[`templates/user-config.example.json`](../../templates/user-config.example.json),
+and the validator at
+[`scripts/check-user-config.py`](../../scripts/check-user-config.py)
+runs as part of the local preflight.
+
+### Replacing or refreshing the config
+
+```text
+/onboard --reset             # full re-run after explicit confirmation
+/onboard --build-knowledge   # rebuild the knowledge directory only
+/onboard --skip-knowledge    # update preferences without touching knowledge
+```
+
+### Reviewing a generated knowledge directory
+
+When the wizard built a knowledge directory (Question 6 = `yes`), every
+`.md` file starts with `[GENERATED — REQUIRES HUMAN REVIEW]`. After
+inspecting and (optionally) editing the contents, lift the gate:
+
+```text
+/review-knowledge knowledge/<industry>-<area>/
+```
+
+The slash command verifies the directory passes
+`scripts/check-generated-knowledge.py`, replaces the banner with
+`[VERIFIED]`, and updates the matching entry in `user-config.json`.
+
+### Precedence
+
+| Run mode | Primary | Fallback |
+|:---|:---|:---|
+| Standalone | `user-config.json` defaults | Per-question overrides win when explicit |
+| Subagent dispatch | Orchestrator classification | `user-config.json` fills only fields the orchestrator did not specify |
+
+### Privacy and file location
+
+`user-config.json` lives at the project root. It is gitignored, so
+the file stays on your machine. Generated knowledge directories under
+`knowledge/<industry>-<area>/` are also gitignored by default — they
+move out of the ignore list only when you intentionally commit
+reviewed knowledge to share.
+
+The wizard never collects names, firms, or bar admissions. Only
+preferences (industry, jurisdictions, output mode, language) are
+stored.
+
 ## Research Modes
 
 The agent picks one of four research modes based on the orchestrator
