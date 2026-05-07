@@ -58,6 +58,11 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-output-modes.py"],
     },
     {
+        "id": "user_config",
+        "description": "Validate user-config.json schema when the file is present.",
+        "cmd": ["python3", "scripts/check-user-config.py"],
+    },
+    {
         "id": "formatter_output",
         "description": "Validate standalone formatter output fixtures.",
         "cmd": ["python3", "scripts/check-formatter-output.py", "tests/fixtures/formatter"],
