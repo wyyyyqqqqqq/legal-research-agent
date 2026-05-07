@@ -1,0 +1,72 @@
+{
+  "meta_version": "1.1",
+  "summary": "Enforcement-and-case-law deliverable fixture validating output-mode composition for KR probability disclosure enforcement.",
+  "research_mode": "game_regulation",
+  "mode_source": "orchestrator",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "game_regulation",
+  "fallback_reason": null,
+  "classification_warnings": [],
+  "co_running_agents": [],
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "issue_map": [
+    {
+      "issue": "Probability disclosure enforcement landscape in Korea",
+      "answer": "KFTC has issued probability-disclosure-related corrective orders; Game Rating Committee monitors compliance.",
+      "authority_ids": ["src_001", "src_002"],
+      "confidence": "medium"
+    }
+  ],
+  "key_findings": [
+    "Recent KFTC corrective orders against probability misrepresentation establish enforcement precedent under [src_002], applying the statutory framework in [src_001]."
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Korean Game Industry Promotion Act probability disclosure provisions",
+      "grade": "A",
+      "citation": "Article 33-2",
+      "pinpoint": "paragraphs (1)-(3)",
+      "url_or_access": "official statute text",
+      "currentness": {
+        "status": "checked_current",
+        "checked_as_of": "2026-05-07",
+        "effective_date": "2024-03-22",
+        "notes": "Official current version verified."
+      }
+    },
+    {
+      "id": "src_002",
+      "title": "KFTC corrective order on probability misrepresentation (Decision 2024-XXX)",
+      "grade": "A",
+      "citation": "Decision 2024-XXX",
+      "pinpoint": "Operative paragraphs",
+      "url_or_access": "KFTC official decisions database",
+      "currentness": {
+        "status": "checked_current",
+        "checked_as_of": "2026-05-07",
+        "effective_date": null,
+        "notes": "Final administrative decision."
+      }
+    }
+  ],
+  "comparison_matrix": [],
+  "coverage_gaps": [],
+  "claim_checks": [
+    {
+      "claim_id": "claim_001",
+      "issue_id": "issue_001",
+      "claim": "KFTC corrective orders establish enforcement precedent for probability misrepresentation.",
+      "authority_ids": ["src_002"],
+      "support_strength": "direct",
+      "currentness": "checked",
+      "confidence_impact": "supports_medium",
+      "limitation": "Single-decision precedent; no appellate review yet."
+    }
+  ],
+  "output_mode": "enforcement_case_law",
+  "output_mode_audience": "litigation lead",
+  "output_mode_format": "markdown",
+  "error": null
+}

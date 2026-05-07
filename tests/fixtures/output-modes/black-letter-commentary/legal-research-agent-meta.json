@@ -1,0 +1,58 @@
+{
+  "meta_version": "1.1",
+  "summary": "Black-letter-commentary deliverable fixture validating output-mode composition for KR Article 33-2 article-by-article commentary.",
+  "research_mode": "game_regulation",
+  "mode_source": "orchestrator",
+  "active_profile": "merged",
+  "orchestrator_route_mode": "game_regulation",
+  "fallback_reason": null,
+  "classification_warnings": [],
+  "co_running_agents": [],
+  "jurisdictions": ["KR"],
+  "domains": ["game_regulation"],
+  "issue_map": [
+    {
+      "issue": "Black-letter commentary on Article 33-2 (probability disclosure)",
+      "answer": "Article 33-2 imposes mandatory disclosure with delegated implementing rules; sanction exposure is statutory.",
+      "authority_ids": ["src_001"],
+      "confidence": "high"
+    }
+  ],
+  "key_findings": [
+    "Article 33-2 of [src_001] is the controlling rule for probability disclosure of randomized paid items in Korea."
+  ],
+  "sources": [
+    {
+      "id": "src_001",
+      "title": "Korean Game Industry Promotion Act probability disclosure provisions",
+      "grade": "A",
+      "citation": "Article 33-2",
+      "pinpoint": "paragraphs (1)-(3)",
+      "url_or_access": "official statute text",
+      "currentness": {
+        "status": "checked_current",
+        "checked_as_of": "2026-05-07",
+        "effective_date": "2024-03-22",
+        "notes": "Official current version verified."
+      }
+    }
+  ],
+  "comparison_matrix": [],
+  "coverage_gaps": [],
+  "claim_checks": [
+    {
+      "claim_id": "claim_001",
+      "issue_id": "issue_001",
+      "claim": "Article 33-2 imposes mandatory disclosure for randomized paid items.",
+      "authority_ids": ["src_001"],
+      "support_strength": "direct",
+      "currentness": "checked",
+      "confidence_impact": "supports_high",
+      "limitation": "Implementing rule depth still being clarified by MoCST."
+    }
+  ],
+  "output_mode": "black_letter_commentary",
+  "output_mode_audience": "in-house counsel",
+  "output_mode_format": "docx_ready",
+  "error": null
+}
