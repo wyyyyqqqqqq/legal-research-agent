@@ -180,6 +180,10 @@ the matching specialist skill in addition to the workflow skills:
   `skills/specialists/gambling-law-summary.md`
 - IP infringement, enforcement →
   `skills/specialists/ip-infringement-analysis.md`
+- judicial opinion / case brief / case summary →
+  `skills/specialists/case-briefs.md`
+- judgment summary / final order / appellate disposition →
+  `skills/specialists/judgment-summary.md`
 - privacy law updates →
   `skills/specialists/privacy-law-updates.md`
 - regulatory market entry, sectoral compliance →

@@ -13,9 +13,11 @@ ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SPECIALISTS = {
     "antitrust-investigation-summary",
     "api-acceptable-use-policy",
+    "case-briefs",
     "cyber-law-compliance-summary",
     "gambling-law-summary",
     "ip-infringement-analysis",
+    "judgment-summary",
     "privacy-law-updates",
     "regulatory-summary",
     "terms-of-service",
