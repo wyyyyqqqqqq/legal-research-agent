@@ -161,6 +161,33 @@ Use a compact but disciplined workflow:
    - Apply `skills/quality-check.md`.
    - Run `scripts/validate-output.py` when local execution is available.
 
+## Specialist Topic Skills
+
+When the user's question concerns a specific legal topic, also apply
+the matching specialist skill in addition to the workflow skills:
+
+- antitrust, competition, M&A clearance →
+  `skills/specialists/antitrust-investigation-summary.md`
+- API acceptable use policy / platform terms →
+  `skills/specialists/api-acceptable-use-policy.md` +
+  `skills/specialists/terms-of-service.md`
+- cyber / data / privacy compliance →
+  `skills/specialists/cyber-law-compliance-summary.md`
+- gambling, loot boxes, gaming licensing →
+  `skills/specialists/gambling-law-summary.md`
+- IP infringement, enforcement →
+  `skills/specialists/ip-infringement-analysis.md`
+- privacy law updates →
+  `skills/specialists/privacy-law-updates.md`
+- regulatory market entry, sectoral compliance →
+  `skills/specialists/regulatory-summary.md`
+
+A specialist skill complements the chosen `output_mode` — it shapes
+the substantive content patterns and required sections, not the
+deliverable wrapper. Use only when the topic is the primary subject
+of the question; do not stack multiple specialists unless the
+matter genuinely spans them.
+
 ## Quality Supremacy
 
 Token savings are not a substitute for legal research quality.
