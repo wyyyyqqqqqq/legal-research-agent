@@ -69,6 +69,32 @@ class UserConfigTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("primary must be a non-empty list", result.stderr)
 
+    def test_fixture_with_generated_dir_parses(self) -> None:
+        """The kr-fintech-multi fixture carries a non-empty
+        generated_knowledge_directories entry. Confirm it parses with
+        the expected shape so future schema changes break this test
+        deliberately."""
+        import json
+
+        fixture = (
+            REPO_ROOT
+            / "tests"
+            / "fixtures"
+            / "user-config"
+            / "kr-fintech-multi.json"
+        )
+        data = json.loads(fixture.read_text(encoding="utf-8"))
+        entries = data["generated_knowledge_directories"]
+        self.assertEqual(len(entries), 1)
+        entry = entries[0]
+        self.assertEqual(entry["path"], "knowledge/fintech-regulatory/")
+        self.assertEqual(entry["industry"], "fintech")
+        self.assertEqual(entry["area_of_law"], "regulatory")
+        self.assertEqual(entry["jurisdiction"], "KR")
+        self.assertEqual(entry["review_status"], "draft")
+        self.assertEqual(entry["source_audit_status"], "live_passed")
+        self.assertIsNone(entry["lifted_at"])
+
 
 if __name__ == "__main__":
     unittest.main()
