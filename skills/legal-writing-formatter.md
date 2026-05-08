@@ -117,18 +117,35 @@ research, rank, or decide new legal points.
 
 ## Profile Selection
 
-Load only the selected compact profile:
+Load only the compact profile that matches both the language and the
+packaging mode:
 
-- Korean deliverable: `knowledge/legal-writing/ko-formatter-profile.md`
-- English deliverable: `knowledge/legal-writing/en-formatter-profile.md`
+| Language | Packaging mode | Profile |
+|---|---|---|
+| `ko` | `docx_ready_markdown` (DOCX requested) | `knowledge/legal-writing/ko-legal-opinion-profile.md` |
+| `ko` | `standalone_markdown`, `handoff_packet`, or no DOCX | `knowledge/legal-writing/ko-formatter-profile.md` |
+| `en` | any | `knowledge/legal-writing/en-formatter-profile.md` |
+| `bilingual` | any | both Korean profiles per ko language row + `en-formatter-profile.md` |
 
-Do not load both profiles unless the user requests a bilingual deliverable. Do
-not load a broad bilingual formatting guide by default.
+The default Korean DOCX path is the legal-opinion profile because the polished
+renderer (`scripts/render-legal-opinion-docx.py`) supplies cover page,
+hierarchical numbering, statutory block quotes, footnote markers, and a
+master 각주 section that depend on the markdown patterns documented in that
+profile. For non-DOCX Korean deliverables, the existing `ko-formatter-profile.md`
+remains the right fit.
+
+Override the default to `ko-formatter-profile.md` when the user explicitly
+requests a quick draft, internal memo, or handoff packet, or when the requested
+register is conversational. Record the override in the run's manifest
+`audit.claim` field with a one-sentence reason.
 
 Prefer Korean when the user question, result memo, or requested final output is
 primarily Korean. Prefer English when the requested final output is primarily
 English. For mixed-language matters, choose the output language requested by the
 user and preserve foreign legal terms in parentheses where useful.
+
+Do not load both profiles unless the user requests a bilingual deliverable.
+Do not load a broad bilingual formatting guide by default.
 
 ## Mandatory Preservation Rules
 

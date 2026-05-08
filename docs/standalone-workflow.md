@@ -139,13 +139,27 @@ again and material source anchors survived extraction.
    - Fix missing sections, source-table drift, unanchored material paragraphs,
      hidden coverage gaps, and handoff omissions before delivery.
 5. Binary DOCX generation, when requested
-   - Run `scripts/render-docx.py` on the validated Markdown deliverable.
-   - Save the render report next to the DOCX when possible.
+   - Renderer selection:
+     - For Korean deliverables (`language=ko`), default to
+       `scripts/render-legal-opinion-docx.py` and supply the cover-page
+       metadata (`--title`, `--subtitle`, `--recipient`, `--date`,
+       `--classification`, `--author`) per
+       `knowledge/legal-writing/ko-legal-opinion-profile.md` "CLI Invocation
+       Convention" defaults.
+     - For English deliverables, or when the user explicitly requests the
+       basic MVP renderer, run `scripts/render-docx.py`.
+   - Save the render report next to the DOCX when the chosen renderer
+     supports `--report` (the MVP renderer does; the polished renderer prints
+     a one-line summary to stdout — capture it manifest-side).
    - Run DOCX extraction with `citation_auditor.docx` or
-     `scripts/check-docx-generation.py` for the local fixture path.
-   - Treat the DOCX as MVP rendering: headings, simple tables, lists, block
-     quotes, and visible text are supported; native footnotes, tracked changes,
-     comments, and complex page layout are not.
+     `scripts/check-docx-generation.py` for the local fixture path. Confirm
+     every `src_*` anchor in `meta.json` survives extraction.
+   - Treat both renderers as MVP rendering: headings, simple tables, lists,
+     block quotes, and visible text are supported. The polished renderer
+     additionally provides cover page, page numbers, classification footer,
+     auto-numbered headings, and superscript-marker 각주 endnotes. Neither
+     renderer produces native Word footnotes, tracked changes, comments, or
+     fully precise page layout.
 
 ### Optional `.html` rendering
 
