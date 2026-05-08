@@ -2,7 +2,7 @@
 
 # Legal Research Agent
 
-**일반 법률 쟁점과 게임산업 규제를 위한 출처 기반 리서치 에이전트, Claude Code 위에서 동작합니다.**
+**Claude Code 위에서 동작하는 출처 기반 법률 리서치 에이전트.**
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Powered-blueviolet?logo=anthropic)](https://claude.ai/code)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
@@ -44,7 +44,7 @@
 
 ## Overview
 
-`legal-research-agent`는 **일반 법률 쟁점**과 **게임산업 규제**를 다루는 출처 기반의 구조화된 리서치를 수행하는 Claude Code 에이전트입니다. 외부 백엔드 없이 로컬 Claude Code 세션 내에서 모두 동작하며, 오케스트레이터 호환의 리서치 기록(`legal-research-agent-result.md` + `legal-research-agent-meta.json`)을 생성하고, 선택적으로 모드형 산출물(executive brief, comparative matrix, enforcement and case-law summary, black-letter commentary, 또는 정식 9-section 메모)을 함께 산출합니다.
+`legal-research-agent`는 다관할 **일반 법률 쟁점**을 다루는 출처 기반의 구조화된 리서치를 수행하는 Claude Code 에이전트입니다. 외부 백엔드 없이 로컬 Claude Code 세션 내에서 모두 동작하며, 오케스트레이터 호환의 리서치 기록(`legal-research-agent-result.md` + `legal-research-agent-meta.json`)을 생성하고, 선택적으로 모드형 산출물(executive brief, comparative matrix, enforcement and case-law summary, black-letter commentary, 또는 정식 9-section 메모)을 함께 산출합니다.
 
 에이전트는 두 가지 호출 방식으로 동작합니다. **KP Legal Orchestrator** 디스패치 그래프 내의 **서브에이전트**로 호출되면 인테이크 페이로드를 받아 오케스트레이터가 지정한 출력 디렉터리에 계약 파일을 작성합니다. 사용자가 직접 실행하는 **스탠드얼론** 도구로 호출되면 자연어 질문(한국어 또는 영어)을 `/research` 슬래시 커맨드로 받아 동일한 계약 파일과 (선택적으로) 폴리쉬된 모드형 산출물을 생성합니다. 어느 경로든 동일한 8단계 워크플로우(인테이크 → 소스 플랜 → 수집 → 청구 검증 → 등급 → 분석 → 출력 → 품질 점검)가 작동합니다.
 
@@ -658,7 +658,7 @@ legal-research-agent/
 - [x] `citation-auditor` 및 verifier 플러그인 패밀리 vendor 처리
 - [ ] `general-legal-research` 정식 패리티 비교 실행 ([`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md) 참조)
 - [ ] `game-legal-research` 정식 패리티 비교 실행
-- [ ] 동일 통합 패턴을 [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) + [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert)에 적용 — 통합 프라이버시 전문가 (진행 중)
+- [ ] 동일 통합 패턴을 [`data-protection-agent`](https://github.com/lowtidebuild/data-protection-agent)에 적용 — `GDPR-expert` + `PIPA-expert`를 대체하는 통합 프라이버시 전문가 (진행 중)
 - [ ] Codex 전용 형제 에이전트 출시 (동일 스킬, `AGENTS.md` 우선, Codex CLI 컨벤션)
 - [ ] 중복 제거된 단일 에이전트 라우트로 `legal-agent-orchestrator` 디스패치 그래프 경량화
 - [ ] citation-audit 스탠드얼론 워크플로우용 라이브 verifier 통합 테스트 fixture 추가
@@ -675,8 +675,9 @@ legal-research-agent/
 | ~~`general-legal-research`~~ | ~~일반법 전문~~ | 이 리포의 `general` 모드로 대체 |
 | ~~`game-legal-research`~~ | ~~게임산업 전문~~ | 이 리포의 `game_regulation` 모드로 대체 |
 | [`legal-translation-agent`](https://github.com/lowtidebuild/legal-translation-agent) | 법률 번역 전문 | 법률 번역 |
-| [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) | 프라이버시 전문 (한국) | 한국 개인정보보호법 |
-| [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) | 프라이버시 전문 (EU) | GDPR |
+| [`data-protection-agent`](https://github.com/lowtidebuild/data-protection-agent) | 프라이버시 / 데이터 보호 전문 (v2) | 한국 PIPA + EU GDPR + 국경 간 데이터 이전 |
+| ~~`PIPA-expert`~~ | ~~프라이버시 전문 (한국)~~ | `data-protection-agent`로 대체 |
+| ~~`GDPR-expert`~~ | ~~프라이버시 전문 (EU)~~ | `data-protection-agent`로 대체 |
 | [`contract-review-agent`](https://github.com/lowtidebuild/contract-review-agent) | 계약 전문 | 계약서 검토 |
 | [`legal-writing-agent`](https://github.com/lowtidebuild/legal-writing-agent) | 법률 작성 전문 | 법률 작성 |
 | [`second-review-agent`](https://github.com/lowtidebuild/second-review-agent) | 시니어 리뷰 전문 | 품질 검토 |

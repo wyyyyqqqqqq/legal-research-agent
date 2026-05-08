@@ -2,7 +2,7 @@
 
 # Legal Research Agent
 
-**Source-first legal research for general legal questions and game-industry regulation, on Claude Code.**
+**Source-first legal research on Claude Code.**
 
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Powered-blueviolet?logo=anthropic)](https://claude.ai/code)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
@@ -44,7 +44,7 @@
 
 ## Overview
 
-`legal-research-agent` is a Claude Code agent that performs structured, source-grounded legal research across **general legal questions** and **game-industry regulation**. It runs entirely within a local Claude Code session — no external backend required — and produces an orchestrator-compatible research record (`legal-research-agent-result.md` + `legal-research-agent-meta.json`) plus optional mode-shaped deliverables (executive brief, comparative matrix, enforcement and case-law summary, black-letter commentary, or the canonical 9-section research memo).
+`legal-research-agent` is a Claude Code agent that performs structured, source-grounded legal research on **general legal questions** across multiple jurisdictions. It runs entirely within a local Claude Code session — no external backend required — and produces an orchestrator-compatible research record (`legal-research-agent-result.md` + `legal-research-agent-meta.json`) plus optional mode-shaped deliverables (executive brief, comparative matrix, enforcement and case-law summary, black-letter commentary, or the canonical 9-section research memo).
 
 The agent works in two invocation modes. As a **subagent** inside the **KP Legal Orchestrator** dispatch graph, it consumes an intake payload and writes the contract files into the orchestrator-supplied output directory. As a **standalone** tool launched by the user directly, it accepts a natural-language question (Korean or English) via the `/research` slash command and produces the same contract files plus, optionally, a polished mode-shaped deliverable. The same eight-stage workflow — intake → source plan → collection → claim verification → grading → analysis → output → quality check — runs in either path.
 
@@ -658,7 +658,7 @@ legal-research-agent/
 - [x] Vendor `citation-auditor` and verifier plugin family
 - [ ] Run formal `general-legal-research` parity comparison (see [`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md))
 - [ ] Run formal `game-legal-research` parity comparison
-- [ ] Apply the same merger pattern to [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) + [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) — unified privacy specialist (in progress)
+- [ ] Apply the same merger pattern in [`data-protection-agent`](https://github.com/lowtidebuild/data-protection-agent) — unified privacy specialist superseding `GDPR-expert` + `PIPA-expert` (in progress)
 - [ ] Ship Codex-tuned sibling agent (same skills, `AGENTS.md`-first, Codex CLI conventions)
 - [ ] Lighten `legal-agent-orchestrator` dispatch graph using the deduplicated single-agent route
 - [ ] Add live-verifier integration test fixtures for the citation-audit standalone workflow
@@ -675,8 +675,9 @@ This agent is part of the **KP Legal Orchestrator** series of specialist legal w
 | ~~`general-legal-research`~~ | ~~General-law specialist~~ | Superseded by this repo's `general` mode |
 | ~~`game-legal-research`~~ | ~~Game-industry specialist~~ | Superseded by this repo's `game_regulation` mode |
 | [`legal-translation-agent`](https://github.com/lowtidebuild/legal-translation-agent) | Legal Translation Specialist | Legal translation |
-| [`PIPA-expert`](https://github.com/lowtidebuild/PIPA-expert) | Privacy Specialist (Korea) | Korean data privacy law |
-| [`GDPR-expert`](https://github.com/lowtidebuild/GDPR-expert) | Privacy Specialist (EU) | Data protection law (GDPR) |
+| [`data-protection-agent`](https://github.com/lowtidebuild/data-protection-agent) | Privacy / Data Protection Specialist (v2) | Korean PIPA + EU GDPR + cross-border data transfer |
+| ~~`PIPA-expert`~~ | ~~Privacy Specialist (Korea)~~ | Superseded by `data-protection-agent` |
+| ~~`GDPR-expert`~~ | ~~Privacy Specialist (EU)~~ | Superseded by `data-protection-agent` |
 | [`contract-review-agent`](https://github.com/lowtidebuild/contract-review-agent) | Contract Specialist | Contract review |
 | [`legal-writing-agent`](https://github.com/lowtidebuild/legal-writing-agent) | Legal Drafting Specialist | Legal writing |
 | [`second-review-agent`](https://github.com/lowtidebuild/second-review-agent) | Senior Review Specialist | Quality review |
