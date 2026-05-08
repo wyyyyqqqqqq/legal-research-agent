@@ -36,7 +36,6 @@
 - [Local Preflight](#local-preflight)
 - [Token Discipline](#token-discipline)
 - [Repository Structure](#repository-structure)
-- [Roadmap](#roadmap)
 - [Part of KP Legal Orchestrator](#part-of-kp-legal-orchestrator)
 - [Disclaimer](#disclaimer)
 
@@ -647,21 +646,6 @@ legal-research-agent/
 ```
 
 </details>
-
----
-
-## Roadmap
-
-- [x] Merge `general-legal-research` and `game-legal-research` into a single dispatch path
-- [x] Add Claude Code skill frontmatter, subagent definition, settings, and slash command
-- [x] Land general-law source playbook authoring scaffold and currentness vocabulary
-- [x] Vendor `citation-auditor` and verifier plugin family
-- [ ] Run formal `general-legal-research` parity comparison (see [`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md))
-- [ ] Run formal `game-legal-research` parity comparison
-- [ ] Apply the same merger pattern in [`data-protection-agent`](https://github.com/lowtidebuild/data-protection-agent) — unified privacy specialist superseding `GDPR-expert` + `PIPA-expert` (in progress)
-- [ ] Ship Codex-tuned sibling agent (same skills, `AGENTS.md`-first, Codex CLI conventions)
-- [ ] Lighten `legal-agent-orchestrator` dispatch graph using the deduplicated single-agent route
-- [ ] Add live-verifier integration test fixtures for the citation-audit standalone workflow
 
 ---
 

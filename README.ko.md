@@ -36,7 +36,6 @@
 - [Local Preflight](#local-preflight)
 - [Token Discipline](#token-discipline)
 - [Repository Structure](#repository-structure)
-- [Roadmap](#roadmap)
 - [Part of KP Legal Orchestrator](#part-of-kp-legal-orchestrator)
 - [Disclaimer](#disclaimer)
 
@@ -647,21 +646,6 @@ legal-research-agent/
 ```
 
 </details>
-
----
-
-## Roadmap
-
-- [x] `general-legal-research`와 `game-legal-research`를 단일 디스패치 경로로 통합
-- [x] Claude Code 스킬 frontmatter, 서브에이전트 정의, 설정, 슬래시 커맨드 추가
-- [x] 일반법 소스 플레이북 작성 스캐폴드와 현행성 어휘 적용
-- [x] `citation-auditor` 및 verifier 플러그인 패밀리 vendor 처리
-- [ ] `general-legal-research` 정식 패리티 비교 실행 ([`docs/general-legacy-parity-plan.md`](docs/general-legacy-parity-plan.md) 참조)
-- [ ] `game-legal-research` 정식 패리티 비교 실행
-- [ ] 동일 통합 패턴을 [`data-protection-agent`](https://github.com/lowtidebuild/data-protection-agent)에 적용 — `GDPR-expert` + `PIPA-expert`를 대체하는 통합 프라이버시 전문가 (진행 중)
-- [ ] Codex 전용 형제 에이전트 출시 (동일 스킬, `AGENTS.md` 우선, Codex CLI 컨벤션)
-- [ ] 중복 제거된 단일 에이전트 라우트로 `legal-agent-orchestrator` 디스패치 그래프 경량화
-- [ ] citation-audit 스탠드얼론 워크플로우용 라이브 verifier 통합 테스트 fixture 추가
 
 ---
 
