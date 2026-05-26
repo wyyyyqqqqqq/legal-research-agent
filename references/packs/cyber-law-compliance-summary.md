@@ -1,7 +1,7 @@
 # Cyber Law Compliance Summary Reference Pack
 
 This pack contains detailed cyber/privacy compliance memo rules for
-`.claude/skills/cyber-law-compliance-summary/SKILL.md`.
+`skills/specialists/cyber-law-compliance-summary.md`.
 
 ## Quick Start
 

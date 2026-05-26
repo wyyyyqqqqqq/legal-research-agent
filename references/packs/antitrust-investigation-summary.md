@@ -1,7 +1,7 @@
 # Antitrust Investigation Summary Reference Pack
 
 This pack contains detailed internal antitrust investigation memo rules for
-`.claude/skills/antitrust-investigation-summary/SKILL.md`.
+`skills/specialists/antitrust-investigation-summary.md`.
 
 ## Quick Start
 

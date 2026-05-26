@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "jurisdiction": "KR",
+  "language_pair": "ko-en",
+  "last_updated": "2026-05-26",
+  "terms": [
+    {
+      "term": "과태료",
+      "source_language": "ko",
+      "preferred_translation": "Administrative fine",
+      "definition": "A non-criminal administrative monetary sanction.",
+      "authority_ids": [],
+      "pinpoints": ["Example Act Article 2"],
+      "status": "verified",
+      "context_rules": []
+    }
+  ]
+}

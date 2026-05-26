@@ -1,56 +1,38 @@
 #!/usr/bin/env python3
-"""Validate references/packs/ catalog and structure."""
+"""Validate references/packs/ through the shared reference catalog."""
 
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+CATALOG_CHECKER = ROOT / "scripts" / "check-reference-catalog.py"
 
-EXPECTED_PACKS = {
-    "antitrust-investigation-summary",
-    "api-acceptable-use-policy",
-    "cyber-law-compliance-summary",
-    "gambling-law-summary",
-    "ip-infringement-analysis",
-    "terms-of-service",
-}
 
-# Confirm a real vendor copy, not an empty placeholder.
-MIN_BYTES = 1500
+def load_catalog_checker():
+    spec = importlib.util.spec_from_file_location("check_reference_catalog", CATALOG_CHECKER)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Could not load {CATALOG_CHECKER}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def check(root: Path) -> list[str]:
-    errors: list[str] = []
-    packs_dir = root / "references" / "packs"
-    if not packs_dir.is_dir():
-        errors.append("references/packs/: directory missing")
-        return errors
+    checker = load_catalog_checker()
+    return checker.check(root, kind="pack")
 
-    actual = {p.stem for p in packs_dir.glob("*.md")}
-    missing = EXPECTED_PACKS - actual
-    extra = actual - EXPECTED_PACKS
 
-    for name in sorted(missing):
-        errors.append(f"references/packs/: missing expected pack {name!r}")
-    for name in sorted(extra):
-        errors.append(
-            f"references/packs/{name}.md: not in expected catalog "
-            f"(update EXPECTED_PACKS or remove the file)"
-        )
-    for name in sorted(actual & EXPECTED_PACKS):
-        path = packs_dir / f"{name}.md"
-        size = path.stat().st_size
-        if size < MIN_BYTES:
-            errors.append(
-                f"references/packs/{name}.md: too small ({size} bytes "
-                f"< {MIN_BYTES}); pack appears empty or truncated"
-            )
-
-    return errors
+def pack_count(root: Path) -> int:
+    checker = load_catalog_checker()
+    errors, summary = checker.validate_catalog(root, kind="pack")
+    if errors:
+        return 0
+    return int(summary["by_kind"].get("pack", 0))
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -63,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
         for line in errors:
             print(f"FAIL: {line}", file=sys.stderr)
         return 1
-    print(f"OK: {len(EXPECTED_PACKS)} reference packs present")
+    print(f"OK: {pack_count(args.root)} reference packs present")
     return 0
 
 

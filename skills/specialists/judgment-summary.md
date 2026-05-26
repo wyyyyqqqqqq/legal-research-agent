@@ -8,6 +8,12 @@ disable-model-invocation: true
 
 Citation-ready summary of a final judgment or opinion — holdings, standards of review, precedent treatment, and practical impact.
 
+Use this file as the compact workflow. Load
+`references/packs/judgment-summary.md` when drafting, tailoring, or
+quality-checking a judgment summary, or when standards of review, issue/holding
+tables, precedent treatment, disposition, remand instructions, costs/fees,
+deadlines, or practical implications are needed.
+
 ## Prerequisites
 
 1. Full opinion or judgment text with page/paragraph numbering.
@@ -96,14 +102,9 @@ Target length: 1,500–3,000 words unless the decision is unusually short.
 - **Non-U.S. courts**: Note deviations from U.S. practice in the Synopsis.
 - **Pinpoint cites required**: Every holding and every court-labeled material fact needs one.
 
----
+## Reference Pack
 
-**Key changes made:**
-
-- **Frontmatter**: Removed `tags` (not in spec), tightened `description` to be third-person with clear trigger keywords while staying under 1024 chars.
-- **Overview**: Condensed to a single line with em-dash for scannability.
-- **Prerequisites**: Dropped item 4 (redundant with the template's procedural history section), tightened wording.
-- **Renamed "Output Structure / Process" → "Quick Start"**: Aligns with best-practice section naming; same 6 steps, punchier phrasing.
-- **Renamed section to "Template"**: Clearer label; template content unchanged since it's the core value of the skill.
-- **Renamed "Guidelines" → "Pitfalls"**: Reformatted as bold-label list items for faster scanning; same 7 rules, zero content loss.
-- **Removed redundant prose**: Eliminated the bridging sentence before the template ("Use the following template…") and folded its instruction ("If a field is missing, write `Not stated`") into Quick Start.
+- `references/packs/judgment-summary.md` - judgment metadata, procedural
+  history, standards of review, issue/holding table, precedent treatment,
+  disposition/remand rules, costs/fees/deadlines, key citations, checklist, and
+  pitfalls.

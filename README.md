@@ -213,6 +213,36 @@ knowledge/
 
 The agent loads only the matching profile for the active mode and language. Bilingual loading happens only when explicitly requested.
 
+### References and Specialist Packs
+
+Reusable drafting, schema, and quality-control material lives under
+[`references/`](references/):
+
+```text
+references/
+├── reference-catalog.json              # machine-readable reference catalog
+├── conflict-report-template.md         # source-conflict reporting control
+├── glossary-schema.md                  # jurisdiction glossary JSON schema
+├── korean-law-reference.md             # Korean-law hierarchy and tool guide
+├── legal-writing-formatting-guide.md   # EN / KO legal writing style guide
+└── packs/                              # detailed specialist drafting/QC packs
+```
+
+Specialist packs stay procedural: they describe what to verify and how to
+structure a deliverable, but they are not cached legal authority. Local checks
+validate the shared reference catalog, corpus, pack catalog, glossary fixtures,
+and active internal reference links.
+
+Create new reference artifacts through the scaffold so the catalog stays in
+sync:
+
+```bash
+python3 scripts/create-reference-artifact.py \
+  --kind pack \
+  --id example-specialist-pack \
+  --title "Example Specialist Pack"
+```
+
 ### Citation auditor (vendored)
 
 [`citation-auditor`](citation_auditor/) ships vendored — the package, the Claude Code skill at [`.claude/skills/citation-auditor/`](.claude/skills/citation-auditor/), the verifier plugins under [`.claude/skills/verifiers/`](.claude/skills/verifiers/), and the [`/audit`](/.claude/commands/audit.md) slash command. Refresh the vendor stamp from the sibling source repo only when intentionally upgrading:

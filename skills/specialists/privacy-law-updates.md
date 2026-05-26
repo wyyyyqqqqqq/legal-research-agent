@@ -8,6 +8,12 @@ disable-model-invocation: true
 
 Produces a structured briefing on recent privacy and data protection developments, oriented toward compliance planning and executive decision-making.
 
+Use this file as the compact workflow. Load
+`references/packs/privacy-law-updates.md` when drafting, tailoring, or
+quality-checking a privacy law update, or when development taxonomy,
+deadline tracking, enforcement tracking, proposal treatment, source minimums,
+or pitfalls are needed.
+
 ## Quick Start
 
 Confirm before generating:
@@ -78,3 +84,9 @@ Cover only topics with material developments:
 - **No editorializing** on political likelihood; state procedural status only
 - **Note sector carve-outs** (HIPAA, GLBA, COPPA, ePrivacy) where they interact with general frameworks
 - **Dual-audience tone** — precise for compliance implementation, clear for executive briefing
+
+## Reference Pack
+
+- `references/packs/privacy-law-updates.md` - development taxonomy,
+  jurisdiction update template, effective-date/deadline tracker, enforcement
+  tracker, proposed-law treatment, source minimums, checklist, and pitfalls.

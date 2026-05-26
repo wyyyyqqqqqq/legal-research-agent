@@ -127,6 +127,47 @@ be verified. Typical consequences:
 
 Do not let a missing source layer disappear silently.
 
+## Reference Packs Are Different
+
+Source playbooks guide source collection for recurring jurisdiction/domain
+research. Reference packs guide drafting, tailoring, and quality control for a
+specialist output.
+
+Add or update a file under `references/packs/` when:
+
+- a specialist skill needs detailed tables, templates, or pitfalls;
+- the material is reusable across matters;
+- the content is procedural rather than cached current law;
+- the compact skill would become too long if the detail stayed inline.
+
+Add or update a top-level `references/*.md` file when:
+
+- a workflow needs a reusable schema, template, or cross-specialist control;
+- more than one skill can use the same reference;
+- the material is not tied to one specialist topic.
+
+After adding a pack or reference, update the relevant validator:
+
+```bash
+python3 scripts/check-reference-catalog.py
+python3 scripts/check-references-corpus.py
+python3 scripts/check-reference-packs.py
+python3 scripts/check-reference-links.py
+```
+
+Prefer the reference scaffold for new artifacts:
+
+```bash
+python3 scripts/create-reference-artifact.py \
+  --kind reference \
+  --id memo-sanity-check \
+  --title "Memo Sanity Check"
+```
+
+The scaffold creates the draft Markdown file and registers it in
+`references/reference-catalog.json`. Fill the draft, wire any skill load rule,
+then run the validators above.
+
 ## Validate
 
 Run the dedicated validator:

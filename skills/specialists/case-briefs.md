@@ -8,6 +8,11 @@ disable-model-invocation: true
 
 Produces a structured case brief from a judicial opinion or case reporter entry. Extracts caption, procedural posture, facts, issues, holdings, reasoning, and significance into a standardized format.
 
+Use this file as the compact workflow. Load
+`references/packs/case-briefs.md` when drafting, tailoring, or quality-checking
+a case brief, or when metadata extraction, procedural posture, narrow holdings,
+dicta, concurrences/dissents, significance, or pitfalls are needed.
+
 ## Quick Start
 
 Given a court opinion, produce a brief with these six sections in order:
@@ -32,3 +37,9 @@ Given a court opinion, produce a brief with these six sections in order:
 - **Speculation on gaps**: if the source is incomplete on any element, note the limitation — never fill in missing details
 - **Overbroad holdings**: state the narrow holding first, then any broader principle the court announced
 - **Conflating facts and analysis**: keep the facts section purely factual; save legal characterization for reasoning
+
+## Reference Pack
+
+- `references/packs/case-briefs.md` - intake, metadata, procedural posture,
+  fact extraction, issue framing, holding/disposition rules, rule extraction,
+  dicta controls, concurrence/dissent handling, checklist, and pitfalls.

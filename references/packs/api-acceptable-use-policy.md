@@ -1,7 +1,7 @@
 # API Acceptable Use Policy Reference Pack
 
 This pack contains the detailed drafting tables, policy template, quality checks,
-and pitfalls for `.claude/skills/api-acceptable-use-policy/SKILL.md`.
+and pitfalls for `skills/specialists/api-acceptable-use-policy.md`.
 
 ## Quick Start
 

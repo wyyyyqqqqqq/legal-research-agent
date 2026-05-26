@@ -213,6 +213,35 @@ knowledge/
 
 에이전트는 활성 모드와 언어에 일치하는 프로파일만 로드합니다. 이중 언어 로드는 명시적으로 요청된 경우에만 발생합니다.
 
+### 참조 문서와 Specialist Pack
+
+반복 사용되는 작성, 스키마, 품질관리 자료는 [`references/`](references/)에
+있습니다:
+
+```text
+references/
+├── reference-catalog.json              # 기계 판독 reference catalog
+├── conflict-report-template.md         # 소스 충돌 보고 컨트롤
+├── glossary-schema.md                  # 관할별 glossary JSON schema
+├── korean-law-reference.md             # 한국법 위계와 도구 가이드
+├── legal-writing-formatting-guide.md   # EN / KO 법률문서 스타일 가이드
+└── packs/                              # specialist별 상세 작성/QC pack
+```
+
+Specialist pack은 절차형 자료입니다. 무엇을 검증하고 어떤 구조로 산출물을
+작성할지 정하지만, 그 자체가 최신 법령 권위는 아닙니다. 로컬 체크는 참조
+문서 catalog, corpus, pack catalog, glossary fixture, 활성 내부 reference
+link를 검증합니다.
+
+새 reference artifact는 scaffold로 생성해 catalog가 함께 갱신되도록 합니다:
+
+```bash
+python3 scripts/create-reference-artifact.py \
+  --kind pack \
+  --id example-specialist-pack \
+  --title "Example Specialist Pack"
+```
+
 ### Citation auditor (vendored)
 
 [`citation-auditor`](citation_auditor/)가 vendored 형태로 포함되어 있습니다 — 패키지, [`.claude/skills/citation-auditor/`](.claude/skills/citation-auditor/) 의 Claude Code 스킬, [`.claude/skills/verifiers/`](.claude/skills/verifiers/) 의 verifier 플러그인, 그리고 [`/audit`](/.claude/commands/audit.md) 슬래시 커맨드. 의도적으로 업그레이드할 때만 vendor stamp를 갱신합니다:

@@ -68,6 +68,21 @@ CHECKS: list[dict[str, Any]] = [
         "cmd": ["python3", "scripts/check-references-corpus.py"],
     },
     {
+        "id": "reference_catalog",
+        "description": "Verify shared reference artifact catalog, owners, headings, and uncataloged files.",
+        "cmd": ["python3", "scripts/check-reference-catalog.py"],
+    },
+    {
+        "id": "reference_links",
+        "description": "Verify active internal Markdown reference paths resolve.",
+        "cmd": ["python3", "scripts/check-reference-links.py"],
+    },
+    {
+        "id": "glossary_files",
+        "description": "Validate glossary JSON fixtures against the glossary schema rules.",
+        "cmd": ["python3", "scripts/check-glossary-files.py", "tests/fixtures/glossary/valid"],
+    },
+    {
         "id": "legal_sources",
         "description": "Validate legal_sources.yaml schema.",
         "cmd": ["python3", "scripts/check-legal-sources.py"],

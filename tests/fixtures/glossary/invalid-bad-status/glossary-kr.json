@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "jurisdiction": "KR",
+  "language_pair": "ko-en",
+  "last_updated": "2026-05-26",
+  "terms": [
+    {
+      "term": "고시",
+      "source_language": "ko",
+      "preferred_translation": "Notice",
+      "definition": "An official notice issued by an agency.",
+      "authority_ids": ["src_002"],
+      "pinpoints": ["Example Notice Section 1"],
+      "status": "maybe",
+      "context_rules": []
+    }
+  ]
+}

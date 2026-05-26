@@ -32,7 +32,7 @@ pass before tagging.
    python3 scripts/run-local-checks.py --report
    ```
 
-   All checks must pass (currently 21/21). The `--report` form writes
+   All checks must pass. The `--report` form writes
    `reports/local-checks-latest.json` for archival.
 
 3. **Run the full unittest discovery**
@@ -85,6 +85,20 @@ pass before tagging.
    If the vendor stamp is older than the sibling source repo, decide
    whether to refresh before tagging.
 
+8. **Verify reference-layer governance**
+
+   ```bash
+   python3 scripts/check-reference-catalog.py \
+     --report-json reports/reference-catalog-latest.json
+   python3 scripts/check-reference-links.py
+   python3 scripts/check-glossary-files.py tests/fixtures/glossary/valid
+   ```
+
+   Reference or pack changes must have catalog entries, owner skills or owner
+   docs where applicable, stable status values, required headings, and clean
+   internal links. Include the reference-catalog report in release notes when
+   reference-layer changes are material.
+
 ---
 
 ## Version Tagging
@@ -132,7 +146,8 @@ Required sections in every release note:
 - `## Compatibility` — orchestrator-contract impact, breaking changes,
   migration notes
 - `## Quality Status` — preflight result (PASS / FAIL count), token
-  comparison status, prompt-footprint delta vs baseline
+  comparison status, prompt-footprint delta vs baseline, and reference-catalog
+  report summary when reference artifacts changed
 - `## Acknowledgements` — optional
 
 Cross-link the release note from:

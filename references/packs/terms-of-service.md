@@ -1,6 +1,6 @@
 # Terms of Service Reference Pack
 
-Detailed drafting rules for `.claude/skills/terms-of-service/SKILL.md`. Load this pack only when drafting, tailoring, or quality-checking a Terms of Service agreement.
+Detailed drafting rules for `skills/specialists/terms-of-service.md`. Load this pack only when drafting, tailoring, or quality-checking a Terms of Service agreement.
 
 ## Intake Table
 

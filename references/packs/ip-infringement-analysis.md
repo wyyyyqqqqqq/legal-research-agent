@@ -1,7 +1,7 @@
 # IP Infringement Analysis Reference Pack
 
 This pack contains detailed IP infringement memo frameworks for
-`.claude/skills/ip-infringement-analysis/SKILL.md`.
+`skills/specialists/ip-infringement-analysis.md`.
 
 ## Quick Start
 

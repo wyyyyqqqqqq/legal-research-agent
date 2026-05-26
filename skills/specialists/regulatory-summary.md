@@ -8,6 +8,12 @@ disable-model-invocation: true
 
 Produces a structured summary of regulatory documents grounded in pinpoint citations, serving as both a standalone reference and a compliance roadmap.
 
+Use this file as the compact workflow. Load
+`references/packs/regulatory-summary.md` when drafting, tailoring, or
+quality-checking a regulatory summary, or when document-type handling,
+provision extraction, deadline tracking, safe-harbor analysis, enforcement
+tables, or procedural-posture checks are needed.
+
 ## Quick Start
 
 1. Collect the regulatory document(s) — final/proposed rules, guidance, enforcement actions, no-action letters, compliance frameworks, or administrative decisions
@@ -89,3 +95,10 @@ Omit if document does not amend a prior framework.
 - **Scale appropriately**: ~1 page for simple guidance, up to ~3 pages for complex final rules
 - **Procedural posture**: Note NPRM, interim final rule, or final rule when part of broader rulemaking
 - **Analytical neutrality**: Do not editorialize on policy merits
+
+## Reference Pack
+
+- `references/packs/regulatory-summary.md` - document-type matrix, metadata
+  table, provision extraction template, prior-framework delta, deadline
+  tracker, safe harbors, enforcement/penalty tables, action plan, checklist,
+  and pitfalls.

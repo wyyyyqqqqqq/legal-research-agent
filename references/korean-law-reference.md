@@ -313,7 +313,7 @@ python3 scripts/open_law_api.py get-case --id 228541 --save
 1. korean-law MCP 서버 → 정상 응답 시 그대로 사용 (Grade A 소스)
 2. MCP 실패 → `python3 scripts/open_law_api.py`로 fallback
 3. Python CLI도 실패 → Tavily/Brave 검색
-4. 검색도 실패 → `references/legal-source-urls.md`의 큐레이팅된 URL로 직접 fetch
+4. 검색도 실패 → `legal_sources.yaml`의 큐레이팅된 URL 또는 공식 포털 URL로 직접 fetch
 
 ### 9.5 MCP vs Python CLI 비교
 

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "jurisdiction": "KR",
+  "language_pair": "ko-en",
+  "last_updated": "2026-05-26",
+  "terms": [
+    {
+      "term": "시행령",
+      "source_language": "ko",
+      "preferred_translation": "Enforcement Decree",
+      "definition": "Delegated presidential decree implementing a statute.",
+      "authority_ids": ["src_001"],
+      "pinpoints": ["Example Act Article 1"],
+      "status": "verified",
+      "notes": "Distinguish from ministerial enforcement rules.",
+      "context_rules": [
+        {
+          "when": "formal statute-decree hierarchy discussion",
+          "translation": "Presidential Enforcement Decree",
+          "authority_ids": ["src_001"],
+          "pinpoints": ["Example Act Article 1"],
+          "note": "Use only when the presidential-decree level matters."
+        }
+      ]
+    }
+  ]
+}

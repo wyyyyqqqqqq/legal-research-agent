@@ -126,6 +126,103 @@ REQUIRED_MARKERS: dict[str, list[str]] = {
         "support_strength",
         "claim_verification",
     ],
+    "skills/specialists/privacy-law-updates.md": [
+        "references/packs/privacy-law-updates.md",
+        "Reference Pack",
+        "development taxonomy",
+    ],
+    "skills/specialists/regulatory-summary.md": [
+        "references/packs/regulatory-summary.md",
+        "Reference Pack",
+        "document-type",
+    ],
+    "skills/specialists/case-briefs.md": [
+        "references/packs/case-briefs.md",
+        "Reference Pack",
+        "narrow holdings",
+    ],
+    "skills/specialists/judgment-summary.md": [
+        "references/packs/judgment-summary.md",
+        "Reference Pack",
+        "standards of review",
+    ],
+    "references/conflict-report-template.md": [
+        "Source Conflict Matrix",
+        "Legal Hierarchy Analysis",
+        "Korean-Specific Conflict Patterns",
+        "Confidence Impact",
+    ],
+    "references/glossary-schema.md": [
+        "Top-Level Object",
+        "Term Entry Fields",
+        "Context Rule Fields",
+        "Korean Starter Glossary",
+    ],
+    "references/packs/privacy-law-updates.md": [
+        "Development Taxonomy",
+        "Effective-Date and Deadline Tracker",
+        "Pending and Proposed Law Treatment",
+        "Source Minimums",
+    ],
+    "references/packs/regulatory-summary.md": [
+        "Document-Type Matrix",
+        "Provision Extraction Template",
+        "Compliance Deadline Tracker",
+        "Safe Harbors and Exemptions",
+    ],
+    "references/packs/case-briefs.md": [
+        "Fact Extraction",
+        "Holding and Disposition",
+        "Dicta and Limiting Language",
+        "Concurring and Dissenting Opinions",
+    ],
+    "references/packs/judgment-summary.md": [
+        "Standards of Review",
+        "Issues and Holdings Table",
+        "Disposition and Remand Instructions",
+        "Practical Implications",
+    ],
+    "references/reference-catalog.json": [
+        "\"version\": \"1.0\"",
+        "\"artifacts\"",
+        "\"conflict-report-template\"",
+        "\"privacy-law-updates\"",
+    ],
+    "scripts/check-reference-catalog.py": [
+        "CATALOG_PATH",
+        "ALLOWED_KINDS",
+        "discover_reference_files",
+        "deprecated_pointed_to_by_active_skills",
+    ],
+    "scripts/create-reference-artifact.py": [
+        "create_reference_artifact",
+        "status\": \"draft\"",
+        "check-reference-catalog.py",
+    ],
+    "scripts/check-reference-links.py": [
+        "MARKDOWN_LINK_RE",
+        "VALIDATED_PREFIXES",
+        "extract_reference_targets",
+    ],
+    "scripts/check-glossary-files.py": [
+        "ALLOWED_STATUSES",
+        "authority_ids",
+        "pinpoints",
+        "context_rules",
+    ],
+    "tests/fixtures/glossary/valid/glossary-kr.json": [
+        "\"schema_version\": \"1.0\"",
+        "\"authority_ids\"",
+        "\"context_rules\"",
+    ],
+    "scripts/run-local-checks.py": [
+        "\"reference_catalog\"",
+        "\"reference_links\"",
+        "\"glossary_files\"",
+        "scripts/check-reference-catalog.py",
+        "scripts/check-reference-links.py",
+        "scripts/check-glossary-files.py",
+    ],
     "templates/source-playbook.example.md": [
         "## Required Source Layers",
         "## Currentness Checks",
@@ -274,6 +371,8 @@ REQUIRED_MARKERS: dict[str, list[str]] = {
         "scripts/run-local-checks.py",
         "scripts/measure-prompt-footprint.py",
         "scripts/compare-token-runs.py",
+        "scripts/check-reference-catalog.py",
+        "reference-catalog report",
     ],
 }
 

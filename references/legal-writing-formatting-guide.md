@@ -231,7 +231,7 @@ Before marking a draft ready for review:
 
 ### 19. Mode A Adaptations — Executive Brief
 
-Mode A is the executive-brief output format (see `.claude/skills/output-generator/references/mode-a-template.md`). The reader is typically a decision-maker who wants the bottom line, the risk posture, and an action list — not the analytical derivation. Apply §§1–18 as the baseline and adjust as follows.
+Mode A is the executive-brief output format (see `templates/output-modes/executive-brief.md`). The reader is typically a decision-maker who wants the bottom line, the risk posture, and an action list — not the analytical derivation. Apply §§1–18 as the baseline and adjust as follows.
 
 **Architecture & Section Pacing.** Compress the IRAC body into the shortest form consistent with §7. The Key Conclusions block carries the majority of the document's informational weight; Counter-Analysis and Practical Implications are second tier. Skip or merge sections that add no decision value for this audience. A single finding is usually one short paragraph or a tight bullet cluster, not a multi-page derivation. Aim for a visible one-to-one mapping between conclusions and action items so the reader can scan vertically.
 
@@ -247,7 +247,7 @@ Mode A is the executive-brief output format (see `.claude/skills/output-generato
 
 ### 20. Mode B Adaptations — Comparative Matrix
 
-Mode B is the cross-jurisdiction comparison output (see `mode-b-template.md`). The centerpiece is a matrix: rows are the ten standard axes from `references/comparative-framework.md`, columns are jurisdictions. Prose before and after the matrix serves the matrix, not the other way around.
+Mode B is the cross-jurisdiction comparison output (see `templates/output-modes/comparative-matrix.md`). The centerpiece is a matrix: rows are the ten standard axes from `references/comparative-framework.md`, columns are jurisdictions. Prose before and after the matrix serves the matrix, not the other way around.
 
 **Architecture & Section Pacing.** Pre-matrix context is minimal — one short Scope paragraph and nothing else. The matrix itself is the main analytical surface. Post-matrix Divergence Commentary is substantial and carries the second-largest weight. Counter-Analysis lives inside the Divergence Commentary as per-axis alternative readings, not as a separate trailing block. Practical Implications (Compliance Strategy, Risk Hotspots, Monitoring Points) form the tail.
 
@@ -522,7 +522,7 @@ Mode D is the article-by-article statute-and-commentary output (see `mode-d-temp
 
 ### 19. Mode A 적용 — 집행 요약 브리프
 
-Mode A는 집행 요약 브리프 출력 포맷입니다 (`.claude/skills/output-generator/references/mode-a-template.md` 참조). 수신자는 통상 분석 도출 과정이 아니라 결론·리스크 포지션·실행 목록만 원하는 의사결정자입니다. §§1-18의 범용 규칙을 기본으로 하되 아래 조정을 더합니다.
+Mode A는 집행 요약 브리프 출력 포맷입니다 (`templates/output-modes/executive-brief.md` 참조). 수신자는 통상 분석 도출 과정이 아니라 결론·리스크 포지션·실행 목록만 원하는 의사결정자입니다. §§1-18의 범용 규칙을 기본으로 하되 아래 조정을 더합니다.
 
 **구조 및 섹션 배분.** §7의 IRAC 본문을 해당 기준과 부합하는 최단 형태로 압축합니다. 요약 결론 블록이 문서 정보량의 대부분을 담당하며, 반대 논거와 실무적 함의가 뒤를 잇습니다. 해당 수신자에게 의사결정 가치를 더하지 않는 섹션은 축소·병합합니다. 하나의 결론은 보통 짧은 한 문단 또는 촘촘한 불릿 한 덩어리이며, 수 페이지 분량의 도출이 아닙니다. 결론과 실행 항목이 시각적으로 1:1 대응하도록 배열하여 수신자가 수직 스캔만으로 파악할 수 있게 합니다.
 
@@ -538,7 +538,7 @@ Mode A는 집행 요약 브리프 출력 포맷입니다 (`.claude/skills/output
 
 ### 20. Mode B 적용 — 관할 비교 매트릭스
 
-Mode B는 다관할 비교 출력 포맷입니다 (`mode-b-template.md` 참조). 중심은 매트릭스입니다 — 행은 `references/comparative-framework.md`의 10개 표준 축, 열은 관할. 매트릭스 전후의 문장은 매트릭스를 보조하는 역할이며 그 반대가 아닙니다.
+Mode B는 다관할 비교 출력 포맷입니다 (`templates/output-modes/comparative-matrix.md` 참조). 중심은 매트릭스입니다 — 행은 `references/comparative-framework.md`의 10개 표준 축, 열은 관할. 매트릭스 전후의 문장은 매트릭스를 보조하는 역할이며 그 반대가 아닙니다.
 
 **구조 및 섹션 배분.** 매트릭스 앞의 배경 서술은 최소화하여 짧은 범위 문단만 둡니다. 매트릭스 자체가 주된 분석 표면입니다. 매트릭스 뒤의 차이 해설이 두 번째로 큰 비중을 가지며, 반대 논거는 별도 말미 블록이 아니라 차이 해설 내 축별 대체 해석으로 배치합니다. 실무적 함의(컴플라이언스 전략, 리스크 핫스팟, 모니터링 포인트)가 말미를 이룹니다.
 

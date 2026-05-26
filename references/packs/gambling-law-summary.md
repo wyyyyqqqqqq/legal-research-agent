@@ -1,6 +1,6 @@
 # Gambling Law Summary Reference Pack
 
-Detailed drafting rules for `.claude/skills/gambling-law-summary/SKILL.md`. Load this pack only when drafting, tailoring, or quality-checking a gambling-law regulatory summary.
+Detailed drafting rules for `skills/specialists/gambling-law-summary.md`. Load this pack only when drafting, tailoring, or quality-checking a gambling-law regulatory summary.
 
 ## Output Template
 

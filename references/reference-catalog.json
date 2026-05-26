@@ -1,0 +1,250 @@
+{
+  "version": "1.0",
+  "artifacts": [
+    {
+      "id": "comparative-framework",
+      "kind": "reference",
+      "path": "references/comparative-framework.md",
+      "status": "active",
+      "owner_skill": "analysis-issue-structuring",
+      "min_bytes": 1000,
+      "required_headings": [
+        "# Comparative Analysis Framework (Mode B)",
+        "## Standard Comparison Axes",
+        "## Matrix Template",
+        "## Practical Implications"
+      ]
+    },
+    {
+      "id": "conflict-report-template",
+      "kind": "reference",
+      "path": "references/conflict-report-template.md",
+      "status": "active",
+      "owner_skill": "conflict-detector",
+      "min_bytes": 1000,
+      "required_headings": [
+        "# Conflict Report Template",
+        "## Source Conflict Matrix",
+        "## Legal Hierarchy Analysis",
+        "## Korean-Specific Conflict Patterns",
+        "## Quality Checklist"
+      ]
+    },
+    {
+      "id": "counter-analysis-checklist",
+      "kind": "reference",
+      "path": "references/counter-analysis-checklist.md",
+      "status": "active",
+      "owner_skill": "analysis-issue-structuring",
+      "min_bytes": 1000,
+      "required_headings": [
+        "# Counter-Analysis Checklist",
+        "## Mandatory Check: Per-Conclusion Counter-Analysis",
+        "## Output Format",
+        "## Minimum Requirements"
+      ]
+    },
+    {
+      "id": "glossary-schema",
+      "kind": "reference",
+      "path": "references/glossary-schema.md",
+      "status": "active",
+      "owner_skill": "glossary-manager",
+      "min_bytes": 1000,
+      "required_headings": [
+        "# Glossary Schema",
+        "## Top-Level Object",
+        "## Term Entry Fields",
+        "## Context Rule Fields",
+        "## Korean Starter Glossary",
+        "## Validation Rules"
+      ]
+    },
+    {
+      "id": "korean-law-reference",
+      "kind": "reference",
+      "path": "references/korean-law-reference.md",
+      "status": "active",
+      "owner_skill": "jurisdiction-source-playbook",
+      "min_bytes": 1000,
+      "required_headings": [
+        "# Korean Law Reference",
+        "## 1. ",
+        "## 7. ",
+        "## 9. "
+      ]
+    },
+    {
+      "id": "legal-writing-formatting-guide",
+      "kind": "reference",
+      "path": "references/legal-writing-formatting-guide.md",
+      "status": "active",
+      "owner_skill": "legal-writing-formatter",
+      "min_bytes": 1000,
+      "required_headings": [
+        "# Legal Opinion Style Guide",
+        "## EN",
+        "## KO",
+        "### 19. Mode A"
+      ]
+    },
+    {
+      "id": "source-payload-contract",
+      "kind": "reference",
+      "path": "references/source-payload-contract.md",
+      "status": "active",
+      "owner_skill": "source-collection",
+      "min_bytes": 1000,
+      "required_headings": [
+        "# Source Payload Contract",
+        "## Canonical Source Envelope",
+        "## Required Trust Handling",
+        "## \ud55c\uad6d\uc5b4 \uc694\uc57d"
+      ]
+    },
+    {
+      "id": "antitrust-investigation-summary",
+      "kind": "pack",
+      "path": "references/packs/antitrust-investigation-summary.md",
+      "status": "active",
+      "owner_skill": "antitrust-investigation-summary",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# Antitrust Investigation Summary Reference Pack",
+        "## Quick Start",
+        "## Section 4",
+        "## Drafting Rules"
+      ]
+    },
+    {
+      "id": "api-acceptable-use-policy",
+      "kind": "pack",
+      "path": "references/packs/api-acceptable-use-policy.md",
+      "status": "active",
+      "owner_skill": "api-acceptable-use-policy",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# API Acceptable Use Policy Reference Pack",
+        "## Pre-Draft Intake",
+        "## Publication-Ready AUP Template",
+        "## Quality Checklist"
+      ]
+    },
+    {
+      "id": "case-briefs",
+      "kind": "pack",
+      "path": "references/packs/case-briefs.md",
+      "status": "active",
+      "owner_skill": "case-briefs",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# Case Briefs Reference Pack",
+        "## Quick Start",
+        "## Holding and Disposition",
+        "## Dicta and Limiting Language",
+        "## Output Quality Checklist"
+      ]
+    },
+    {
+      "id": "cyber-law-compliance-summary",
+      "kind": "pack",
+      "path": "references/packs/cyber-law-compliance-summary.md",
+      "status": "active",
+      "owner_skill": "cyber-law-compliance-summary",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# Cyber Law Compliance Summary Reference Pack",
+        "## Quick Start",
+        "## Section 2",
+        "## Pitfalls and Checks"
+      ]
+    },
+    {
+      "id": "gambling-law-summary",
+      "kind": "pack",
+      "path": "references/packs/gambling-law-summary.md",
+      "status": "active",
+      "owner_skill": "gambling-law-summary",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# Gambling Law Summary Reference Pack",
+        "## Output Template",
+        "### Licensing and Suitability",
+        "## Pitfalls"
+      ]
+    },
+    {
+      "id": "ip-infringement-analysis",
+      "kind": "pack",
+      "path": "references/packs/ip-infringement-analysis.md",
+      "status": "active",
+      "owner_skill": "ip-infringement-analysis",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# IP Infringement Analysis Reference Pack",
+        "## Quick Start",
+        "## Step 3",
+        "## Troubleshooting"
+      ]
+    },
+    {
+      "id": "judgment-summary",
+      "kind": "pack",
+      "path": "references/packs/judgment-summary.md",
+      "status": "active",
+      "owner_skill": "judgment-summary",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# Judgment Summary Reference Pack",
+        "## Standards of Review",
+        "## Issues and Holdings Table",
+        "## Disposition and Remand Instructions",
+        "## Output Quality Checklist"
+      ]
+    },
+    {
+      "id": "privacy-law-updates",
+      "kind": "pack",
+      "path": "references/packs/privacy-law-updates.md",
+      "status": "active",
+      "owner_skill": "privacy-law-updates",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# Privacy Law Updates Reference Pack",
+        "## Development Taxonomy",
+        "## Effective-Date and Deadline Tracker",
+        "## Pending and Proposed Law Treatment",
+        "## Source Minimums"
+      ]
+    },
+    {
+      "id": "regulatory-summary",
+      "kind": "pack",
+      "path": "references/packs/regulatory-summary.md",
+      "status": "active",
+      "owner_skill": "regulatory-summary",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# Regulatory Summary Reference Pack",
+        "## Document-Type Matrix",
+        "## Provision Extraction Template",
+        "## Compliance Deadline Tracker",
+        "## Output Quality Checklist"
+      ]
+    },
+    {
+      "id": "terms-of-service",
+      "kind": "pack",
+      "path": "references/packs/terms-of-service.md",
+      "status": "active",
+      "owner_skill": "terms-of-service",
+      "min_bytes": 1500,
+      "required_headings": [
+        "# Terms of Service Reference Pack",
+        "## Intake Table",
+        "## Clause Selection",
+        "## Final QC Checklist"
+      ]
+    }
+  ]
+}
