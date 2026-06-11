@@ -6,10 +6,9 @@
 
 ## Personal Project
 
-This is an independent personal project by Legal Research Agent contributors. It is not sponsored,
-endorsed, or affiliated with any law firm, employer, or organization. All
-opinions, design decisions, and content in this repository are solely the
-author's own.
+This is an independent personal project. It is not sponsored, endorsed, or
+affiliated with any law firm, employer, or organization. All opinions, design
+decisions, and content in this repository are solely the maintainer's own.
 
 ## Not Legal Advice
 
