@@ -74,6 +74,97 @@ jurisdictions:
     secondary: []
     mcp_fallback: null
 
+  AU:
+    # Preferred starting points only. This registry is not exhaustive.
+    # The agent may identify and use additional authoritative sources where the facts or legal issues require them.
+
+    primary:
+      - name: "Federal Register of Legislation"
+        url: "https://www.legislation.gov.au"
+        scope: "Commonwealth legislation, regulations, legislative instruments, amendments, commencement materials, and explanatory materials"
+
+      - name: "High Court of Australia"
+        url: "https://www.hcourt.gov.au"
+        scope: "High Court judgments and case materials"
+
+      - name: "Federal Court of Australia"
+        url: "https://www.fedcourt.gov.au"
+        scope: "Federal Court judgments and court materials"
+
+      - name: "ACCC"
+        url: "https://www.accc.gov.au"
+        scope: "Competition, Australian Consumer Law, enforcement, and guidance"
+
+      - name: "OAIC"
+        url: "https://www.oaic.gov.au"
+        scope: "Privacy and information regulation"
+
+      - name: "eSafety Commissioner"
+        url: "https://www.esafety.gov.au"
+        scope: "Online safety regulation, guidance, and enforcement"
+
+      - name: "Australian Classification"
+        url: "https://www.classification.gov.au"
+        scope: "Classification decisions, ratings, and guidance"
+
+      - name: "IP Australia"
+        url: "https://www.ipaustralia.gov.au"
+        scope: "Trade marks, patents, designs, official registers, and IP guidance"
+
+      - name: "NSW Legislation"
+        url: "https://legislation.nsw.gov.au"
+        scope: "New South Wales legislation"
+
+      - name: "Victorian Legislation"
+        url: "https://www.legislation.vic.gov.au"
+        scope: "Victorian legislation"
+
+      - name: "Queensland Legislation"
+        url: "https://www.legislation.qld.gov.au"
+        scope: "Queensland legislation"
+
+      - name: "Western Australian Legislation"
+        url: "https://www.legislation.wa.gov.au"
+        scope: "Western Australian legislation"
+
+      - name: "South Australian Legislation"
+        url: "https://www.legislation.sa.gov.au"
+        scope: "South Australian legislation"
+
+      - name: "Tasmanian Legislation"
+        url: "https://www.legislation.tas.gov.au"
+        scope: "Tasmanian legislation"
+
+      - name: "ACT Legislation Register"
+        url: "https://www.legislation.act.gov.au"
+        scope: "Australian Capital Territory legislation"
+
+      - name: "Northern Territory Legislation"
+        url: "https://legislation.nt.gov.au"
+        scope: "Northern Territory legislation"
+
+    secondary:
+      - name: "AustLII"
+        url: "https://www.austlii.edu.au"
+        scope: "Case law, legislation, tribunal materials, source discovery, and citation tracing. Use targeted retrieval only. Do not bulk crawl, spider, mirror, or systematically download AustLII databases. Respect access restrictions and prefer official sources for final verification where available."
+        grade: "B"
+
+      - name: "Westlaw Precision Australia"
+        scope: "Subscription legal research database for Australian primary law, law reports, citators, and commentary. Use only where licensed."
+        grade: "B"
+
+      - name: "LexisNexis Australia"
+        scope: "Subscription legal research database for Australian case law, legislation, citators, commentary, and regulatory content. Use licensed institutional or API access where available."
+        grade: "B"
+
+      - name: "Jade"
+        url: "https://jade.io"
+        scope: "Australian case law, citation relationships, and legal research. Verify permitted access method before automation."
+        grade: "B"
+
+    mcp_fallback: null
+  
+
 # Add additional jurisdictions per /onboard wizard demand. The
 # wizard's question catalog at knowledge/onboarding/wizard-flow.md
 # enumerates the supported jurisdiction codes.

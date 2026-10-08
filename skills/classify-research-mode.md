@@ -45,41 +45,26 @@ with the routed mode rather than silently switching.
 
 ## Self-Classification Rules
 
-Use `game_regulation` when the facts involve:
+Use `game_regulation` when the question is materially connected to the development, publishing, distribution, operation, monetization, marketing, launch, maintenance, or commercial exploitation of a video game, online game, mobile game, cloud game, or related digital game product.
 
-- online, mobile, PC, console, or cloud games
-- game publishing or distribution
-- app-store or platform compliance for a game product
-- loot boxes, gacha, random rewards, or probability disclosure
-- game age ratings or youth protection
-- game advertising, influencer marketing, dark patterns, or monetization
-- virtual items, paid currency, cash-out boundaries, or gambling adjacency
-- game consumer protection or refund issues
+Classification should be based primarily on the factual and business context rather than on whether the question matches a predefined legal category or keyword list.
 
-Use `game_plus_general` only when:
+Relevant game-industry facts may include product mechanics, monetization models, users, distribution channels, platforms, technologies, commercial relationships, content, marketing, live-service operation, cross-border launch, or other aspects of the game business.
 
-- the question is game-industry framed; and
-- there is a distinct non-game legal issue that cannot be handled as adjacency.
+Examples may include loot boxes, gacha, age ratings, advertising, virtual goods, consumer protection, privacy, intellectual property, employment, tax, competition, payments, platform rules, online safety, contracts, regulatory approvals, or other legal issues arising from the game business. These examples are illustrative rather than exhaustive.
 
-Examples of distinct non-game issues:
+Do not route a game-industry question to `general` merely because the material legal issue falls outside the repository's predefined game-regulation categories or specialist skills.
 
-- corporate licensing unrelated to game publishing rules
-- tax treatment
-- employment or labor issue
-- securities, finance, or corporate governance issue
-- non-game platform liability
+Use `game_plus_general` only when the matter contains both:
 
-Use `general` when:
+- a material game-industry component requiring game-specific legal or regulatory analysis; and
+- a distinct legal workstream that is substantially independent of the game product or game-business context and is better handled through the general research workflow.
 
-- no narrower specialist is required; and
-- the question is not game-industry framed.
+The existence of tax, employment, corporate, intellectual-property, contract, competition, finance, or other general legal issues does not by itself require `game_plus_general` if those issues arise directly from the development, launch, operation, distribution, monetization, or commercial exploitation of the game.
 
-Use `fallback` when:
+Use `general` when the question is not materially game-industry framed and no narrower game-regulation analysis is required.
 
-- jurisdiction or domain is unclear;
-- source coverage is materially insufficient; or
-- the subject falls outside this agent's competence and no better specialist is
-  available.
+Use `fallback` when the relevant facts, jurisdiction, or subject matter are too unclear to classify reliably, source coverage is materially insufficient, or the matter falls outside the agent's competence and no better route is available.
 
 ## Metadata
 

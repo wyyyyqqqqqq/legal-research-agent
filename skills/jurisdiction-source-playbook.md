@@ -114,6 +114,30 @@ For JP research:
 4. Verify consumer, prize, payment, gambling, and youth-protection issues
    against official sources where possible.
 
+  ## Australia
+
+For AU research:
+
+1. Identify whether the relevant rule operates at the Commonwealth, State, or Territory level.
+
+2. Do not generalize one State or Territory rule as "Australian law" where subnational variation is material.
+
+3. Where Commonwealth and State or Territory law may overlap, identify and research each legal layer separately before synthesizing the practical position.
+
+4. Identify the competent court, tribunal, regulator, government agency, or other authoritative body where relevant before collecting guidance, decisions, enforcement materials, or administrative sources.
+
+5. Distinguish between relevant source types, including primary and delegated legislation, court and tribunal decisions, regulator and government materials, official registers and administrative decisions, contracts and licences, treaties and international instruments, industry codes and recognised standards, and secondary academic or practitioner commentary.
+
+6. Prefer current primary or official Australian sources for material legal propositions. Use secondary sources principally for source discovery, context, interpretation, or identifying unresolved issues.
+
+7. Check currentness before relying on controlling law, including consolidated legislation, amendments, commencement provisions, transitional provisions, and relevant current decisions or guidance.
+
+8. Treat the source registry in `legal_sources.yaml` as a set of preferred starting points rather than a closed list. Where the facts or legal issues require sources not listed in the registry, identify and use additional authoritative Australian sources consistent with the source-first and source-grading rules.
+
+9. Where the answer materially depends on State or Territory variation and the relevant jurisdiction is unknown, seek clarification where possible or record the variation as a coverage gap.
+
+10. Record unresolved jurisdictional allocation, source availability, currentness, or authority questions as coverage gaps rather than inferring a uniform Australian position.
+
 ## Cross-Border And Comparisons
 
 For any comparison:

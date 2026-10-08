@@ -68,11 +68,9 @@ Steps:
    `source-map.md` → `regulatory-map.md` →
    `issue-taxonomy.md` → `library-index.md` → `review-status.json`.
 4. Per file, follow the recipe's live-research protocol:
-   - For `jurisdiction: KR`, prefer `mcp__claude_ai_Korean-law__*`
-     tool calls over `WebFetch`.
-   - For other jurisdictions, use `WebFetch` against whitelisted
-     official portals (`law.go.kr`, `eur-lex.europa.eu`,
-     `congress.gov`, `legislation.gov.uk`, etc.).
+   - For `jurisdiction: KR`, prefer `mcp__claude_ai_Korean-law__*` tool calls over `WebFetch`.
+   - For other jurisdictions, begin with the preferred sources registered in `legal_sources.yaml` and the applicable jurisdiction rules in `skills/jurisdiction-source-playbook.md`.
+   - The source registry is a set of preferred starting points, not a closed list. Where the facts or legal issues require additional sources, identify and use other authoritative primary or official sources consistent with the source-first and source-grading rules.
 5. Apply the recipe's hallucination mitigation rules. Every
    regulator name and statute citation must cite a source URL.
    Unverifiable facts are marked `[Unverified]` inline rather than
